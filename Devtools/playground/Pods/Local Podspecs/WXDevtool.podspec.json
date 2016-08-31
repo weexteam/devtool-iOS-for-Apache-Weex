@@ -1,0 +1,29 @@
+{
+  "name": "WXDevtool",
+  "version": "0.0.1",
+  "summary": "WXDevtool Source.",
+  "description": "WXDevtool Source description",
+  "homepage": "https://github.com/alibaba/weex",
+  "license": {
+    "type": "Copyright",
+    "text": "           Alibaba-INC copyright\n"
+  },
+  "authors": {
+    "yangshengtao": "yangshengtao1314@163.com"
+  },
+  "platforms": {
+    "ios": "7.0"
+  },
+  "source": {
+    "path": "."
+  },
+  "source_files": "WXDevTool/Source/**/*.{h,m,mm,c}",
+  "requires_arc": true,
+  "prefix_header_file": "WXDevTool/Source/Supporting Files/TBWXDevTool.pch",
+  "frameworks": "Foundation",
+  "dependencies": {
+    "WeexSDK": [
+
+    ]
+  }
+}
