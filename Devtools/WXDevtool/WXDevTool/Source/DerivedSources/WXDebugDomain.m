@@ -22,12 +22,16 @@
         [self.delegate domain:self enableWithCallback:^(id error) {
             responseCallback(nil, error);
         }];
-    } else if ([methodName isEqualToString:@"setLogLevel"] && [self.delegate respondsToSelector:@selector(domain:sendLogLevel:WithCallback:)]) {
-        [self.delegate domain:self sendLogLevel:[params objectForKey:@"logLevel"] WithCallback:^(id error) {
+    } else if ([methodName isEqualToString:@"setLogLevel"] && [self.delegate respondsToSelector:@selector(domain:sendLogLevel:withCallback:)]) {
+        [self.delegate domain:self sendLogLevel:[params objectForKey:@"logLevel"] withCallback:^(id error) {
             responseCallback(nil,error);
         }];
     } else if ([methodName isEqualToString:@"disable"] && [self.delegate respondsToSelector:@selector(domain:disableWithCallback:)]) {
         [self.delegate domain:self disableWithCallback:^(id error) {
+            responseCallback(nil,error);
+        }];
+    } else if ([methodName isEqualToString:@"setElementMode"] && [self.delegate respondsToSelector:@selector(domain:setInspectorMode:withCallback:)]) {
+        [self.delegate domain:self setInspectorMode:[params objectForKey:@"mode"] withCallback:^(id error) {
             responseCallback(nil,error);
         }];
     }

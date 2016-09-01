@@ -83,6 +83,7 @@ extern void _WXLogObjectsImpl(NSString *severity, NSArray *arguments);
 #pragma mark View Hierarchy Debugging
 - (void)enableViewHierarchyDebugging;
 - (void)setDisplayedViewAttributeKeyPaths:(NSArray *)keyPaths;
++ (void)setVDom:(BOOL)isVDom;
 + (BOOL)isVDom;
 
 #pragma mark Remote Logging

@@ -56,11 +56,19 @@
     callback(nil);
 }
 
-- (void)domain:(WXDebugDomain *)domain sendLogLevel:(NSString *)level WithCallback:(void (^)(id error))callback {
+- (void)domain:(WXDebugDomain *)domain sendLogLevel:(NSString *)level withCallback:(void (^)(id error))callback {
     NSDictionary *logLevelMap = [WXDebugDomainController getLogLevelMap];
     WXLogLevel wxLogLevel = [[logLevelMap objectForKey:level] integerValue];
     [WXLog setLogLevel:wxLogLevel];
     callback(nil);
+}
+
+- (void)domain:(WXDebugDomain *)domain setInspectorMode:(NSString *)mode withCallback:(void (^)(id error))callback {
+    if ([mode isEqualToString:@"native"]) {
+        [WXDebugger setVDom:NO];
+    } else if ([mode isEqualToString:@"vdom"]) {
+        [WXDebugger setVDom:YES];
+    }
 }
 
 
