@@ -1,3 +1,5 @@
+[![GitHub release](https://img.shields.io/github/release/weexteam/wweex-devtool-iOS.svg)](https://github.com/weexteam/weex-devtool-iOS/releases)  [![GitHub issues](https://img.shields.io/github/issues/weexteam/weex-devtool-iOS.svg)](https://github.com/weexteam/weex-devtool-iOS/issues)
+
 # weex-devtool-iOS [中文版](README-zh.md)
 Remote debug for your native iOS app using Chrome Developer Tools
 
