@@ -1,4 +1,4 @@
-[![GitHub release](https://img.shields.io/github/release/weexteam/wweex-devtool-iOS.svg)](https://github.com/weexteam/weex-devtool-iOS/releases)  [![GitHub issues](https://img.shields.io/github/issues/weexteam/weex-devtool-iOS.svg)](https://github.com/weexteam/weex-devtool-iOS/issues)
+[![GitHub release](https://img.shields.io/github/release/weexteam/wweex-devtool-iOS.svg)](https://github.com/weexteam/weex-devtool-iOS/releases)  [![GitHub issues](https://img.shields.io/github/issues/weexteam/weex-devtool-iOS.svg)](https://github.com/weexteam/weex-devtool-iOS/issues) [![CocoaPods](https://img.shields.io/cocoapods/v/WXDevtool.svg?maxAge=2592000)]()
 
 伴随Weex的开源，业务线接入Weex Devtools也在持续增加，本文详细解说Devtools在ios平台如何集成。
 
