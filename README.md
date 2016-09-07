@@ -1,4 +1,4 @@
-# weex-devtool-iOS
+# weex-devtool-iOS [中文版](README-zh.md)
 Remote debug for your native iOS app using Chrome Developer Tools
 
 
