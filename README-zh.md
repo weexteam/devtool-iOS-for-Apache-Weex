@@ -44,11 +44,11 @@
   2. 按照如下图示：
    
 
-    ![drag](http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/def3b8c2d0379acb276a1880288c6d06)
+    ![drag](https://img.alicdn.com/tps/TB1MXjjNXXXXXXlXpXXXXXXXXXX-795-326.png)
 
      *直接拖动source目录源文件到目标工程中*
 
-    ![_](http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/68366d84dd9dbc3ecfd77e91f7284e12)
+    ![_](https://img.alicdn.com/tps/TB1A518NXXXXXbZXFXXXXXXXXXX-642-154.png)
 
      *按照红框中配置勾选*
 
@@ -63,13 +63,13 @@
         $:npm install -g weex-toolkit
         $:weex debug        
      
-   ![_](http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/b649894ffc3f2f6d8bf233cd8e38d138)
+   ![_](https://img.alicdn.com/tps/TB1qlDfNXXXXXauXpXXXXXXXXXX-1060-186.png)
 
    如果你能看到上面的结果，说明weex-devtool启动成功了。
 
    此命令安装之后会自动启动浏览器，打开调试主页面：
 
-  ![_](http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/4541aacaba2b706dcdeb46f02f97b941)
+  ![_](https://img.alicdn.com/tps/TB1aKy4NXXXXXacXVXXXXXXXXXX-1019-756.png)
      
  2. 如果按照方法一接入：framework的方式，添加头文件包含
  
@@ -123,7 +123,7 @@
         [WXDevTool launchDevToolDebugWithUrl:@"ws://30.30.31.7:8088/debugProxy/native"];
         
         
-       ![_](http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/39cfc174cc78e4c7aadd1c2d0d074819)
+       ![_](https://img.alicdn.com/tps/TB1mKeWNXXXXXaMaXXXXXXXXXXX-998-985.png)
     
     如果出现上面页面，恭喜你，WXDevtool集成完毕，so easy！
     
@@ -133,7 +133,7 @@
 
     如下图所示，当点击debug按钮时，js的运行环境会从手机端（JavaScriptCore）切换到chrome（V8），这时需要重新初始化weex环境，重新渲染页面。页面渲染是需要接入方在自己的页面添加。
          
-       ![_debug](http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/02b42b858ca117920983a8b5780f61c8)
+       ![_debug](https://img.alicdn.com/tps/TB1xRHhNXXXXXakXpXXXXXXXXXX-1498-668.png)
 
   + 什么场景下需要添加页面刷新功能?  
        + 点击debug按钮调试
@@ -205,7 +205,7 @@
 
    1. 日志级别控制
 
-      ![_](http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/c80d3a967ab48477a409fa0b2b7cf755)
+      ![_](https://img.alicdn.com/tps/TB1F8WONXXXXXa_apXXXXXXXXXX-1706-674.png)
      日志级别可以控制native端关于weex的日志。
 
      日记级别描述如下：
@@ -225,18 +225,18 @@
 
    2. Vdom/Native tree选择
 
-     <img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/5b05cc670dcc868d9e68964d6fc74c38"  alt="替代文本" title="标题文本" width="200"  />  
+     <img src="https://img.alicdn.com/tps/TB19Yq5NXXXXXXVXVXXXXXXXXXX-343-344.png"  alt="替代文本" title="标题文本" width="200"  />  
      *图一*
 
-     ![图二](http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/f0d9f46055522ad0d755fc64524a75c2 "图二")  
+     ![图二](https://img.alicdn.com/tps/TB1vomVNXXXXXcXaXXXXXXXXXXX-2072-1202.png "图二")  
     *图二*
     
    点击图一所示native选项会打开图二，方便查看native tree以及view property
 
-   ![vdom](http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/442a18bc1f19ca86064302cc294f03cb)
+   ![vdom](https://img.alicdn.com/tps/TB116y0NXXXXXXNaXXXXXXXXXXX-1448-668.png)
    *图三*
 
-   ![vdom_tree](http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/6950dc88e8c754dd1c95d9a9e40efcf4)  
+   ![vdom_tree](https://img.alicdn.com/tps/TB16frmNXXXXXa7XXXXXXXXXXXX-2106-1254.png)  
    *图四*
    
    点击图三所示vdom选项会打开图四，方便查看vdom tree以及component property
@@ -244,14 +244,14 @@
 
    3. debug调试开关手动控制
 
-    ![_debug](http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/771275e139225bc50e4a37683a0c9eac)
+    ![_debug](https://img.alicdn.com/tps/TB1eNSLNXXXXXcZapXXXXXXXXXX-650-72.png)
     *图五*
 
-    ![_debug](http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/48adec9ad9e26eae2af65a1f0d0d6f0c)
+    ![_debug](https://img.alicdn.com/tps/TB1XHPgNXXXXXauXpXXXXXXXXXX-654-96.png)
     *图六*
     
 
-   ![_debug_](http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/f0e6547676678b206f7cc0fda3c77a93)
+   ![_debug_](https://img.alicdn.com/tps/TB1mJO4NXXXXXa.XVXXXXXXXXXX-1422-382.png)
    *图七*
    
    OFF为关闭远程debug调试，反之ON为开启debug调试，点击打开debug时会自动打开图七所示页面，此时可以打开控制台调试js代码了
