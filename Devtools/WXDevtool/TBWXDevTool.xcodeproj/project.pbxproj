@@ -170,6 +170,8 @@
 		0AFA10101D2CEC3B006E30BB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AFA100F1D2CEC3B006E30BB /* UIKit.framework */; };
 		0AFA10121D2CEC42006E30BB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AFA10111D2CEC42006E30BB /* CoreGraphics.framework */; };
 		0AFA10141D2CEC49006E30BB /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AFA10131D2CEC49006E30BB /* CoreData.framework */; };
+		0AFE81D61D8102B800C99208 /* WXPageDomainUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AFE81D41D8102B800C99208 /* WXPageDomainUtility.h */; };
+		0AFE81D71D8102B800C99208 /* WXPageDomainUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AFE81D51D8102B800C99208 /* WXPageDomainUtility.m */; };
 		75C1C0A17938023E1B39089E /* libPods-TBWXDevTool.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A04B5D4DF9E863CD1DE1B075 /* libPods-TBWXDevTool.a */; };
 /* End PBXBuildFile section */
 
@@ -340,6 +342,8 @@
 		0AFA10111D2CEC42006E30BB /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		0AFA10131D2CEC49006E30BB /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		0AFA10151D2CEC58006E30BB /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
+		0AFE81D41D8102B800C99208 /* WXPageDomainUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXPageDomainUtility.h; sourceTree = "<group>"; };
+		0AFE81D51D8102B800C99208 /* WXPageDomainUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXPageDomainUtility.m; sourceTree = "<group>"; };
 		421E7FD57E17C231508BA514 /* Pods-TBWXDevTool.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBWXDevTool.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TBWXDevTool/Pods-TBWXDevTool.debug.xcconfig"; sourceTree = "<group>"; };
 		A04B5D4DF9E863CD1DE1B075 /* libPods-TBWXDevTool.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TBWXDevTool.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7CA78A41D406A09A4D0B154 /* Pods-TBWXDevTool.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBWXDevTool.release.xcconfig"; path = "Pods/Target Support Files/Pods-TBWXDevTool/Pods-TBWXDevTool.release.xcconfig"; sourceTree = "<group>"; };
@@ -425,6 +429,8 @@
 				0ADE97FC1D767BA5005781C1 /* WXPageDomain.m */,
 				0ADE97FD1D767BA5005781C1 /* WXPageTypes.h */,
 				0ADE97FE1D767BA5005781C1 /* WXPageTypes.m */,
+				0AFE81D41D8102B800C99208 /* WXPageDomainUtility.h */,
+				0AFE81D51D8102B800C99208 /* WXPageDomainUtility.m */,
 				0ADE97FF1D767BA5005781C1 /* WXProfilerDomain.h */,
 				0ADE98001D767BA5005781C1 /* WXProfilerDomain.m */,
 				0ADE97BB1D767B93005781C1 /* WXApplicationCacheDomain.h */,
@@ -655,6 +661,7 @@
 				0ADE97A81D767B6F005781C1 /* WXDOMDomainController.h in Headers */,
 				0A0102E31D35E25300F0D592 /* WXProfilerDomainController.h in Headers */,
 				0ADE97D71D767B93005781C1 /* WXDatabaseDomain.h in Headers */,
+				0AFE81D61D8102B800C99208 /* WXPageDomainUtility.h in Headers */,
 				0ADE97D11D767B93005781C1 /* WXConsoleTypes.h in Headers */,
 				0ADE97D91D767B93005781C1 /* WXDatabaseTypes.h in Headers */,
 				0A0298541D4B402400B4BC95 /* WXDevToolType.h in Headers */,
@@ -731,6 +738,7 @@
 				0AFA0EC81D2CE79E006E30BB /* Headers */,
 				0AFA0EC91D2CE79E006E30BB /* Resources */,
 				0E7A4E4982426C183183F465 /* [CP] Copy Pods Resources */,
+				0AFECA031D76C75E0035719C /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -817,6 +825,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "#!/bin/sh\n\nexport LANG=en_US.UTF-8\n\n# capture ERR signal\ntrap 'exit 2' ERR\n\nBUILD_CONFIG=Release\n\nrm -rf Products/*\n                \nDEVICE_ARCHS=\"$1\"\n[ -z \"$DEVICE_ARCHS\" ] && {\n    DEVICE_ARCHS=\"armv7 arm64\";\n};\n\necho \"ARCHS: $DEVICE_ARCHS\"\necho \"\"\n\nfor arch in $DEVICE_ARCHS; do\nBUILD_ARCHS=\"$BUILD_ARCHS -arch $arch\"\ndone\n\n\nfiles=`ls`\nWORKSPACE=\nPROJECT=\nfor file in $files\ndo\nif [ `echo $file|grep 'xcworkspace'` ];then\nWORKSPACE=$file\necho \"=> found xcode workspace : '$WORKSPACE'\"\nelif [ `echo $file|grep 'xcodeproj'` ];then\nPROJECT=$file\necho \"=> found xocde project : '$PROJECT'\"\nfi\ndone;\n\nPROJECT=`ls .|grep xcodeproj|cut -d. -f1`\nSRCROOT=.\n\n#SCHEMES=`xcodebuild -list |sed -n '/Schemes/,$p' | awk 'NR>1'`\nSCHEME='TBWXDevTool'\n\n# Sets the target folders and the final framework product.\nFRAMEWORK_NAME=`xcodebuild -sdk iphoneos -showBuildSettings|grep 'PRODUCT_NAME'|awk 'NR>1'|awk -F '=' '{print $2}'|awk 'gsub(/^ *| *$/,\"\")'`\necho \"FRAMEWORK_NAME=>${FRAMEWORK_NAME}\"\n\nFRAMEWORK_VERSION=1.0\nFRAMEWORK_CONFIG=$BUILD_CONFIG\n[ -z $BUILD_CONFIG ] && {\n    FRAMEWORK_CONFIG=Debug;\n}\n\necho \"Building configuration \\`$FRAMEWORK_CONFIG'\"\n\n# The products directory will be creates when building the project.\nPRODUCT_DIR=Products\n[[ ! -d \"$PRODUCT_DIR\" ]] && { mkdir -pv \"$PRODUCT_DIR\"; }\n\n\n# DEVICE_FRAMEWORK=${PRODUCT_DIR}/${FRAMEWORK_CONFIG}-iphoneos/${FRAMEWORK_NAME}.framework\n# SIMULATOR_FRAMEWORK=${PRODUCT_DIR}/${FRAMEWORK_CONFIG}-iphonesimulator/${FRAMEWORK_NAME}.framework\n\n# Building both architectures.\nset -o history -o histexpand\nBUILD_SETTINGS=\nif [ $WORKSPACE ];then\nxcodebuild clean build -workspace $WORKSPACE -configuration \"${FRAMEWORK_CONFIG}\" -scheme \"${SCHEME}\" -sdk iphoneos $BUILD_ARCHS\nBUILD_SETTINGS=$(xcodebuild clean build -workspace $WORKSPACE -configuration \"${FRAMEWORK_CONFIG}\" -scheme \"${SCHEME}\" -sdk iphoneos $BUILD_ARCHS -showBuildSettings 2>/dev/null)\necho $BUILD_SETTINGS\neval \"$(echo \"$BUILD_SETTINGS\" | grep BUILT_PRODUCTS_DIR | grep \" = \" | sed \"s/ = /=/g\" | sed \"s/    //g\")\"\nelse\nxcodebuild clean build -configuration \"${FRAMEWORK_CONFIG}\" -scheme \"${SCHEME}\" -sdk iphoneos $BUILD_ARCHS\nBUILD_SETTINGS=$(xcodebuild clean build -configuration \"${FRAMEWORK_CONFIG}\" -scheme \"${SCHEME}\" -sdk iphoneos $BUILD_ARCHS -showBuildSettings 2>/dev/null)\neval \"$(echo \"$BUILD_SETTINGS\" | grep BUILT_PRODUCTS_DIR | grep \" = \" | sed \"s/ = /=/g\" | sed \"s/    //g\")\"\nfi\necho \"==》BUILT_PRODUCTS_DIR: ${BUILT_PRODUCTS_DIR} \"\nDEVICE_FRAMEWORK=${BUILT_PRODUCTS_DIR}/${FRAMEWORK_NAME}.framework\n\n\nset -o history -o histexpand\nif [ $WORKSPACE ];then\nxcodebuild clean build -workspace $WORKSPACE -configuration \"${FRAMEWORK_CONFIG}\" -scheme \"${SCHEME}\" -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6s'\nBUILD_SETTINGS=$(xcodebuild clean build -workspace $WORKSPACE -configuration \"${FRAMEWORK_CONFIG}\" -scheme \"${SCHEME}\" -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6s' -showBuildSettings 2>/dev/null)\necho $BUILD_SETTINGS\neval \"$(echo \"$BUILD_SETTINGS\" | grep BUILT_PRODUCTS_DIR | grep \" = \" | sed \"s/ = /=/g\" | sed \"s/    //g\")\"\nelse\nxcodebuild clean build  -configuration \"${FRAMEWORK_CONFIG}\" -scheme \"${SCHEME}\" -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6s'\nBUILD_SETTINGS=$(xcodebuild clean build  -configuration \"${FRAMEWORK_CONFIG}\" -scheme \"${SCHEME}\" -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6s' -showBuildSettings 2>/dev/null)\necho $BUILD_SETTINGS\neval \"$(echo \"$BUILD_SETTINGS\" | grep BUILT_PRODUCTS_DIR | grep \" = \" | sed \"s/ = /=/g\" | sed \"s/    //g\")\"\nfi\necho \"==》BUILT_PRODUCTS_DIR: ${BUILT_PRODUCTS_DIR} \"\nSIMULATOR_FRAMEWORK=${BUILT_PRODUCTS_DIR}/${FRAMEWORK_NAME}.framework\n\n\n# Copies the headers files to the final product folder.\ncp -r \"${SIMULATOR_FRAMEWORK}\" \"${PRODUCT_DIR}\"\n\n# Uses the Lipo Tool to merge both binary files (i386 + armv7) into one Universal final product.\necho \"\"\nrm -f \"${PRODUCT_DIR}/${FRAMEWORK_NAME}.framework/${FRAMEWORK_NAME}\"\necho \"Use 'lipo' to create fat binary(i386+arm).\"\nlipo -create \"${DEVICE_FRAMEWORK}/${FRAMEWORK_NAME}\" \"${SIMULATOR_FRAMEWORK}/${FRAMEWORK_NAME}\" -output \"${PRODUCT_DIR}/${FRAMEWORK_NAME}.framework/${FRAMEWORK_NAME}\"\n\n\n# Removes the temporary files.\necho \"Clean temporary files.\"\nfind $PRODUCT_DIR -depth 1 | grep \"Debug\\|Release\" | xargs rm -rf\n\necho \"\\nBUILD FINISH.\"\n\nexit 0\n";
+		};
+		0AFECA031D76C75E0035719C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\n\nFMK_NAME=${PROJECT_NAME}\n\nINSTALL_DIR=${BUILD_DIR}/Release-iphoneos/${FMK_NAME}.framework\n\nMAIN=\"main\"\n\nMAIN_JS=${INSTALL_DIR}/${MAIN}.js\n\nif [ -e \"$MAIN_JS\" ]; then\n    rm \"$MAIN_JS\"\nfi\n\nRESOURCE=\"Resources\"\nRESOURCE_DIR=${INSTALL_DIR}/$RESOURCE\nif [ -d \"$RESOURCE_DIR\" ]; then\n    rm -rf \"$RESOURCE_DIR\"\nfi\n\nfor pngFile in ${INSTALL_DIR}/*; do\n    if [[ $pngFile =~ (.*)png ]]; then\n        rm \"$pngFile\"\n        break;\n    fi\ndone\n";
 		};
 		0E7A4E4982426C183183F465 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -932,6 +953,7 @@
 				0ADE98141D767BA5005781C1 /* WXIndexedDBDomain.m in Sources */,
 				0ABDFC701D3C7B6900206418 /* WXDebugDomain.m in Sources */,
 				0ADE980A1D767BA5005781C1 /* WXDOMStorageDomain.m in Sources */,
+				0AFE81D71D8102B800C99208 /* WXPageDomainUtility.m in Sources */,
 				0ADE980C1D767BA5005781C1 /* WXDOMStorageTypes.m in Sources */,
 				0ADE98441D767BB7005781C1 /* WXWebGLTypes.m in Sources */,
 				0ADE97761D767B62005781C1 /* NSArray+WXRuntimePropertyDescriptor.m in Sources */,
@@ -1002,6 +1024,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -1043,6 +1066,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -1063,7 +1087,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 421E7FD57E17C231508BA514 /* Pods-TBWXDevTool.debug.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEAD_CODE_STRIPPING = NO;
 				DEFINES_MODULE = YES;
@@ -1071,6 +1094,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GCC_PREFIX_HEADER = "$(SRCROOT)/WXDevTool/Source/Supporting Files/TBWXDevTool.pch";
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				INFOPLIST_FILE = WXDevTool/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
@@ -1094,7 +1118,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B7CA78A41D406A09A4D0B154 /* Pods-TBWXDevTool.release.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEAD_CODE_STRIPPING = NO;
 				DEFINES_MODULE = YES;
@@ -1102,6 +1125,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GCC_PREFIX_HEADER = "$(SRCROOT)/WXDevTool/Source/Supporting Files/TBWXDevTool.pch";
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				INFOPLIST_FILE = WXDevTool/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;

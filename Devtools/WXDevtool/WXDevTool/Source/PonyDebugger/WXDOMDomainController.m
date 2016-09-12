@@ -12,9 +12,10 @@
 #import "WXDOMDomainController.h"
 #import "WXInspectorDomainController.h"
 #import "WXRuntimeTypes.h"
-#import <WeexSDK/WXSDKManager.h>
-#import <WeexSDK/WXSDKInstance.h>
-#import <WeexSDK/WXBridgeManager.h>
+#import "WXPageDomainController.h"
+#import "WXPageDomainUtility.h"
+
+#import <WeexSDK/WeexSDK.h>
 
 #import <objc/runtime.h>
 #import <QuartzCore/QuartzCore.h>
@@ -341,6 +342,136 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
     callback(@([objectId intValue]), nil);
 }
 
+- (void)domain:(WXDOMDomain *)domain getBoxModelNodeId:(NSString *)nodeId callback:(void (^)(WXDOMBoxModel *boxModel, id error))callback
+{
+    CGFloat scale = [WXPageDomainController defaultInstance].domain.screenScaleFactor;
+    UIView *objectForNodeId;
+    if ([WXDebugger isVDom]) {
+        NSString *nodeIdStr = [NSString stringWithFormat:@"%ld",(long)[nodeId integerValue]];
+        objectForNodeId = [self.objectsForComponentRefs objectForKey:nodeIdStr];
+    } else {
+        objectForNodeId = [self.objectsForNodeIds objectForKey:nodeId];
+    }
+    UIView *view = [WXPageDomainUtility getCurrentVC].view;
+    CGRect changeRect = [objectForNodeId.superview convertRect:objectForNodeId.frame toView:view];
+    NSNumber *width = [NSNumber numberWithInteger:objectForNodeId.frame.size.width / WXScreenResizeRadio()];
+    NSNumber *height = [NSNumber numberWithInteger:objectForNodeId.frame.size.height / WXScreenResizeRadio()];
+    CGFloat left = changeRect.origin.x * scale;
+    CGFloat top = changeRect.origin.y * scale;
+    CGFloat right = left + objectForNodeId.frame.size.width * scale;
+    CGFloat bottom = top + objectForNodeId.frame.size.height * scale;
+    
+    CGFloat paddingLeft = 0;
+    CGFloat paddingRight = 0;
+    CGFloat paddingTop = 0;
+    CGFloat paddingBottom = 0;
+    
+//    UIEdgeInsets marginView = [objectForNodeId layoutMargins];
+    CGFloat marginLeft = 0;//marginView.left * scale;
+    CGFloat marginRight = 0;//marginView.right * scale;
+    CGFloat marginTop = 0;//marginView.top * scale;
+    CGFloat marginBottom = 0;//marginView.bottom * scale;
+    
+    CGFloat borderLeftWidth = 0;
+    CGFloat borderRightWidth = 0;
+    CGFloat borderTopWidth = 0;
+    CGFloat borderBottomWidth = 0;
+    
+    NSArray *content = @[@(left + borderLeftWidth + paddingLeft),
+                         @(top + borderTopWidth + paddingTop),
+                         @(right - borderRightWidth - paddingRight),
+                         @(top + borderTopWidth + paddingTop),
+                         @(right - borderRightWidth - paddingRight),
+                         @(bottom - borderBottomWidth - paddingBottom),
+                         @(left + borderLeftWidth + paddingLeft),
+                         @(bottom - borderBottomWidth - paddingBottom)];
+    NSArray *padding = @[@(left + borderLeftWidth),
+                         @(top + borderTopWidth),
+                         @(right - borderRightWidth),
+                         @(top + borderTopWidth),
+                         @(right - borderRightWidth),
+                         @(bottom - borderBottomWidth),
+                         @(left + borderLeftWidth),
+                         @(bottom - borderBottomWidth)];
+    NSArray *border = @[@(left),
+                        @(top),
+                        @(right),
+                        @(top),
+                        @(right),
+                        @(bottom),
+                        @(left),
+                        @(bottom)];
+    NSArray *margin = @[@(left - marginLeft),
+                       @(top - marginTop),
+                       @(right + marginRight),
+                       @(top - marginTop),
+                       @(right + marginRight),
+                       @(bottom + marginBottom),
+                       @(left - marginLeft),
+                       @(bottom + marginBottom)];
+    
+    WXDOMBoxModel *model = [[WXDOMBoxModel alloc] init];
+    model.width = width;
+    model.height = height;
+    model.content = content;
+    model.padding = padding;
+    model.margin = margin;
+    model.border = border;
+    callback(model, nil);
+    
+}
+
+- (void)domain:(WXDOMDomain *)domain getNodeForLocationX:(NSNumber *)locationX locationY:(NSNumber *)locationY callback:(void (^)(NSNumber *nodeId, id error))callback
+{
+    UIView *selectView;
+    UIView *rootView;
+    NSNumber *nodeId = nil;
+    CGPoint point = CGPointMake(locationX.floatValue, locationY.floatValue);
+    rootView = [WXPageDomainUtility getCurrentVC].view;
+    selectView = [self p_point:point withRootView:rootView];
+    if ([WXDebugger isVDom]) {
+        if (selectView.wx_ref) {
+            nodeId = [self _getRealNodeIdWithComponentRef:selectView.wx_ref];
+        }
+        callback(nodeId, nil);
+    } else {
+        nodeId = [self.nodeIdsForObjects objectForKey:[NSValue valueWithNonretainedObject:selectView]];
+        callback(nodeId, nil);
+    }
+}
+
+
+- (UIView *)p_point:(CGPoint)point withRootView:(UIView *)rootView;
+{
+    if (!rootView || (!CGRectEqualToRect(rootView.frame, CGRectZero) && !CGRectContainsPoint([self changeRectFromView:rootView], point))) {
+        return nil;
+    }
+    if (rootView.subviews.count > 0) {
+        UIView *tempView;
+        for (UIView *subView in [rootView.subviews reverseObjectEnumerator]) {
+            if (CGRectEqualToRect(subView.frame, CGRectZero) || CGRectContainsPoint([self changeRectFromView:subView], point)) {
+                UIView *returnView = [self p_point:point withRootView:subView];
+                if (!returnView) {
+                    tempView = subView;
+                }else {
+                    return returnView;
+                }
+            }
+        }
+        return tempView;
+    }
+    return nil;
+}
+
+- (CGRect)changeRectFromView:(UIView *)view
+{
+    UIView *toView = [WXPageDomainUtility getCurrentVC].view;
+    if ([view isEqual:toView]) {
+        return view.frame;
+    }
+    return [view.superview convertRect:view.frame toView:toView];
+}
+
 #pragma mark - Gesture Moving and Resizing
 
 - (void)handleMovePanGesure:(UIPanGestureRecognizer *)panGR;
@@ -563,42 +694,6 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
 
 - (void)addView:(UIView *)view;
 {
-/*
-    if ([self shouldIgnoreView:view]) {
-        return;
-    }
-    NSValue *value = nil;
-    @try {
-        value = [view valueForKeyPath:@"wx_ref"];
-        if (value) {
-            NSString *key = [self stringForValue:value atKeyPath:@"wx_ref" onObject:view];
-            WXComponent *corrComponent = [self _getComponentFromRef:key];
-            WXComponent *parentComponent = corrComponent.supercomponent;
-            WXComponent *previousComponent = nil;
-            NSNumber *parentNodeId = [NSNumber numberWithFloat:[parentComponent.ref floatValue]];
-            NSNumber *previousNodeId = nil;
-            if (parentComponent && [self.objectsForComponentRefs objectForKey:parentComponent.ref]) {
-                WXDOMNode *node = [self nodeForComponent:corrComponent];
-                NSUInteger indexOfComponent = [parentComponent.subcomponents indexOfObject:corrComponent];
-                if (indexOfComponent <[parentComponent.subcomponents count] - 1) {
-                    previousComponent = [parentComponent.subcomponents objectAtIndex:indexOfComponent + 1];
-                    previousNodeId = [NSNumber numberWithFloat:[previousComponent.ref floatValue]];
-                }
-                [self.domain childNodeInsertedWithParentNodeId:parentNodeId previousNodeId:previousNodeId node:node];
-            } else if ([corrComponent.ref isEqualToString:@"_root"]) {
-                WXDOMNode *node = [self rootVirElementWithInstance:nil];
-                [self startTrackingView:view withComponentRef:corrComponent.ref];
-                [self.domain childNodeInsertedWithParentNodeId:@(1) previousNodeId:previousNodeId node:node];
-            }
-        }
-    }
-    @catch (NSException *exception) {
-        
-    }
-    @finally {
-        
-    }
-*/
     // Bail early if we're ignoring this view or if the document hasn't been requested yet
     if ([self shouldIgnoreView:view] || !self.objectsForNodeIds) {
         return;
@@ -636,7 +731,7 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
         NSArray *windows = [[UIApplication sharedApplication] windows];
         NSUInteger indexOfWindow = [windows indexOfObject:view];
         
-        if (indexOfWindow > 0) {
+        if (indexOfWindow > 0 && indexOfWindow < windows.count - 1) {
             UIWindow *previousWindow = [windows objectAtIndex:indexOfWindow - 1];
             previousNodeId = [self.nodeIdsForObjects objectForKey:[NSValue valueWithNonretainedObject:previousWindow]];
         }
@@ -1363,20 +1458,37 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
 
 - (void)devtool_swizzled_addSubview:(UIView *)subview
 {
-    [self devtool_swizzled_addSubview:subview];
-    [[WXDOMDomainController defaultInstance] addVDomTreeWithView:subview];
+    if (![WXDebugger isVDom]) {
+        [[WXDOMDomainController defaultInstance] removeView:subview];
+        [self devtool_swizzled_addSubview:subview];
+        [[WXDOMDomainController defaultInstance] addView:subview];
+    } else {
+        [self devtool_swizzled_addSubview:subview];
+        [[WXDOMDomainController defaultInstance] addVDomTreeWithView:subview];
+    }
 }
 
 - (void)devtool_swizzled_insertSubview:(UIView *)view atIndex:(NSInteger)index;
 {
-    [self devtool_swizzled_insertSubview:view atIndex:index];
-    [[WXDOMDomainController defaultInstance] addVDomTreeWithView:view];
+    if (![WXDebugger isVDom]) {
+        [[WXDOMDomainController  defaultInstance] removeView:view];
+        [self devtool_swizzled_insertSubview:view atIndex:index];
+        [[WXDOMDomainController defaultInstance] addView:view];
+    } else {
+        [self devtool_swizzled_insertSubview:view atIndex:index];
+        [[WXDOMDomainController defaultInstance] addVDomTreeWithView:view];
+    }
 }
 
 - (void)devtool_swizzled_removeFromSuperview
 {
-    [self devtool_swizzled_removeFromSuperview];
-    [[WXDOMDomainController defaultInstance] removeVDomTreeWithView:self];
+    if (![WXDebugger isVDom]) {
+        [[WXDOMDomainController defaultInstance] removeView:self];
+        [self devtool_swizzled_removeFromSuperview];
+    } else {
+        [self devtool_swizzled_removeFromSuperview];
+        [[WXDOMDomainController defaultInstance] removeVDomTreeWithView:self];
+    }
 }
 
 

@@ -165,3 +165,84 @@
  
 @end
 
+@implementation WXScreencastFrameMetadata
+
++ (NSDictionary *)keysToEncode;
+{
+    static NSDictionary *mappings = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        mappings = [[NSDictionary alloc] initWithObjectsAndKeys:
+                    @"offsetTop",@"offsetTop",
+                    @"pageScaleFactor",@"pageScaleFactor",
+                    @"deviceWidth",@"deviceWidth",
+                    @"deviceHeight",@"deviceHeight",
+                    @"scrollOffsetX",@"scrollOffsetX",
+                    @"scrollOffsetY",@"scrollOffsetY",
+                    @"timestamp",@"timestamp",
+                    nil];
+    });
+    
+    return mappings;
+}
+
+@dynamic offsetTop;
+@dynamic pageScaleFactor;
+@dynamic deviceWidth;
+@dynamic deviceHeight;
+@dynamic scrollOffsetX;
+@dynamic scrollOffsetY;
+@dynamic timestamp;
+
+@end
+
+@implementation WXScreencastFrame
+
++ (NSDictionary *)keysToEncode;
+{
+    static NSDictionary *mappings = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        mappings = [[NSDictionary alloc] initWithObjectsAndKeys:
+                    @"data",@"data",
+                    @"metadata",@"metadata",
+                    @"sessionId",@"sessionId",
+                    nil];
+    });
+    
+    return mappings;
+}
+
+@dynamic data;
+@dynamic metadata;
+@dynamic sessionId;
+
+@end
+
+@implementation WXStartScreencast
+
++ (NSDictionary *)keysToEncode;
+{
+    static NSDictionary *mappings = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        mappings = [[NSDictionary alloc] initWithObjectsAndKeys:
+                    @"format",@"format",
+                    @"quality",@"quality",
+                    @"maxWidth",@"maxWidth",
+                    @"maxHeight",@"maxHeight",
+                    @"everyNthFrame",@"everyNthFrame",
+                    nil];
+    });
+    
+    return mappings;
+}
+
+@dynamic format;
+@dynamic quality;
+@dynamic maxWidth;
+@dynamic maxHeight;
+@dynamic everyNthFrame;
+
+@end
+

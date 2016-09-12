@@ -8,8 +8,7 @@
 
 #import "WXDebugDomainController.h"
 #import "WXDevToolType.h"
-#import <WeexSDK/WXLog.h>
-#import <WeexSDK/WXSDKEngine.h>
+#import <WeexSDK/WeexSDK.h>
 
 @implementation WXDebugDomainController
 @dynamic domain;
@@ -70,6 +69,7 @@
         [WXDebugger setVDom:YES];
     }
 }
+
 
 
 @end

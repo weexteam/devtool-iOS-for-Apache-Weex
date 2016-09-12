@@ -13,17 +13,25 @@
 #import "WXPageDomain.h"
 #import "WXObject.h"
 #import "WXPageTypes.h"
+#import "WXPageDomainUtility.h"
 #import "WXRuntimeTypes.h"
+
+static BOOL observing = NO;
+static NSString * const WXScreencastChangeNotification = @"WXScreencastChangeNotification";
 
 @interface WXPageDomain ()
 //Commands
 
 @property (nonatomic, strong)WXPageFrameResourceTree *testFrameTree;
 
+@property (nonatomic, strong)WXStartScreencast *startScreencast;
+
 @end
 
 @implementation WXPageDomain
 @synthesize testFrameTree;
+@synthesize startScreencast;
+@synthesize screenScaleFactor;
 
 @dynamic delegate;
 
@@ -99,6 +107,75 @@
     NSDictionary *version = @{@"versions":[NSArray array]};
     [self.debuggingServer sendEventWithName:@"ServiceWorker.workerVersionUpdated" parameters:version];
 }
+
+
+- (void)screencastFormat:(NSString *)format Quality:(NSNumber *)quality scaleFactor:(CGFloat)scaleFactor
+{
+    __weak typeof(self) weakSelf = self;
+    WXPerformBlockOnScreencastThread(^{
+        NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:1];
+        UIImage *screenImage = [WXPageDomainUtility screencastDataScale:scaleFactor];
+        NSData *imageData = UIImageJPEGRepresentation(screenImage, [quality floatValue]);
+        NSString *codeImage = [imageData base64EncodedStringWithOptions:0];
+        [params setObject:codeImage forKey:@"data"];
+        
+        NSMutableDictionary *metaData = [WXPageDomainUtility screencastMetaDataWithScale:scaleFactor];
+        [metaData setObject:[NSNumber numberWithInteger:screenImage.size.width] forKey:@"deviceWidth"];
+        [metaData setObject:[NSNumber numberWithInteger:screenImage.size.height] forKey:@"deviceHeight"];
+        [params setObject:metaData forKey:@"metadata"];
+        
+        [params setObject:[NSNumber numberWithInteger:1] forKey:@"sessionId"];
+        
+        [weakSelf.debuggingServer sendEventWithName:@"Page.screencastFrame" parameters:params];
+    });
+}
+
+- (void)screencastFrame:(NSNotification *)notification
+{
+    if (self.startScreencast) {
+        [self screencastFormat:self.startScreencast.format
+                       Quality:self.startScreencast.quality
+                      scaleFactor:self.screenScaleFactor];
+    }
+}
+
+#pragma mark -
+- (void)startObserving
+{
+    if (observing == NO) {
+        [self swizzledFrameChangeMethod];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(screencastFrame:) name:WXScreencastChangeNotification object:nil];
+        observing = YES;
+    }
+}
+
+- (void)stopObserving
+{
+    if (observing == YES) {
+        [self swizzledFrameChangeMethod];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:WXScreencastChangeNotification object:nil];
+        observing = NO;
+    }
+}
+
+- (void)swizzledFrameChangeMethod
+{
+    Method original, swizzle;
+    Class viewClass = [UIView class];
+    original = class_getInstanceMethod(viewClass, @selector(setNeedsLayout));
+    swizzle = class_getInstanceMethod(viewClass, sel_registerName("devtool_setNeedsLayout"));
+    method_exchangeImplementations(original, swizzle);
+    
+    original = class_getInstanceMethod(viewClass, @selector(setNeedsDisplay));
+    swizzle = class_getInstanceMethod(viewClass, sel_registerName("devtool_setNeedsDisplay"));
+    method_exchangeImplementations(original, swizzle);
+    
+    original = class_getInstanceMethod(viewClass, @selector(setFrame:));
+    swizzle = class_getInstanceMethod(viewClass, sel_registerName("devtool_setFrame:"));
+    method_exchangeImplementations(original, swizzle);
+}
+
+#pragma mark - handleMethod
 
 - (void)handleMethodWithName:(NSString *)methodName parameters:(NSDictionary *)params responseCallback:(WXResponseCallback)responseCallback;
 {
@@ -270,6 +347,33 @@
         [self.delegate domain:self setTouchEmulationEnabledWithEnabled:[params objectForKey:@"enabled"] callback:^(id error) {
             responseCallback(nil, error);
         }];
+    } else if ([methodName isEqualToString:@"startScreencast"] && [self.delegate respondsToSelector:@selector(domain:startScreencastWithcallback:)]) {
+        [self.delegate domain:self startScreencastWithcallback:^(id error) {
+            NSNumber *maxWidth = [params objectForKey:@"maxWidth"];
+            NSNumber *maxHeight = [params objectForKey:@"maxHeight"];
+            if (!self.startScreencast) {
+                self.startScreencast = [[WXStartScreencast alloc] init];
+            }
+            self.startScreencast.quality = [params objectForKey:@"quality"];
+            self.startScreencast.format = [params objectForKey:@"format"];
+            
+            CGRect rect = [WXPageDomainUtility getCurrentVC].view.frame;
+            CGFloat deviceWidth = rect.size.width;
+            CGFloat deviceHeight = rect.size.height;
+            CGFloat scaleFactorWidth = maxWidth.floatValue/deviceWidth;
+            CGFloat scaleFactorHeight = maxHeight.floatValue/deviceHeight;
+            CGFloat scaleFactor = (scaleFactorWidth < scaleFactorHeight) ? scaleFactorWidth : scaleFactorHeight;
+            self.screenScaleFactor = scaleFactor;
+            [self screencastFormat:[params objectForKey:@"format"] Quality:[params objectForKey:@"format"] scaleFactor:scaleFactor];
+            
+            [self startObserving];
+            responseCallback(nil, error);
+        }];
+    } else if ([methodName isEqualToString:@"stopScreencast"] && [self.delegate respondsToSelector:@selector(domain:stopScreencastWithcallback:)]) {
+        [self.delegate domain:self stopScreencastWithcallback:^(id error) {
+            responseCallback(nil, error);
+            [self stopObserving];
+        }];
     } else {
         [super handleMethodWithName:methodName parameters:params responseCallback:responseCallback];
     }
@@ -283,6 +387,36 @@
 - (WXPageDomain *)pageDomain;
 {
     return [self domainForName:@"Page"];
+}
+
+@end
+
+@implementation UIView (ScreencastChange)
+
+- (void)devtool_setNeedsLayout
+{
+    [self devtool_setNeedsLayout];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(postNotificationScreencastChangeNotification) object:nil];
+    [self performSelector:@selector(postNotificationScreencastChangeNotification) withObject:nil afterDelay:0.1];
+}
+
+- (void)devtool_setNeedsDisplay
+{
+    [self devtool_setNeedsDisplay];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(postNotificationScreencastChangeNotification) object:nil];
+    [self performSelector:@selector(postNotificationScreencastChangeNotification) withObject:nil afterDelay:0.1];
+}
+
+- (void)devtool_setFrame:(CGRect)frame
+{
+    [self devtool_setFrame:frame];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(postNotificationScreencastChangeNotification) object:nil];
+    [self performSelector:@selector(postNotificationScreencastChangeNotification) withObject:nil afterDelay:0.1];
+}
+
+- (void)postNotificationScreencastChangeNotification
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:WXScreencastChangeNotification object:nil];
 }
 
 @end

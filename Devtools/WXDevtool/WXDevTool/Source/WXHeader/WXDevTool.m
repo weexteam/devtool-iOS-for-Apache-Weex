@@ -7,9 +7,9 @@
  */
 
 #import "WXDevTool.h"
-#import <WeexSDK/WXSDKEngine.h>
 #import "WXDebugger.h"
 #import "WXDevToolType.h"
+#import <WeexSDK/WeexSDK.h>
 
 @implementation WXDevTool
 

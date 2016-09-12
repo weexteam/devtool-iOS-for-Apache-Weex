@@ -11,7 +11,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
-#import <WeexSDK/WXBridgeProtocol.h>
+#import <WeexSDK/WeexSDK.h>
 
 #pragma mark - Preprocessor
 

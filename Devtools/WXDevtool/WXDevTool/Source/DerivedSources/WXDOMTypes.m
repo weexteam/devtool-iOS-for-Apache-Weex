@@ -143,3 +143,31 @@
  
 @end
 
+@implementation WXDOMBoxModel
+
++ (NSDictionary *)keysToEncode;
+{
+    static NSDictionary *mappings = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        mappings = [[NSDictionary alloc] initWithObjectsAndKeys:
+                    @"content",@"content",
+                    @"padding",@"padding",
+                    @"border",@"border",
+                    @"margin",@"margin",
+                    @"width",@"width",
+                    @"height",@"height",
+                    nil];
+    });
+    
+    return mappings;
+}
+
+@dynamic content;
+@dynamic padding;
+@dynamic border;
+@dynamic margin;
+@dynamic width;
+@dynamic height;
+
+@end

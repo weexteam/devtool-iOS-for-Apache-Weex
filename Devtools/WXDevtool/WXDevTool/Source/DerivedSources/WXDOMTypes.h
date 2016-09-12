@@ -160,4 +160,20 @@
 
 @end
 
+@interface WXDOMBoxModel : WXObject
+
+@property (nonatomic, strong) NSArray *content;
+
+@property (nonatomic, strong) NSArray *padding;
+
+@property (nonatomic, strong) NSArray *border;
+
+@property (nonatomic, strong) NSArray *margin;
+
+@property (nonatomic, strong) NSNumber *width;
+
+@property (nonatomic, strong) NSNumber *height;
+
+@end
+
 

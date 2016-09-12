@@ -11,6 +11,7 @@
 
 #import "WXObject.h"
 #import "WXDebugger.h"
+#import "WXDOMTypes.h"
 #import "WXDynamicDebuggerDomain.h"
 
 @class WXRuntimeRemoteObject;
@@ -238,6 +239,12 @@
 
 // Marks last undoable state.
 - (void)domain:(WXDOMDomain *)domain markUndoableStateWithCallback:(void (^)(id error))callback;
+
+//get BoxModel on screencast
+- (void)domain:(WXDOMDomain *)domain getBoxModelNodeId:(NSString *)nodeId callback:(void (^)(WXDOMBoxModel *boxModel, id error))callback;
+
+//get NodeForLocation on screencast
+- (void)domain:(WXDOMDomain *)domain getNodeForLocationX:(NSNumber *)locationX locationY:(NSNumber *)locationY callback:(void (^)(NSNumber *nodeId, id error))callback;
 
 @end
 

@@ -30,10 +30,8 @@
 #import "WXDebugDomainController.h"
 #import "WXDevToolType.h"
 
-#import <WeexSDK/WXAppConfiguration.h>
 #import "WXDeviceInfo.h"
-#import <WeexSDK/WXSDKEngine.h>
-#import <WeexSDK/WXUtility.h>
+#import <WeexSDK/WeexSDK.h>
 
 #import <objc/runtime.h>
 #import <objc/message.h>
@@ -504,10 +502,12 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
     [self _executionDebugAry];
 }
 
-- (void)callJSMethod:(NSString *)method args:(NSArray *)args {
+- (JSValue *)callJSMethod:(NSString *)method args:(NSArray*)args {
     NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-    [params setObject:method forKey:@"method"];
-    [params setObject:args forKey:@"args"];
+    NSString *nonullMethod = method ? : @"";
+    NSArray *nonullArgs = args ? : [NSArray array];
+    [params setObject:nonullMethod forKey:@"method"];
+    [params setObject:nonullArgs forKey:@"args"];
     
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     [dict setObject:@"WxDebug.callJS" forKey:@"method"];
@@ -515,6 +515,7 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
     
     [_debugAry addObject:[WXUtility JSONString:dict]];
     [self _executionDebugAry];
+    return nil;
 }
 
 - (void)registerCallNative:(WXJSCallNative)callNative

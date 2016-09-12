@@ -392,6 +392,22 @@
         [self.delegate domain:self markUndoableStateWithCallback:^(id error) {
             responseCallback(nil, error);
         }];
+    } else if ([methodName isEqualToString:@"getBoxModel"] && [self.delegate respondsToSelector:@selector(domain:getBoxModelNodeId:callback:)]) {
+        [self.delegate domain:self getBoxModelNodeId:[params objectForKey:@"nodeId"] callback:^(WXDOMBoxModel *boxModel, id error) {
+            NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:1];
+            [params setObject:[boxModel WX_JSONObjectCopy] forKey:@"model"];
+            responseCallback(params, error);
+        }];
+    } else if ([methodName isEqualToString:@"getNodeForLocation"] && [self.delegate respondsToSelector:@selector(domain:getNodeForLocationX:locationY:callback:)]) {
+        [self.delegate domain:self getNodeForLocationX:[params objectForKey:@"x"] locationY:[params objectForKey:@"y"] callback:^(NSNumber *nodeId, id error) {
+            NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:1];
+            
+            if (nodeId != nil) {
+                [params setObject:nodeId forKey:@"nodeId"];
+            }
+            
+            responseCallback(params, error);
+        }];
     } else {
         [super handleMethodWithName:methodName parameters:params responseCallback:responseCallback];
     }

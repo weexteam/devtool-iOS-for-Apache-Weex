@@ -9,9 +9,7 @@
 #import "WXCSSDomainController.h"
 #import "WXDOMDomainController.h"
 #import "WXCSSTypes.h"
-#import <WeexSDK/WXComponent.h>
-#import <WeexSDK/WXSDKInstance.h>
-#import <WeexSDK/WXUtility.h>
+#import <WeexSDK/WeexSDK.h>
 
 @implementation WXCSSDomainController
 @dynamic domain;
@@ -107,7 +105,7 @@
                         for (int i = 0; i < property.count; i++) {
                             WXCSSCSSProperty *cssProperty = [[WXCSSCSSProperty alloc] init];
                             cssProperty.name = names[i];
-                            cssProperty.value = property[names[i]];
+                            cssProperty.value = [NSString stringWithFormat:@"%@px",[self _toPixelFromPoint:property[names[i]]]];
                             [cssText appendString:[NSString stringWithFormat:@"%@:%@;",cssProperty.name,cssProperty.value]];
                             [cssProperties addObject:[cssProperty WX_JSONObject]];
                         }
@@ -264,16 +262,16 @@
 
 - (void)domain:(WXCSSDomain *)domain getComputedStyleForNodeWithNodeId:(NSNumber *)nodeId callback:(void (^)(NSArray *computedStyle, id error))callback {
     /*
-    WXDOMNode *rootDomNode = [WXDOMDomainController defaultInstance].rootDomNode;
-    WXDOMNode *node = [self p_getNodeFromNodeId:nodeId rootNode:rootDomNode];
-    
-    __block NSArray *position;
-    [node.attributes enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        if ([obj isEqualToString:@"frame"]) {
-            *stop = YES;
-            position = [self p_formateFrame:node.attributes[idx + 1]];
-        }
-    }];
+     WXDOMNode *rootDomNode = [WXDOMDomainController defaultInstance].rootDomNode;
+     WXDOMNode *node = [self p_getNodeFromNodeId:nodeId rootNode:rootDomNode];
+     
+     __block NSArray *position;
+     [node.attributes enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+     if ([obj isEqualToString:@"frame"]) {
+     *stop = YES;
+     position = [self p_formateFrame:node.attributes[idx + 1]];
+     }
+     }];
      */
     if ([WXDebugger isVDom]) {
         UIView *selectedView = [[[WXDOMDomainController defaultInstance] getObjectsForComponentRefs] objectForKey:[NSString stringWithFormat:@"%ld",(long)nodeId.integerValue]];
@@ -291,12 +289,10 @@
         NSString *top = @"";
         NSString *left = @"";
         if (position.count == 4) {
-            width = position[2];
-            height = position[3];
-            top = position[1];
-            left = position[0];
-            width = [NSString stringWithFormat:@"%lf",[width floatValue]/WXScreenResizeRadio()];
-            height = [NSString stringWithFormat:@"%lf",[height floatValue]/WXScreenResizeRadio()];
+            left = [self _toPixelFromPoint:position[0]];
+            top = [self _toPixelFromPoint:position[1]];
+            width = [self _toPixelFromPoint:position[2]];
+            height = [self _toPixelFromPoint:position[3]];
         }
         NSMutableArray *computedStyles = [[NSMutableArray alloc] init];
         NSArray *layout = @[@{@"name":@"width",@"value":width},
@@ -384,5 +380,11 @@
     callback(cssProperties,nil);
 }
 
+#pragma mark - utility
+
+- (NSString *)_toPixelFromPoint:(NSString *)point
+{
+    return [NSString stringWithFormat:@"%ld",(long)([point floatValue] * 2)];
+}
 
 @end

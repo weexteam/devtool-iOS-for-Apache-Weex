@@ -23,6 +23,8 @@
 
 @property (nonatomic, assign) id <WXPageCommandDelegate, WXCommandDelegate> delegate;
 
+@property (nonatomic, assign) CGFloat screenScaleFactor;
+
 // Events
 - (void)domContentEventFiredWithTimestamp:(NSNumber *)timestamp;
 - (void)loadEventFiredWithTimestamp:(NSNumber *)timestamp;
@@ -153,9 +155,16 @@
 // Callback Param result: If true, <code>setDeviceOrientationOverride</code> can safely be invoked on the agent.
 - (void)domain:(WXPageDomain *)domain canOverrideDeviceOrientationWithCallback:(void (^)(NSNumber *result, id error))callback;
 
+//start screencast
+- (void)domain:(WXPageDomain *)domain startScreencastWithcallback:(void (^)(id error))callback;
+
+//stop screencast
+- (void)domain:(WXPageDomain *)domain stopScreencastWithcallback:(void (^)(id error))callback;
+
 // Toggles mouse event-based touch event emulation.
 // Param enabled: Whether the touch event emulation should be enabled.
 - (void)domain:(WXPageDomain *)domain setTouchEmulationEnabledWithEnabled:(NSNumber *)enabled callback:(void (^)(id error))callback;
+
 
 @end
 

@@ -85,7 +85,12 @@
     callback(resourceTree, nil);
 }
 
-- (void)domain:(WXPageDomain *)domain reloadWithIgnoreCache:(NSNumber *)ignoreCache scriptToEvaluateOnLoad:(NSString *)scriptToEvaluateOnLoad callback:(void (^)(id))callback;
+- (void)domain:(WXPageDomain *)domain startScreencastWithcallback:(void (^)(id error))callback
+{
+    callback(nil);
+}
+
+- (void)domain:(WXPageDomain *)domain stopScreencastWithcallback:(void (^)(id error))callback
 {
     callback(nil);
 }

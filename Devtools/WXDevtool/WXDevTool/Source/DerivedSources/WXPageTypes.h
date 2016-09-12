@@ -153,4 +153,46 @@
 
 @end
 
+@interface WXScreencastFrameMetadata : WXObject
+
+@property (nonatomic, strong) NSNumber *offsetTop;
+
+@property (nonatomic, strong) NSNumber *pageScaleFactor;
+
+@property (nonatomic, strong) NSNumber *deviceWidth;
+
+@property (nonatomic, strong) NSNumber *deviceHeight;
+
+@property (nonatomic, strong) NSNumber *scrollOffsetX;
+
+@property (nonatomic, strong) NSNumber *scrollOffsetY;
+
+@property (nonatomic, strong) NSNumber *timestamp;
+
+@end
+
+@interface WXScreencastFrame : WXObject
+
+@property (nonatomic, copy) NSString *data;
+
+@property (nonatomic, strong) WXScreencastFrameMetadata *metadata;
+
+@property (nonatomic, strong) NSNumber *sessionId;
+
+@end
+
+@interface WXStartScreencast : WXObject
+
+@property (nonatomic, copy) NSString *format;
+
+@property (nonatomic, strong) NSNumber *quality;
+
+@property (nonatomic, strong) NSNumber *maxWidth;
+
+@property (nonatomic, strong) NSNumber *maxHeight;
+
+@property (nonatomic, strong) NSNumber *everyNthFrame;
+
+@end
+
 
