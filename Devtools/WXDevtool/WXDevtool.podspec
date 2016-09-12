@@ -2,14 +2,14 @@
 Pod::Spec.new do |s|
 
   s.name         = "WXDevtool"
-  s.version      = "0.0.1"
+  s.version      = "0.7.0"
   s.summary      = "WXDevtool Source."
 
   s.description  = <<-DESC
                    WXDevtool Source description
                    DESC
 
-  s.homepage     = "https://github.com/alibaba/weex"
+  s.homepage     = "https://github.com/weexteam/weex-devtool-iOS"
   s.license = {
     :type => 'Copyright',
     :text => <<-LICENSE
