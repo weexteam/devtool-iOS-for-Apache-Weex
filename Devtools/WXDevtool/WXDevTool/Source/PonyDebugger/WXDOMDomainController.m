@@ -850,7 +850,7 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
     [self initObjectsForComponentRefs];
     NSString *instanceStr = instance ? :[self _weexInstanceId];
     NSString *instanceFormatStr = [NSString stringWithFormat:@"instance:%@",instanceStr];
-    NSNumber *instanceId = [NSNumber numberWithInteger:INT32_MAX - [instanceStr integerValue]];
+    NSNumber *instanceId = [NSNumber numberWithInteger:INT32_MAX - [instanceStr integerValue]] ? : [NSNumber numberWithInteger:0];
     
     //add a instance element
     WXDOMNode *instanceNode = [[WXDOMNode alloc] init];
@@ -932,7 +932,7 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
     if (instanceIds.count > 0) {
         return [instanceIds firstObject];
     }
-    return nil;
+    return @"";
 }
 
 - (WXComponent *)_getRootComponentWithInstance:(NSString *)instance
