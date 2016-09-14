@@ -621,7 +621,7 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
         NSNumber *index = args[@"index"] ? : [NSNumber numberWithInteger:0];
         NSInteger insertIndex = index.integerValue;
         
-        WXLogDebug(@"callAddElement...%@, %@, %@, %ld", instanceId, parentRef, componentData, insertIndex);
+        WXLogDebug(@"callAddElement...%@, %@, %@, %ld", instanceId, parentRef, componentData, (long)insertIndex);
         _callAddElementBlock(instanceId, parentRef, componentData, insertIndex);
         
     }
