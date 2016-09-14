@@ -1,4 +1,4 @@
-(this.nativeLog || function(s) {console.log(s)})('START WEEX HTML5: 0.3.2 Build 20160913');
+(this.nativeLog || function(s) {console.log(s)})('START WEEX HTML5: 0.3.2 Build 20160914');
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
