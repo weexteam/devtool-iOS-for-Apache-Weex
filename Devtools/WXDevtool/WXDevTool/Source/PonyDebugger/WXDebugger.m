@@ -69,6 +69,7 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
     NSMutableArray  *_debugAry;
     BOOL _isConnect;
     WXJSCallNative  _nativeCallBlock;
+    WXJSCallAddElement _callAddElementBlock;
     NSThread    *_bridgeThread;
     NSThread    *_inspectThread;
     NSString    *_registerData;
@@ -351,6 +352,7 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
 - (void)disconnect;
 {
     _nativeCallBlock = nil;
+    _callAddElementBlock = nil;
     _msgAry = nil;
     _debugAry = nil;
     [_bonjourBrowser stop];
@@ -502,7 +504,7 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
     [self _executionDebugAry];
 }
 
-- (JSValue *)callJSMethod:(NSString *)method args:(NSArray*)args {
+- (JSValue *)callJSMethod:(NSString *)method args:(NSArray *)args {
     NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
     NSString *nonullMethod = method ? : @"";
     NSArray *nonullArgs = args ? : [NSArray array];
@@ -522,6 +524,11 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
 {
     [self _initBridgeThread];
     _nativeCallBlock = callNative;
+}
+
+- (void)registerCallAddElement:(WXJSCallAddElement)callAddElement
+{
+    _callAddElementBlock = callAddElement;
 }
 
 - (JSValue*) exception
@@ -605,6 +612,18 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
         //call native
         WXLogInfo(@"Calling native... instancdId:%@, methods:%@, callbackId:%@", instanceId, [WXUtility JSONString:methods], callbackId);
         _nativeCallBlock(instanceId, methods, callbackId);
+    }
+    
+    if ([method isEqualToString:@"callAddElement"]) {
+        NSString *instanceId = args[@"instance"] ? : @"";
+        NSDictionary *componentData = args[@"dom"] ? : [NSDictionary dictionary];
+        NSString *parentRef = args[@"ref"] ? : @"";
+        NSNumber *index = args[@"index"] ? : [NSNumber numberWithInteger:0];
+        NSInteger insertIndex = index.integerValue;
+        
+        WXLogDebug(@"callAddElement...%@, %@, %@, %ld", instanceId, parentRef, componentData, insertIndex);
+        _callAddElementBlock(instanceId, parentRef, componentData, insertIndex);
+        
     }
     
     if ([method isEqualToString:@"reload"]) {
