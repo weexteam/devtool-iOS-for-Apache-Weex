@@ -51,6 +51,8 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
 @property (nonatomic, strong) NSMutableDictionary *instanceIdForRoot;
 @property (nonatomic, strong) NSMutableDictionary *instancesDic;
 @property (nonatomic, strong) NSMutableDictionary *componentForRefs;
+
+@property (nonatomic, strong) NSMutableDictionary *kvoObserverRecode;
 @end
 
 #pragma mark - Implementation
@@ -96,6 +98,12 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
 - (void)dealloc;
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    self.objectsForComponentRefs = nil;
+    self.nodeIdsForObjects = nil;
+    self.kvoObserverRecode = nil;
+    self.componentForRefs = nil;
+    self.instanceIdForRoot = nil;
+    self.instancesDic = nil;
 }
 
 #pragma mark - Class Methods
@@ -165,7 +173,8 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
         
     });
 }
- 
+
+
 + (Class)domainClass;
 {
     return [WXDOMDomain class];
@@ -226,7 +235,6 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
 - (void)domain:(WXDOMDomain *)domain getDocumentWithCallback:(void (^)(WXDOMNode *root, id error))callback;
 {
     if ([WXDebugger isVDom]) {
-        [self stopTrackingAllViews];
         WXDOMNode *rootNode = [[WXDOMNode alloc] init];
         rootNode.nodeId = [NSNumber numberWithInt:1];
         rootNode.nodeType = @(kWXDOMNodeTypeDocument);
@@ -235,6 +243,7 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
         self.rootDomNode = rootNode;
         callback(rootNode, nil);
     } else {
+        self.kvoObserverRecode = [[NSMutableDictionary alloc] init];
         [self stopTrackingAllViews];
         self.objectsForNodeIds = [[NSMutableDictionary alloc] init];
         self.nodeIdsForObjects = [[NSMutableDictionary alloc] init];
@@ -686,9 +695,8 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
             // Windows are always children of the root element node
             parentNodeId = @(1);
         }
-        
-        [self stopTrackingView:view];
         [self.domain childNodeRemovedWithParentNodeId:parentNodeId nodeId:nodeId];
+        [self stopTrackingView:view];
     }
 }
 
@@ -745,21 +753,21 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
 {
     NSAssert(view != self.highlightOverlay, @"The highlight overlay should not be tracked. We update its frame in the KVO observe method, so tracking it will lead to infinite recursion");
     
-    [self.nodeIdsForObjects setObject:nodeId forKey:[NSValue valueWithNonretainedObject:view]];
-    [self.objectsForNodeIds setObject:view forKey:nodeId];
-    
-    // Use KVO to keep the displayed properties fresh
-    for (NSString *keyPath in self.viewKeyPathsToDisplay) {
-        [view addObserver:self forKeyPath:keyPath options:NSKeyValueObservingOptionNew context:NULL];
-    }
-}
-
-- (void)startTrackingView:(UIView *)view
-{
-    NSAssert(view != self.highlightOverlay, @"The highlight overlay should not be tracked. We update its frame in the KVO observe method, so tracking it will lead to infinite recursion");
-    // Use KVO to keep the displayed properties fresh
-    for (NSString *keyPath in self.viewKeyPathsToDisplay) {
-        [view addObserver:self forKeyPath:keyPath options:NSKeyValueObservingOptionNew context:NULL];
+    if (nodeId) {
+        [self.nodeIdsForObjects setObject:nodeId forKey:[NSValue valueWithNonretainedObject:view]];
+        [self.objectsForNodeIds setObject:view forKey:nodeId];
+        
+        // Use KVO to keep the displayed properties fresh
+        for (NSString *keyPath in self.viewKeyPathsToDisplay) {
+            [view addObserver:self forKeyPath:keyPath options:NSKeyValueObservingOptionNew context:NULL];
+        }
+        
+        NSNumber *record = [self.kvoObserverRecode objectForKey:[NSValue valueWithNonretainedObject:view]];
+        if (record) {
+            [self.kvoObserverRecode setObject:[NSNumber numberWithInteger:record.integerValue + 1] forKey:[NSValue valueWithNonretainedObject:view]];
+        }else {
+            [self.kvoObserverRecode setObject:[NSNumber numberWithInteger:1] forKey:[NSValue valueWithNonretainedObject:view]];
+        }
     }
 }
 
@@ -786,6 +794,7 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
         return;
     }
     
+    
     // Recurse to get any nested views
     for (UIView *subview in view.subviews) {
         [self stopTrackingView:subview];
@@ -797,9 +806,17 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
         self.viewToHighlight = nil;
     }
     
-    // Unregister from KVO
-    for (NSString *keyPath in self.viewKeyPathsToDisplay) {
-        [view removeObserver:self forKeyPath:keyPath];
+    NSInteger kvoCount = [[self.kvoObserverRecode objectForKey:[NSValue valueWithNonretainedObject:view]] integerValue];
+    if (kvoCount <= 0) {
+        return;
+    }else {
+        for (NSInteger i = 0; i < kvoCount; i++) {
+            // Unregister from KVO
+            for (NSString *keyPath in self.viewKeyPathsToDisplay) {
+                [view removeObserver:self forKeyPath:keyPath];
+            }
+        }
+        [self.kvoObserverRecode removeObjectForKey:[NSValue valueWithNonretainedObject:view]];
     }
     
     // Important that this comes last, so we don't get KVO observations for objects we don't konw about
