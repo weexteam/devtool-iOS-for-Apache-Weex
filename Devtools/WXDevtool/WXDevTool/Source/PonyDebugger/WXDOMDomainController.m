@@ -716,7 +716,7 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
         NSUInteger indexOfView = [view.superview.subviews indexOfObject:view];
         
         // If this is the last subview in the array, it has no previous node.
-        if (indexOfView < [view.superview.subviews count] - 1) {
+        if (indexOfView + 1 < [view.superview.subviews count] - 1) {
             UIView *aheadSibling = [view.superview.subviews objectAtIndex:indexOfView + 1];
             previousNodeId = [self.nodeIdsForObjects objectForKey:[NSValue valueWithNonretainedObject:aheadSibling]];
         }
@@ -731,7 +731,7 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
         NSArray *windows = [[UIApplication sharedApplication] windows];
         NSUInteger indexOfWindow = [windows indexOfObject:view];
         
-        if (indexOfWindow > 0 && indexOfWindow < windows.count - 1) {
+        if (indexOfWindow > 0 && indexOfWindow < windows.count) {
             UIWindow *previousWindow = [windows objectAtIndex:indexOfWindow - 1];
             previousNodeId = [self.nodeIdsForObjects objectForKey:[NSValue valueWithNonretainedObject:previousWindow]];
         }
