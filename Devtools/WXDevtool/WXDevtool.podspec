@@ -27,6 +27,6 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.prefix_header_file = 'WXDevTool/Source/Supporting Files/TBWXDevTool.pch'
 #s.vendored_frameworks = 'WXDevTool.framework'
-  s.frameworks = 'Foundation'
+  s.frameworks = 'Foundation','CoreData'
   s.dependency 'WeexSDK'
 end
