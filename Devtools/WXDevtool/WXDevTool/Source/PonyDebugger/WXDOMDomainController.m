@@ -1206,7 +1206,9 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
             }
         }
         [viewRefs setObject:view forKey:[NSString stringWithFormat:@"%ld",(long)[nodeId integerValue]]];
-        if (self.componentForRefs.count > 0) {
+        if (self.componentForRefs.count <= 0 && !self.rootComponent) {
+            return;
+        } else {
             if (![self.componentForRefs objectForKey:ref]) {
                 WXComponent *component = [self _getComponentFromRef:ref];
                 if (component) {
