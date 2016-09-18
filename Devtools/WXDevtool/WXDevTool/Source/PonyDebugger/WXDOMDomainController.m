@@ -1475,15 +1475,15 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
 // Choosing the set below seems safer becuase the UIView implementations of the other methods are documented to be no-ops.
 // Custom UIView subclasses may override and not make calls to super for those methods, which would cause us to miss changes in the view hierarchy.
 
-- (void)devtool_swizzled_addSubview:(UIView *)subview
+- (void)devtool_swizzled_addSubview:(UIView *)view
 {
     if (![WXDebugger isVDom]) {
-        [[WXDOMDomainController defaultInstance] removeView:subview];
-        [self devtool_swizzled_addSubview:subview];
-        [[WXDOMDomainController defaultInstance] addView:subview];
+        [[WXDOMDomainController defaultInstance] removeView:view];
+        [self devtool_swizzled_addSubview:view];
+        [[WXDOMDomainController defaultInstance] addView:view];
     } else {
-        [self devtool_swizzled_addSubview:subview];
-        [[WXDOMDomainController defaultInstance] addVDomTreeWithView:subview];
+        [self devtool_swizzled_addSubview:view];
+        [[WXDOMDomainController defaultInstance] addVDomTreeWithView:view];
     }
 }
 
@@ -1517,6 +1517,8 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
         [[WXDOMDomainController  defaultInstance] removeView:view];
         [self devtool_swizzled_bringSubviewToFront:view];
         [[WXDOMDomainController defaultInstance] addView:view];
+    }else {
+        [self devtool_swizzled_bringSubviewToFront:view];
     }
 }
 
@@ -1526,6 +1528,8 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
         [[WXDOMDomainController  defaultInstance] removeView:view];
         [self devtool_swizzled_sendSubviewToBack:view];
         [[WXDOMDomainController defaultInstance] addView:view];
+    }else {
+        [self devtool_swizzled_sendSubviewToBack:view];
     }
 }
 
@@ -1535,6 +1539,8 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
         [[WXDOMDomainController  defaultInstance] removeView:view];
         [self devtool_swizzled_insertSubview:view aboveSubview:siblingSubview];
         [[WXDOMDomainController defaultInstance] addView:view];
+    }else {
+        [self devtool_swizzled_insertSubview:view aboveSubview:siblingSubview];
     }
 }
 
@@ -1544,6 +1550,8 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
         [[WXDOMDomainController  defaultInstance] removeView:view];
         [self devtool_swizzled_insertSubview:view belowSubview:siblingSubview];
         [[WXDOMDomainController defaultInstance] addView:view];
+    }else {
+        [self devtool_swizzled_insertSubview:view belowSubview:siblingSubview];
     }
 }
 
@@ -1567,6 +1575,8 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
         if (index2 >= 0 && index2 < [[self subviews] count]) {
             [[WXDOMDomainController defaultInstance] addView:[[self subviews] objectAtIndex:index2]];
         }
+    }else {
+        [self devtool_swizzled_exchangeSubviewAtIndex:index1 withSubviewAtIndex:index2];
     }
 }
 
