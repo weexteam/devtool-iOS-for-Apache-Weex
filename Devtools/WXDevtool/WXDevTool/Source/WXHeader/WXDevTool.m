@@ -25,11 +25,9 @@
 + (void)launchDevToolDebugWithUrl:(NSString *)url {
     WXDebugger *debugger = [[WXDebugger alloc] init];
     //    [debugger serverStartWithHost:@"localhost" port:9009];
-    
     // Enable Network debugging, and automatically track network traffic that comes through any classes that implement either NSURLConnectionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate or NSURLSessionDataDelegate methods.
-    [debugger enableNetworkTrafficDebugging];
-    [debugger forwardAllNetworkTraffic];
-    
+//    [debugger enableNetworkTrafficDebugging];
+//    [debugger forwardAllNetworkTraffic];
     // Enable Core Data debugging, and broadcast the main managed object context.
     //     [debugger enableCoreDataDebugging];
     //     [debugger addManagedObjectContext:self.managedObjectContext withName:@"PonyDebugger Test App MOC"];
@@ -51,7 +49,6 @@
     [debugger enableCSSStyle];
 
     [debugger enableDevToolDebug];
-    
     [WXSDKEngine connectDevToolServer:url];
 }
 
