@@ -10,6 +10,7 @@
 #import "WXDemoViewController.h"
 #import "UIViewController+WXDemoNaviBar.h"
 #import "WXEventModule.h"
+#import "WXChartsModule.h"
 #import "WXImgLoaderDefaultImpl.h"
 #import "DemoDefine.h"
 #import "WXScannerVC.h"
@@ -81,6 +82,8 @@
     
     [WXSDKEngine registerComponent:@"select" withClass:NSClassFromString(@"WXSelectComponent")];
     [WXSDKEngine registerModule:@"event" withClass:[WXEventModule class]];
+    [WXSDKEngine registerComponent:@"charts" withClass:NSClassFromString(@"WXChartsComponent")];
+    [WXSDKEngine registerModule:@"charts" withClass:[WXChartsModule class]];
     
 #if !(TARGET_IPHONE_SIMULATOR)
     [self checkUpdate];
