@@ -108,14 +108,11 @@
     xAxis.labelFont = [UIFont systemFontOfSize:10.f];
     xAxis.drawGridLinesEnabled = NO;
     
-    
     ChartYAxis *leftAxis = _chartView.leftAxis;
     leftAxis.labelFont = [UIFont systemFontOfSize:10.f];
     leftAxis.labelCount = 8;
     leftAxis.valueFormatter = [[NSNumberFormatter alloc] init];
     leftAxis.valueFormatter.maximumFractionDigits = 1;
-    leftAxis.valueFormatter.negativeSuffix = @" $";
-    leftAxis.valueFormatter.positiveSuffix = @" $";
     leftAxis.labelPosition = YAxisLabelPositionOutsideChart;
     leftAxis.spaceTop = 0.15;
     leftAxis.axisMinValue = 0.0;
@@ -178,5 +175,7 @@
         _chartView.data = data;
     }
 }
+
+
 
 @end
