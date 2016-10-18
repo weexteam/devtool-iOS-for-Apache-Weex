@@ -7,7 +7,7 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "WXComponent.h"
+#import <WeexSDK/WeexSDK.h>
 @class WXChartsModule;
 
 @interface WXChartsComponent : WXComponent

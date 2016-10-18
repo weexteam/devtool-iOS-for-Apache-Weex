@@ -8,7 +8,7 @@
 
 #import "WXChartsModule.h"
 #import "WXChartsComponent.h"
-#import "WXComponentManager.h"
+#import <WeexSDK/WeexSDK.h>
 
 @interface WXChartsModule()
 
