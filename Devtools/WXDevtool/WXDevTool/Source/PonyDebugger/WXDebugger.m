@@ -121,6 +121,7 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
         @"iOS", @"platform",
         machine, @"model",
         [WXSDKEngine SDKEngineVersion],@"weexVersion",
+        [WXDevTool WXDevtoolVersion],@"devtoolVersion",
         appName, @"name",
         [WXLog logLevelString] ?: @"error",@"logLevel",
         [NSNumber numberWithBool:[WXDevToolType isDebug]],@"remoteDebug",
@@ -541,8 +542,6 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
     [self _initEnvironment];
 }
 
-
-
 #pragma mark - Private Methods
 - (void)_changeToDebugLogicMessage:(NSString *)message {
     __weak typeof(self) weakSelf = self;
@@ -624,13 +623,6 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
         WXLogDebug(@"callAddElement...%@, %@, %@, %ld", instanceId, parentRef, componentData, (long)insertIndex);
         _callAddElementBlock(instanceId, parentRef, componentData, insertIndex);
         
-    }
-    
-    if ([method isEqualToString:@"reload"]) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [WXSDKEngine restart];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreshInstance" object:nil];
-        });
     }
 }
 

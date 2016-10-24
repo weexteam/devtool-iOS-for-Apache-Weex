@@ -34,6 +34,14 @@
         [self.delegate domain:self setInspectorMode:[params objectForKey:@"mode"] withCallback:^(id error) {
             responseCallback(nil,error);
         }];
+    } else if ([methodName isEqualToString:@"refresh"] && [self.delegate respondsToSelector:@selector(domain:refreshCallback:)]) {
+        [self.delegate domain:self refreshCallback:^(id error) {
+            responseCallback(nil,error);
+        }];
+    } else if ([methodName isEqualToString:@"reload"] && [self.delegate respondsToSelector:@selector(domain:reloadCallback:)]) {
+        [self. delegate domain:self reloadCallback:^(id error) {
+            responseCallback(nil,error);
+        }];
     }
 }
 

@@ -23,6 +23,8 @@
 @optional
 - (void)domain:(WXDebugDomain *)domain sendLogLevel:(NSString *)level withCallback:(void (^)(id error))callback;
 - (void)domain:(WXDebugDomain *)domain setInspectorMode:(NSString *)mode withCallback:(void (^)(id error))callback;
+- (void)domain:(WXDynamicDebuggerDomain *)domain refreshCallback:(void (^)(id error))callback;
 
+- (void)domain:(WXDynamicDebuggerDomain *)domain reloadCallback:(void (^)(id error))callback;
 
 @end

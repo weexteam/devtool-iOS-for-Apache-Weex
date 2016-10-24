@@ -11,6 +11,8 @@
 #import "WXDevToolType.h"
 #import <WeexSDK/WeexSDK.h>
 
+#define WXDevtool_VERSION @"0.8.0"
+
 @implementation WXDevTool
 
 + (void)setDebug:(BOOL)isDebug {
@@ -50,6 +52,11 @@
 
     [debugger enableDevToolDebug];
     [WXSDKEngine connectDevToolServer:url];
+}
+
++ (NSString*)WXDevtoolVersion
+{
+    return WXDevtool_VERSION;
 }
 
 @end

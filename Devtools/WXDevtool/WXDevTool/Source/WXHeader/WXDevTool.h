@@ -31,4 +31,10 @@
  **/
 + (void)launchDevToolDebugWithUrl:(NSString *)url;
 
+/**
+ * @abstract Returns the version of SDK
+ *
+ **/
++ (NSString*)WXDevtoolVersion;
+
 @end

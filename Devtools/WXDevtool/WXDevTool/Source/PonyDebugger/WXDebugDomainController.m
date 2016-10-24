@@ -70,6 +70,20 @@
     }
 }
 
+- (void)domain:(WXDynamicDebuggerDomain *)domain refreshCallback:(void (^)(id error))callback {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreshInstance" object:nil];
+    });
+    callback(nil);
+}
+
+- (void)domain:(WXDynamicDebuggerDomain *)domain reloadCallback:(void (^)(id error))callback {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [WXSDKEngine restart];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreshInstance" object:nil];
+    });
+}
+
 
 
 @end
