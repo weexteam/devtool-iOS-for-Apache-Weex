@@ -918,7 +918,7 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
 {
     // Build the child nodes by recursing on this component's subcomponents
     NSMutableArray *childComponents = [[NSMutableArray alloc] initWithCapacity:component.subcomponents.count];
-    for (WXComponent *subComponent in [component.subcomponents reverseObjectEnumerator]) {
+    for (WXComponent *subComponent in component.subcomponents) {
         [self.componentForRefs setObject:subComponent forKey:subComponent.ref];
         WXDOMNode *childComponent = [self nodeForComponent:subComponent];
         if (childComponent) {
