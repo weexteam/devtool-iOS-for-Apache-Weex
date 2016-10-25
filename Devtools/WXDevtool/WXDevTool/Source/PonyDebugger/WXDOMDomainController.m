@@ -244,13 +244,15 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
 - (void)domain:(WXDOMDomain *)domain getDocumentWithCallback:(void (^)(WXDOMNode *root, id error))callback;
 {
     if ([WXDebugger isVDom]) {
-        WXDOMNode *rootNode = [[WXDOMNode alloc] init];
-        rootNode.nodeId = [NSNumber numberWithInt:1];
-        rootNode.nodeType = @(kWXDOMNodeTypeDocument);
-        rootNode.nodeName = @"#document";
-        rootNode.children = @[ [self rootVirElementWithInstance:nil] ];
-        self.rootDomNode = rootNode;
-        callback(rootNode, nil);
+        WXPerformBlockOnComponentThread(^{
+            WXDOMNode *rootNode = [[WXDOMNode alloc] init];
+            rootNode.nodeId = [NSNumber numberWithInt:1];
+            rootNode.nodeType = @(kWXDOMNodeTypeDocument);
+            rootNode.nodeName = @"#document";
+            rootNode.children = @[ [self rootVirElementWithInstance:nil] ];
+            self.rootDomNode = rootNode;
+            callback(rootNode, nil);
+        });
     } else {
         self.kvoObserverRecode = [[NSMutableDictionary alloc] init];
         [self stopTrackingAllViews];
@@ -265,26 +267,39 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
 {
     NSInteger transformNodeId = nodeId.integerValue;
     NSString *nodeKey = [NSString stringWithFormat:@"%ld",(long)transformNodeId];
-    id objectForNodeId;
+    __block id objectForNodeId;
     if ([WXDebugger isVDom]) {
-        objectForNodeId = [self.objectsForComponentRefs objectForKey:nodeKey];
+        WXPerformBlockOnComponentThread(^{
+            objectForNodeId = [self.objectsForComponentRefs objectForKey:nodeKey];
+            WXPerformBlockOnMainThread(^{
+                if ([objectForNodeId isKindOfClass:[UIView class]]) {
+                    [self configureHighlightOverlayWithConfig:highlightConfig];
+                    [self revealHighlightOverlayForView:objectForNodeId allowInteractions:YES];
+                }
+                callback(nil);
+            });
+        });
     } else {
         objectForNodeId = [self.objectsForNodeIds objectForKey:nodeId];
+        if ([objectForNodeId isKindOfClass:[UIView class]]) {
+            [self configureHighlightOverlayWithConfig:highlightConfig];
+            [self revealHighlightOverlayForView:objectForNodeId allowInteractions:YES];
+        }
+        
+        callback(nil);
     }
-    if ([objectForNodeId isKindOfClass:[UIView class]]) {
-        [self configureHighlightOverlayWithConfig:highlightConfig];
-        [self revealHighlightOverlayForView:objectForNodeId allowInteractions:YES];
-    }
-    
-    callback(nil);
 }
 
 - (void)domain:(WXDOMDomain *)domain hideHighlightWithCallback:(void (^)(id))callback;
 {
-    [self.highlightOverlay removeFromSuperview];
-    self.viewToHighlight = nil;
-    
-    callback(nil);
+    WXPerformBlockOnComponentThread(^{
+       WXPerformBlockOnMainThread(^{
+           [self.highlightOverlay removeFromSuperview];
+           self.viewToHighlight = nil;
+           
+           callback(nil);
+       });
+    });
 }
 
 - (void)domain:(WXDOMDomain *)domain removeNodeWithNodeId:(NSNumber *)nodeId callback:(void (^)(id))callback;
@@ -362,81 +377,23 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
 
 - (void)domain:(WXDOMDomain *)domain getBoxModelNodeId:(NSString *)nodeId callback:(void (^)(WXDOMBoxModel *boxModel, id error))callback
 {
-    CGFloat scale = [WXPageDomainController defaultInstance].domain.screenScaleFactor;
-    UIView *objectForNodeId;
+    __block UIView *objectForNodeId;
     if ([WXDebugger isVDom]) {
-        NSString *nodeIdStr = [NSString stringWithFormat:@"%ld",(long)[nodeId integerValue]];
-        objectForNodeId = [self.objectsForComponentRefs objectForKey:nodeIdStr];
+        WXPerformBlockOnComponentThread(^{
+            NSString *nodeIdStr = [NSString stringWithFormat:@"%ld",(long)[nodeId integerValue]];
+            objectForNodeId = [self.objectsForComponentRefs objectForKey:nodeIdStr];
+            WXPerformBlockOnMainThread(^{
+                [self _getBoxModelNode:objectForNodeId callback:^(WXDOMBoxModel *boxModel, id error) {
+                    callback(boxModel,nil);
+                }];
+            });
+        });
     } else {
         objectForNodeId = [self.objectsForNodeIds objectForKey:nodeId];
+        [self _getBoxModelNode:objectForNodeId callback:^(WXDOMBoxModel *boxModel, id error) {
+            callback(boxModel,nil);
+        }];
     }
-    UIView *view = [WXPageDomainUtility getCurrentVC].view;
-    CGRect changeRect = [objectForNodeId.superview convertRect:objectForNodeId.frame toView:view];
-    NSNumber *width = [NSNumber numberWithInteger:objectForNodeId.frame.size.width / WXScreenResizeRadio()];
-    NSNumber *height = [NSNumber numberWithInteger:objectForNodeId.frame.size.height / WXScreenResizeRadio()];
-    CGFloat left = changeRect.origin.x * scale;
-    CGFloat top = changeRect.origin.y * scale;
-    CGFloat right = left + objectForNodeId.frame.size.width * scale;
-    CGFloat bottom = top + objectForNodeId.frame.size.height * scale;
-    
-    CGFloat paddingLeft = 0;
-    CGFloat paddingRight = 0;
-    CGFloat paddingTop = 0;
-    CGFloat paddingBottom = 0;
-    
-//    UIEdgeInsets marginView = [objectForNodeId layoutMargins];
-    CGFloat marginLeft = 0;//marginView.left * scale;
-    CGFloat marginRight = 0;//marginView.right * scale;
-    CGFloat marginTop = 0;//marginView.top * scale;
-    CGFloat marginBottom = 0;//marginView.bottom * scale;
-    
-    CGFloat borderLeftWidth = 0;
-    CGFloat borderRightWidth = 0;
-    CGFloat borderTopWidth = 0;
-    CGFloat borderBottomWidth = 0;
-    
-    NSArray *content = @[@(left + borderLeftWidth + paddingLeft),
-                         @(top + borderTopWidth + paddingTop),
-                         @(right - borderRightWidth - paddingRight),
-                         @(top + borderTopWidth + paddingTop),
-                         @(right - borderRightWidth - paddingRight),
-                         @(bottom - borderBottomWidth - paddingBottom),
-                         @(left + borderLeftWidth + paddingLeft),
-                         @(bottom - borderBottomWidth - paddingBottom)];
-    NSArray *padding = @[@(left + borderLeftWidth),
-                         @(top + borderTopWidth),
-                         @(right - borderRightWidth),
-                         @(top + borderTopWidth),
-                         @(right - borderRightWidth),
-                         @(bottom - borderBottomWidth),
-                         @(left + borderLeftWidth),
-                         @(bottom - borderBottomWidth)];
-    NSArray *border = @[@(left),
-                        @(top),
-                        @(right),
-                        @(top),
-                        @(right),
-                        @(bottom),
-                        @(left),
-                        @(bottom)];
-    NSArray *margin = @[@(left - marginLeft),
-                       @(top - marginTop),
-                       @(right + marginRight),
-                       @(top - marginTop),
-                       @(right + marginRight),
-                       @(bottom + marginBottom),
-                       @(left - marginLeft),
-                       @(bottom + marginBottom)];
-    
-    WXDOMBoxModel *model = [[WXDOMBoxModel alloc] init];
-    model.width = width;
-    model.height = height;
-    model.content = content;
-    model.padding = padding;
-    model.margin = margin;
-    model.border = border;
-    callback(model, nil);
-    
 }
 
 - (void)domain:(WXDOMDomain *)domain getNodeForLocationX:(NSNumber *)locationX locationY:(NSNumber *)locationY callback:(void (^)(NSNumber *nodeId, id error))callback
@@ -1197,7 +1154,7 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
     if (parentComponent && [self.objectsForComponentRefs objectForKey:[NSString stringWithFormat:@"%ld",(long)parentNodeId.integerValue]]) {
         WXDOMNode *node = [self nodeForComponent:corrComponent];
         NSUInteger indexOfComponent = [parentComponent.subcomponents indexOfObject:corrComponent];
-        if (indexOfComponent <[parentComponent.subcomponents count] - 1) {
+        if (indexOfComponent < [parentComponent.subcomponents count] - 1) {
             NSInteger index = indexOfComponent - 1;
             if (index < 0) {
                 previousNodeId = @(-1);
@@ -1208,6 +1165,10 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
                 }
                 previousNodeId = [self _getRealNodeIdWithComponentRef:previousComponent.ref];
             }
+        }
+        if (previousNodeId == nil) {
+            previousComponent = [parentComponent.subcomponents objectAtIndex:[parentComponent.subcomponents count] - 1];
+            previousNodeId = [self _getRealNodeIdWithComponentRef:previousComponent.ref];
         }
         [self.domain childNodeInsertedWithParentNodeId:parentNodeId previousNodeId:previousNodeId node:node];
     } else if ([corrComponent.ref isEqualToString:@"_root"]) {
@@ -1276,11 +1237,11 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
             }
             [self.objectsForComponentRefs removeObjectForKey:ref];
         }
-        if (self.componentForRefs.count > 0) {
-            if ([self.componentForRefs objectForKey:ref]) {
+//        if (self.componentForRefs.count > 0) {
+//            if ([self.componentForRefs objectForKey:ref]) {
 //                [self removeWXComponentRef:ref withInstanceId:nil];
-            }
-        }
+//            }
+//        }
     }
 }
 
@@ -1466,6 +1427,79 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
 }
 
 
+#pragma mark - private method
+- (void)_getBoxModelNode:(UIView *)objectForNodeId callback:(void (^)(WXDOMBoxModel *boxModel, id error))callback
+{
+    CGFloat scale = [WXPageDomainController defaultInstance].domain.screenScaleFactor;
+    UIView *view = [WXPageDomainUtility getCurrentVC].view;
+    CGRect changeRect = [objectForNodeId.superview convertRect:objectForNodeId.frame toView:view];
+    NSNumber *width = [NSNumber numberWithInteger:objectForNodeId.frame.size.width / WXScreenResizeRadio()];
+    NSNumber *height = [NSNumber numberWithInteger:objectForNodeId.frame.size.height / WXScreenResizeRadio()];
+    CGFloat left = changeRect.origin.x * scale;
+    CGFloat top = changeRect.origin.y * scale;
+    CGFloat right = left + objectForNodeId.frame.size.width * scale;
+    CGFloat bottom = top + objectForNodeId.frame.size.height * scale;
+    
+    CGFloat paddingLeft = 0;
+    CGFloat paddingRight = 0;
+    CGFloat paddingTop = 0;
+    CGFloat paddingBottom = 0;
+    
+    //    UIEdgeInsets marginView = [objectForNodeId layoutMargins];
+    CGFloat marginLeft = 0;//marginView.left * scale;
+    CGFloat marginRight = 0;//marginView.right * scale;
+    CGFloat marginTop = 0;//marginView.top * scale;
+    CGFloat marginBottom = 0;//marginView.bottom * scale;
+    
+    CGFloat borderLeftWidth = 0;
+    CGFloat borderRightWidth = 0;
+    CGFloat borderTopWidth = 0;
+    CGFloat borderBottomWidth = 0;
+    
+    NSArray *content = @[@(left + borderLeftWidth + paddingLeft),
+                         @(top + borderTopWidth + paddingTop),
+                         @(right - borderRightWidth - paddingRight),
+                         @(top + borderTopWidth + paddingTop),
+                         @(right - borderRightWidth - paddingRight),
+                         @(bottom - borderBottomWidth - paddingBottom),
+                         @(left + borderLeftWidth + paddingLeft),
+                         @(bottom - borderBottomWidth - paddingBottom)];
+    NSArray *padding = @[@(left + borderLeftWidth),
+                         @(top + borderTopWidth),
+                         @(right - borderRightWidth),
+                         @(top + borderTopWidth),
+                         @(right - borderRightWidth),
+                         @(bottom - borderBottomWidth),
+                         @(left + borderLeftWidth),
+                         @(bottom - borderBottomWidth)];
+    NSArray *border = @[@(left),
+                        @(top),
+                        @(right),
+                        @(top),
+                        @(right),
+                        @(bottom),
+                        @(left),
+                        @(bottom)];
+    NSArray *margin = @[@(left - marginLeft),
+                        @(top - marginTop),
+                        @(right + marginRight),
+                        @(top - marginTop),
+                        @(right + marginRight),
+                        @(bottom + marginBottom),
+                        @(left - marginLeft),
+                        @(bottom + marginBottom)];
+    
+    WXDOMBoxModel *model = [[WXDOMBoxModel alloc] init];
+    model.width = width;
+    model.height = height;
+    model.content = content;
+    model.padding = padding;
+    model.margin = margin;
+    model.border = border;
+    callback(model, nil);
+}
+
+
 @end
 
 @implementation WXBridgeManager (hackery)
@@ -1473,29 +1507,33 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
 - (void)devtool_swizzled_fireEvent:(NSString *)instanceId ref:(NSString *)ref type:(NSString *)type params:(NSDictionary *)params domChanges:(NSDictionary *)domChanges
 {
     [self devtool_swizzled_fireEvent:instanceId ref:ref type:type params:params domChanges:domChanges];
-    WXSDKInstance *currentInstance = [WXSDKManager instanceForID:instanceId];
-    if ([ref isEqualToString:@"_root"]) {
-        switch (currentInstance.state) {
-            case WeexInstanceAppear:{
-                [[WXDOMDomainController defaultInstance] addWXComponentRef:ref withInstanceId:instanceId];
+    WXPerformBlockOnComponentThread(^{
+        WXSDKInstance *currentInstance = [WXSDKManager instanceForID:instanceId];
+        if ([ref isEqualToString:@"_root"]) {
+            switch (currentInstance.state) {
+                case WeexInstanceAppear:{
+                    [[WXDOMDomainController defaultInstance] addWXComponentRef:ref withInstanceId:instanceId];
+                }
+                    break;
+                case WeexInstanceDisappear: {
+                    [[WXDOMDomainController defaultInstance].componentForRefs removeAllObjects];
+                    [[WXDOMDomainController defaultInstance] removeWXComponentRef:ref withInstanceId:instanceId];
+                }
+                    break;
+                default:
+                    break;
             }
-                break;
-            case WeexInstanceDisappear: {
-                [[WXDOMDomainController defaultInstance] removeWXComponentRef:ref withInstanceId:instanceId];
-            }
-                break;
-            default:
-                break;
-        }
-    }
+        } 
+    });
 }
 
 - (void)devtool_swizzled_destroyInstance:(NSString *)instance
 {
     [self devtool_swizzled_destroyInstance:instance];
-    [[WXDOMDomainController defaultInstance].componentForRefs removeAllObjects];
-    [[WXDOMDomainController defaultInstance] removeWXComponentRef:@"_root" withInstanceId:instance];
-    [[WXDOMDomainController defaultInstance] removeInstanceDicWithInstance:instance];
+    WXPerformBlockOnComponentThread(^{
+        [[WXDOMDomainController defaultInstance] removeWXComponentRef:@"_root" withInstanceId:instance];
+        [[WXDOMDomainController defaultInstance] removeInstanceDicWithInstance:instance];
+    });
 }
 
 @end
@@ -1505,8 +1543,10 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
 - (void)devtool_swizzled_creatFinish
 {
     [self devtool_swizzled_creatFinish];
-    [[WXDOMDomainController defaultInstance] removeWXComponentRef:@"_root" withInstanceId:self.instanceId];
-    [[WXDOMDomainController defaultInstance] addWXComponentRef:@"_root" withInstanceId:self.instanceId];
+    WXPerformBlockOnComponentThread(^{
+        [[WXDOMDomainController defaultInstance] removeWXComponentRef:@"_root" withInstanceId:self.instanceId];
+        [[WXDOMDomainController defaultInstance] addWXComponentRef:@"_root" withInstanceId:self.instanceId];
+    });
 }
 
 @end
@@ -1516,14 +1556,18 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
 - (void)devtool_swizzled_removeComponent:(NSString *)ref
 {
     [self devtool_swizzled_removeComponent:ref];
-    [[WXDOMDomainController defaultInstance] removeWXComponentRef:ref withInstanceId:nil];
+    WXPerformBlockOnComponentThread(^{
+       [[WXDOMDomainController defaultInstance] removeWXComponentRef:ref withInstanceId:nil];
+    });
 }
 
 - (void)devtool_swizzled_moveComponent:(NSString *)ref toSuper:(NSString *)superRef atIndex:(NSInteger)index
 {
     [self devtool_swizzled_moveComponent:ref toSuper:superRef atIndex:index];
-    [[WXDOMDomainController defaultInstance] removeWXComponentRef:ref withInstanceId:nil];
-    [[WXDOMDomainController defaultInstance] moveWXComponentRef:ref toSuper:superRef atIndex:index];
+    WXPerformBlockOnComponentThread(^{
+        [[WXDOMDomainController defaultInstance] removeWXComponentRef:ref withInstanceId:nil];
+        [[WXDOMDomainController defaultInstance] moveWXComponentRef:ref toSuper:superRef atIndex:index];
+    });
 }
 
 @end
@@ -1542,7 +1586,9 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
         [[WXDOMDomainController defaultInstance] addView:view];
     } else {
         [self devtool_swizzled_addSubview:view];
-        [[WXDOMDomainController defaultInstance] addVDomTreeWithView:view];
+        WXPerformBlockOnComponentThread(^{
+           [[WXDOMDomainController defaultInstance] addVDomTreeWithView:view];
+        });
     }
 }
 
@@ -1554,7 +1600,9 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
         [[WXDOMDomainController defaultInstance] addView:view];
     } else {
         [self devtool_swizzled_insertSubview:view atIndex:index];
-        [[WXDOMDomainController defaultInstance] addVDomTreeWithView:view];
+        WXPerformBlockOnComponentThread(^{
+            [[WXDOMDomainController defaultInstance] addVDomTreeWithView:view];
+        });
     }
 }
 
@@ -1565,7 +1613,9 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
         [self devtool_swizzled_removeFromSuperview];
     } else {
         [self devtool_swizzled_removeFromSuperview];
-        [[WXDOMDomainController defaultInstance] removeVDomTreeWithView:self];
+        WXPerformBlockOnComponentThread(^{
+           [[WXDOMDomainController defaultInstance] removeVDomTreeWithView:self];
+        });
     }
 }
 

@@ -138,43 +138,49 @@
         WXCSSCSSStyle *vdomStyle = [[WXCSSCSSStyle alloc] init];
         NSMutableArray *vdomCssProperties = [NSMutableArray array];
         NSMutableString *vdomCssText = [[NSMutableString alloc] init];
-        WXComponent *component = [[WXDOMDomainController defaultInstance] _getComponentFromRef:nodeKey];
-        if (component) {
-            NSDictionary *vdomStyles = component.styles;
-            if (vdomStyles.allKeys > 0) {
-                for (NSString *key in vdomStyles.allKeys) {
-                    WXCSSCSSProperty *cssProperty = [[WXCSSCSSProperty alloc] init];
-                    cssProperty.name = key;
-                    if ([[vdomStyles objectForKey:key] isKindOfClass:[NSString class]]) {
-                        cssProperty.value = [vdomStyles objectForKey:key];
-                    }else {
-                        cssProperty.value = [NSString stringWithFormat:@"%@",[vdomStyles objectForKey:key]];
+        
+        __block WXComponent *component = nil;
+        WXPerformBlockOnComponentThread(^{
+            WXComponent *component = [[WXDOMDomainController defaultInstance] _getComponentFromRef:nodeKey];
+            WXPerformBlockOnMainThread(^{
+                if (component) {
+                    NSDictionary *vdomStyles = component.styles;
+                    if (vdomStyles.allKeys > 0) {
+                        for (NSString *key in vdomStyles.allKeys) {
+                            WXCSSCSSProperty *cssProperty = [[WXCSSCSSProperty alloc] init];
+                            cssProperty.name = key;
+                            if ([[vdomStyles objectForKey:key] isKindOfClass:[NSString class]]) {
+                                cssProperty.value = [vdomStyles objectForKey:key];
+                            }else {
+                                cssProperty.value = [NSString stringWithFormat:@"%@",[vdomStyles objectForKey:key]];
+                            }
+                            [vdomCssText appendString:[NSString stringWithFormat:@"%@:%@;",cssProperty.name,cssProperty.value]];
+                            [vdomCssProperties addObject:[cssProperty WX_JSONObject]];
+                        }
                     }
-                    [vdomCssText appendString:[NSString stringWithFormat:@"%@:%@;",cssProperty.name,cssProperty.value]];
-                    [vdomCssProperties addObject:[cssProperty WX_JSONObject]];
                 }
-            }
-        }
-        
-        vdomStyle.shorthandEntries = @[];
-        vdomStyle.cssText = vdomCssText;
-        vdomStyle.cssProperties = [NSArray arrayWithArray:vdomCssProperties];
-        
-        WXCSSCSSRule *vdomRule = [[WXCSSCSSRule alloc] init];
-        vdomRule.media = @[];
-        vdomRule.origin = @"inspector";
-        vdomRule.selectorList = vdomSelectorData;
-        vdomRule.style = vdomStyle;
-        
-        
-        if ([rule WX_JSONObject] && [vdomRule WX_JSONObject]) {
-            NSDictionary *ruleMatch = @{@"matchingSelectors":@[[NSNumber numberWithInteger:0]],@"rule":[rule WX_JSONObject]};
-            NSDictionary *vdomRuleMatch = @{@"matchingSelectors":@[[NSNumber numberWithInteger:0]],@"rule":[vdomRule WX_JSONObject]};
-            NSArray *matchCSSRules = @[ruleMatch, vdomRuleMatch];
-            callback(matchCSSRules,pseudoElements,inherited,nil);
-        }else {
-            callback(nil,pseudoElements,inherited,nil);
-        }
+                
+                vdomStyle.shorthandEntries = @[];
+                vdomStyle.cssText = vdomCssText;
+                vdomStyle.cssProperties = [NSArray arrayWithArray:vdomCssProperties];
+                
+                WXCSSCSSRule *vdomRule = [[WXCSSCSSRule alloc] init];
+                vdomRule.media = @[];
+                vdomRule.origin = @"inspector";
+                vdomRule.selectorList = vdomSelectorData;
+                vdomRule.style = vdomStyle;
+                
+                
+                if ([rule WX_JSONObject] && [vdomRule WX_JSONObject]) {
+                    NSDictionary *ruleMatch = @{@"matchingSelectors":@[[NSNumber numberWithInteger:0]],@"rule":[rule WX_JSONObject]};
+                    NSDictionary *vdomRuleMatch = @{@"matchingSelectors":@[[NSNumber numberWithInteger:0]],@"rule":[vdomRule WX_JSONObject]};
+                    NSArray *matchCSSRules = @[ruleMatch, vdomRuleMatch];
+                    callback(matchCSSRules,pseudoElements,inherited,nil);
+                }else {
+                    callback(nil,pseudoElements,inherited,nil);
+                }
+            });
+        });
     } else {
         //assembling object of rule
         WXDOMNode *rootDomNode = [WXDOMDomainController defaultInstance].rootDomNode;
