@@ -139,7 +139,7 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
         method_exchangeImplementations(original, swizzle);
         
         original = class_getInstanceMethod(WXComponentMgr, @selector(moveComponent:toSuper:atIndex:));
-        swizzle = class_getInstanceMethod(WXComponentMgr, @selector(devtool_swizzled_moveComponent:toSuper:atIndex:));
+        swizzle = class_getInstanceMethod(WXComponentMgr, sel_registerName("devtool_swizzled_moveComponent:toSuper:atIndex:"));
         method_exchangeImplementations(original, swizzle);
         
         Class WXSDKInstanceClass = [WXSDKInstance class];
