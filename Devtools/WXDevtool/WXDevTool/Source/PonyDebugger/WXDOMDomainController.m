@@ -1169,11 +1169,11 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
     if ([self.objectsForComponentRefs objectForKey:[NSString stringWithFormat:@"%ld",(long)parentNodeId.integerValue]]) {
         WXDOMNode *node = [self nodeForComponent:corrComponent];
         if (index < [parentComponent.subcomponents count] - 1) {
-            NSInteger index = index - 1;
-            if (index < 0) {
+            NSInteger previousIndex = index - 1;
+            if (previousIndex < 0) {
                 previousNodeId = @(-1);
             }else {
-                previousComponent = [parentComponent.subcomponents objectAtIndex:index];
+                previousComponent = [parentComponent.subcomponents objectAtIndex:previousIndex];
                 previousNodeId = [self _getRealNodeIdWithComponentRef:previousComponent.ref];
             }
         }
