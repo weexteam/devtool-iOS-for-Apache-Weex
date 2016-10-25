@@ -13,6 +13,8 @@
 
 + (void)setDebug:(BOOL)isDebug {
     [WXDebugTool setDevToolDebug:isDebug];
+    //notify debug status
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"WXDevtoolDebug" object:@(isDebug)];
 }
 
 + (BOOL)isDebug {

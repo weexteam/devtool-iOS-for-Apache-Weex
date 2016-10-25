@@ -99,6 +99,7 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
     _isConnect = NO;
     _domains = [[NSMutableDictionary alloc] init];
     _controllers = [[NSMutableDictionary alloc] init];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationIsDebug:) name:@"WXDevtoolDebug" object:nil];
     
     return self;
 }
@@ -333,7 +334,9 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
     _msgAry = [NSMutableArray array];
     _debugAry = nil;
     _debugAry = [NSMutableArray array];
-    _bridgeThread = nil;
+    if (![WXDevToolType isDebug]) {
+        _bridgeThread = nil;
+    }
     _registerData = nil;
     _isConnect = NO;
     
@@ -542,6 +545,13 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
     [self _initEnvironment];
 }
 
+#pragma mark - notification 
+- (void)notificationIsDebug:(NSNotification *)notification {
+    if ([notification.object boolValue]) {
+        _bridgeThread = nil;
+    }
+}
+
 #pragma mark - Private Methods
 - (void)_changeToDebugLogicMessage:(NSString *)message {
     __weak typeof(self) weakSelf = self;
@@ -686,6 +696,17 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
     NSData *data = [NSJSONSerialization dataWithJSONObject:obj options:0 error:nil];
     NSString *encodedData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     _registerData = encodedData;
+    
+    if (_bridgeThread) {
+        [self _executeBridgeThead:^{
+            [_debugAry insertObject:encodedData atIndex:0];
+            [self _executionDebugAry];
+        }];
+    }else {
+        [_socket send:encodedData];
+    }
+    
+    /*
     if (_bridgeThread) {
         [self _executeBridgeThead:^{
             [_debugAry insertObject:encodedData atIndex:0];
@@ -697,6 +718,7 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
             [self _executionMsgAry];
         }];
     }
+     */
 }
 
 - (void)_resolveService:(NSNetService*)service;
