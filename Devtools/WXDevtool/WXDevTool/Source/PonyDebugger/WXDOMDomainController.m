@@ -244,12 +244,13 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
 - (void)domain:(WXDOMDomain *)domain getDocumentWithCallback:(void (^)(WXDOMNode *root, id error))callback;
 {
     if ([WXDebugger isVDom]) {
+        __weak typeof(self) weakSelf = self;
         WXPerformBlockOnComponentThread(^{
             WXDOMNode *rootNode = [[WXDOMNode alloc] init];
             rootNode.nodeId = [NSNumber numberWithInt:1];
             rootNode.nodeType = @(kWXDOMNodeTypeDocument);
             rootNode.nodeName = @"#document";
-            rootNode.children = @[ [self rootVirElementWithInstance:nil] ];
+            rootNode.children = @[ [weakSelf rootVirElementWithInstance:nil] ];
             self.rootDomNode = rootNode;
             callback(rootNode, nil);
         });
@@ -269,12 +270,14 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
     NSString *nodeKey = [NSString stringWithFormat:@"%ld",(long)transformNodeId];
     __block id objectForNodeId;
     if ([WXDebugger isVDom]) {
+        __weak typeof(self) weakSelf = self;
         WXPerformBlockOnComponentThread(^{
-            objectForNodeId = [self.objectsForComponentRefs objectForKey:nodeKey];
+            objectForNodeId = [weakSelf.objectsForComponentRefs objectForKey:nodeKey];
             WXPerformBlockOnMainThread(^{
+                __strong typeof(self) strongSelf = weakSelf;
                 if ([objectForNodeId isKindOfClass:[UIView class]]) {
-                    [self configureHighlightOverlayWithConfig:highlightConfig];
-                    [self revealHighlightOverlayForView:objectForNodeId allowInteractions:YES];
+                    [strongSelf configureHighlightOverlayWithConfig:highlightConfig];
+                    [strongSelf revealHighlightOverlayForView:objectForNodeId allowInteractions:YES];
                 }
                 callback(nil);
             });
@@ -292,11 +295,11 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
 
 - (void)domain:(WXDOMDomain *)domain hideHighlightWithCallback:(void (^)(id))callback;
 {
+    __weak typeof(self) weakSelf = self;
     WXPerformBlockOnComponentThread(^{
        WXPerformBlockOnMainThread(^{
-           [self.highlightOverlay removeFromSuperview];
-           self.viewToHighlight = nil;
-           
+           [weakSelf.highlightOverlay removeFromSuperview];
+           weakSelf.viewToHighlight = nil;
            callback(nil);
        });
     });
@@ -379,11 +382,12 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
 {
     __block UIView *objectForNodeId;
     if ([WXDebugger isVDom]) {
+        __weak typeof(self) weakSelf = self;
         WXPerformBlockOnComponentThread(^{
             NSString *nodeIdStr = [NSString stringWithFormat:@"%ld",(long)[nodeId integerValue]];
             objectForNodeId = [self.objectsForComponentRefs objectForKey:nodeIdStr];
             WXPerformBlockOnMainThread(^{
-                [self _getBoxModelNode:objectForNodeId callback:^(WXDOMBoxModel *boxModel, id error) {
+                [weakSelf _getBoxModelNode:objectForNodeId callback:^(WXDOMBoxModel *boxModel, id error) {
                     callback(boxModel,nil);
                 }];
             });

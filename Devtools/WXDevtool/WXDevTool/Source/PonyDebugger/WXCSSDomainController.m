@@ -139,9 +139,8 @@
         NSMutableArray *vdomCssProperties = [NSMutableArray array];
         NSMutableString *vdomCssText = [[NSMutableString alloc] init];
         
-        __block WXComponent *component = nil;
         WXPerformBlockOnComponentThread(^{
-            WXComponent *component = [[WXDOMDomainController defaultInstance] _getComponentFromRef:nodeKey];
+            __block WXComponent *component = [[WXDOMDomainController defaultInstance] _getComponentFromRef:nodeKey];
             WXPerformBlockOnMainThread(^{
                 if (component) {
                     NSDictionary *vdomStyles = component.styles;
