@@ -1154,7 +1154,7 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
     if (parentComponent && [self.objectsForComponentRefs objectForKey:[NSString stringWithFormat:@"%ld",(long)parentNodeId.integerValue]]) {
         WXDOMNode *node = [self nodeForComponent:corrComponent];
         NSUInteger indexOfComponent = [parentComponent.subcomponents indexOfObject:corrComponent];
-        if (indexOfComponent < [parentComponent.subcomponents count] - 1) {
+        if (indexOfComponent < [parentComponent.subcomponents count]) {
             NSInteger index = indexOfComponent - 1;
             if (index < 0) {
                 previousNodeId = @(-1);
@@ -1165,10 +1165,6 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
                 }
                 previousNodeId = [self _getRealNodeIdWithComponentRef:previousComponent.ref];
             }
-        }
-        if (previousNodeId == nil) {
-            previousComponent = [parentComponent.subcomponents objectAtIndex:[parentComponent.subcomponents count] - 1];
-            previousNodeId = [self _getRealNodeIdWithComponentRef:previousComponent.ref];
         }
         [self.domain childNodeInsertedWithParentNodeId:parentNodeId previousNodeId:previousNodeId node:node];
     } else if ([corrComponent.ref isEqualToString:@"_root"]) {
