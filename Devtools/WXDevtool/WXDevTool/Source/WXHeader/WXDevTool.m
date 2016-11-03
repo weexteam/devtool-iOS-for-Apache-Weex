@@ -10,6 +10,7 @@
 #import "WXDebugger.h"
 #import "WXDevToolType.h"
 #import <WeexSDK/WeexSDK.h>
+#import <ATSDK/ATManager.h>
 
 #define WXDevtool_VERSION @"0.8.1"
 
@@ -57,6 +58,11 @@
 + (NSString*)WXDevtoolVersion
 {
     return WXDevtool_VERSION;
+}
+
++ (void)showATManager
+{
+    [[ATManager shareInstance] show];
 }
 
 @end

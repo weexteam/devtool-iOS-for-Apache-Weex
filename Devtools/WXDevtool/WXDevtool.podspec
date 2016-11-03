@@ -29,4 +29,5 @@ Pod::Spec.new do |s|
 #s.vendored_frameworks = 'WXDevTool.framework'
   s.frameworks = 'Foundation','CoreData'
   s.dependency 'WeexSDK'
+  s.dependency 'ATSDK-Weex'
 end
