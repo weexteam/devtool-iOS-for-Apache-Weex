@@ -16,7 +16,7 @@
 #import "WXScannerVC.h"
 #import <WeexSDK/WeexSDK.h>
 #import <AVFoundation/AVFoundation.h>
-#import <ATSDK/ATManager.h>
+#import "WXDevtool.h"
 
 @interface AppDelegate ()
 @end
@@ -30,6 +30,8 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor = [UIColor whiteColor];
+    
+    [WXDevTool showATManager];
     
     [self initWeexSDK];
     
@@ -90,12 +92,12 @@
 #endif
     
 #ifdef DEBUG
-    [self atAddPlugin];
+//    [self atAddPlugin];
     [WXDebugTool setDebug:YES];
-    [WXLog setLogLevel:WXLogLevelLog];
+    [WXLog setLogLevel:WXLogLevelDebug];
     
     #ifndef UITEST
-        [[ATManager shareInstance] show];
+        //[[ATManager shareInstance] show];
     #endif
 #else
     [WXDebugTool setDebug:NO];
@@ -109,7 +111,7 @@
     
 #if DEBUG
     //If you are debugging in device , please change the host to current IP of your computer.
-    ((WXDemoViewController *)demo).url = [NSURL URLWithString:HOME_URL];
+    ((WXDemoViewController *)demo).url = [NSURL URLWithString:BUNDLE_URL];
 #else
     ((WXDemoViewController *)demo).url = [NSURL URLWithString:BUNDLE_URL];
 #endif
@@ -179,6 +181,7 @@
 
 #pragma mark
 
+/*
 - (void)atAddPlugin {
     
     [[ATManager shareInstance] addPluginWithId:@"weex" andName:@"weex" andIconName:@"../weex" andEntry:@"" andArgs:@[@""]];
@@ -187,6 +190,7 @@
     [[ATManager shareInstance] addSubPluginWithParentId:@"weex" andSubId:@"test2" andName:@"test" andIconName:@"at_arr_refresh" andEntry:@"" andArgs:@[]];
     [[ATManager shareInstance] addSubPluginWithParentId:@"weex" andSubId:@"test3" andName:@"test" andIconName:@"at_arr_refresh" andEntry:@"" andArgs:@[]];
 }
+ */
 
 - (void)checkUpdate {
     __weak typeof(self) weakSelf = self;
