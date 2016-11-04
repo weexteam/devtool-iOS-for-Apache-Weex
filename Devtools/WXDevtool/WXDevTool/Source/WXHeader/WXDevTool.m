@@ -26,6 +26,7 @@
 
 #pragma mark weex devtool
 + (void)launchDevToolDebugWithUrl:(NSString *)url {
+    [self showATManager];
     WXDebugger *debugger = [[WXDebugger alloc] init];
     //    [debugger serverStartWithHost:@"localhost" port:9009];
     // Enable Network debugging, and automatically track network traffic that comes through any classes that implement either NSURLConnectionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate or NSURLSessionDataDelegate methods.

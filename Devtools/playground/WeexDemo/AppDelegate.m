@@ -16,7 +16,6 @@
 #import "WXScannerVC.h"
 #import <WeexSDK/WeexSDK.h>
 #import <AVFoundation/AVFoundation.h>
-#import "WXDevtool.h"
 
 @interface AppDelegate ()
 @end
@@ -30,8 +29,6 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor = [UIColor whiteColor];
-    
-    [WXDevTool showATManager];
     
     [self initWeexSDK];
     

@@ -37,10 +37,4 @@
  **/
 + (NSString*)WXDevtoolVersion;
 
-
-/**
- * @abstract open performance data
- *
- **/
-+ (void)showATManager;
 @end
