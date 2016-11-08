@@ -111,31 +111,41 @@ static NSString * const WXScreencastChangeNotification = @"WXScreencastChangeNot
 
 - (void)screencastFormat:(NSString *)format Quality:(NSNumber *)quality scaleFactor:(CGFloat)scaleFactor
 {
-    __weak typeof(self) weakSelf = self;
-    WXPerformBlockOnScreencastThread(^{
-        NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:1];
-        UIImage *screenImage = [WXPageDomainUtility screencastDataScale:scaleFactor];
-        NSData *imageData = UIImageJPEGRepresentation(screenImage, [quality floatValue]);
-        NSString *codeImage = [imageData base64EncodedStringWithOptions:0];
-        [params setObject:codeImage forKey:@"data"];
-        
-        NSMutableDictionary *metaData = [WXPageDomainUtility screencastMetaDataWithScale:scaleFactor];
-        [metaData setObject:[NSNumber numberWithInteger:screenImage.size.width] forKey:@"deviceWidth"];
-        [metaData setObject:[NSNumber numberWithInteger:screenImage.size.height] forKey:@"deviceHeight"];
-        [params setObject:metaData forKey:@"metadata"];
-        
-        [params setObject:[NSNumber numberWithInteger:1] forKey:@"sessionId"];
-        
-        [weakSelf.debuggingServer sendEventWithName:@"Page.screencastFrame" parameters:params];
-    });
+    NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:1];
+    UIImage *screenImage = [WXPageDomainUtility screencastDataScale:scaleFactor];
+    NSData *imageData = UIImageJPEGRepresentation(screenImage, [quality floatValue]);
+    NSString *codeImage = [imageData base64EncodedStringWithOptions:0];
+    [params setObject:codeImage forKey:@"data"];
+    
+    NSMutableDictionary *metaData = [WXPageDomainUtility screencastMetaDataWithScale:scaleFactor];
+    [metaData setObject:[NSNumber numberWithInteger:screenImage.size.width] forKey:@"deviceWidth"];
+    [metaData setObject:[NSNumber numberWithInteger:screenImage.size.height] forKey:@"deviceHeight"];
+    [params setObject:metaData forKey:@"metadata"];
+    
+    [params setObject:[NSNumber numberWithInteger:1] forKey:@"sessionId"];
+    
+    [self.debuggingServer sendEventWithName:@"Page.screencastFrame" parameters:params];
 }
 
 - (void)screencastFrame:(NSNotification *)notification
 {
     if (self.startScreencast) {
-        [self screencastFormat:self.startScreencast.format
-                       Quality:self.startScreencast.quality
-                      scaleFactor:self.screenScaleFactor];
+        UIView *view = [WXPageDomainUtility getCurrentKeyController].view;
+        if ([WXPageDomainUtility isContainWebView:view]) {
+            __weak typeof(self) weakSelf = self;
+            WXPerformBlockOnMainThread(^{
+                [weakSelf screencastFormat:weakSelf.startScreencast.format
+                                   Quality:weakSelf.startScreencast.quality
+                               scaleFactor:weakSelf.screenScaleFactor];
+            });
+        }else {
+            __weak typeof(self) weakSelf = self;
+            WXPerformBlockOnScreencastThread(^{
+                [weakSelf screencastFormat:weakSelf.startScreencast.format
+                               Quality:weakSelf.startScreencast.quality
+                           scaleFactor:weakSelf.screenScaleFactor];
+            });
+        }
     }
 }
 
@@ -357,14 +367,27 @@ static NSString * const WXScreencastChangeNotification = @"WXScreencastChangeNot
             self.startScreencast.quality = [params objectForKey:@"quality"];
             self.startScreencast.format = [params objectForKey:@"format"];
             
-            CGRect rect = [WXPageDomainUtility getCurrentVC].view.frame;
+            CGRect rect = [WXPageDomainUtility getCurrentKeyController].view.frame;
             CGFloat deviceWidth = rect.size.width;
             CGFloat deviceHeight = rect.size.height;
             CGFloat scaleFactorWidth = maxWidth.floatValue/deviceWidth;
             CGFloat scaleFactorHeight = maxHeight.floatValue/deviceHeight;
             CGFloat scaleFactor = (scaleFactorWidth < scaleFactorHeight) ? scaleFactorWidth : scaleFactorHeight;
             self.screenScaleFactor = scaleFactor;
-            [self screencastFormat:[params objectForKey:@"format"] Quality:[params objectForKey:@"format"] scaleFactor:scaleFactor];
+            
+            UIView *view = [WXPageDomainUtility getCurrentKeyController].view;
+            if ([WXPageDomainUtility isContainWebView:view]){
+                __weak typeof(self) weakSelf = self;
+                WXPerformBlockOnMainThread(^{
+                    [weakSelf screencastFormat:[params objectForKey:@"format"] Quality:[params objectForKey:@"format"] scaleFactor:scaleFactor];
+                });
+            }else {
+                __weak typeof(self) weakSelf = self;
+                WXPerformBlockOnScreencastThread(^{
+                    [weakSelf screencastFormat:[params objectForKey:@"format"] Quality:[params objectForKey:@"format"] scaleFactor:scaleFactor];
+                });
+            }
+            
             
             [self startObserving];
             responseCallback(nil, error);

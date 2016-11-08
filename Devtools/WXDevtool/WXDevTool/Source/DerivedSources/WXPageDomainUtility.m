@@ -8,6 +8,9 @@
 
 #import "WXPageDomainUtility.h"
 #import <objc/runtime.h>
+#import <WebKit/WebKit.h>
+
+#define IsIOS8 [[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0
 
 @implementation WXPageDomainUtility
 
@@ -34,7 +37,7 @@
 {
 //    UIWindow * window = [UIApplication sharedApplication].keyWindow;
 //    UIView *view = [[window subviews] objectAtIndex:0];
-    UIView *view = [self getCurrentVC].view;
+    UIView *view = [self getCurrentKeyController].view;
     UIGraphicsBeginImageContextWithOptions(view.frame.size, NO, [UIScreen mainScreen].scale);
     [view.layer renderInContext:UIGraphicsGetCurrentContext()];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
@@ -52,31 +55,70 @@
     return scaledImage;
 }
 
-+ (UIViewController *)getCurrentVC
++(UIViewController*)getCurrentKeyController
 {
-    UIViewController *result = nil;
-    UIWindow * window = [[UIApplication sharedApplication] keyWindow];
-    if (window.windowLevel != UIWindowLevelNormal) {
+    UIViewController *result;
+    UIWindow *topWindow = [[[UIApplication sharedApplication] delegate] window];
+    if (topWindow.windowLevel != UIWindowLevelNormal)
+    {
         NSArray *windows = [[UIApplication sharedApplication] windows];
-        for(UIWindow * tmpWin in windows) {
-            if (tmpWin.windowLevel == UIWindowLevelNormal) {
-                window = tmpWin;
-                break;
-            }
+        for(topWindow in windows)
+        {
+            if (topWindow.windowLevel == UIWindowLevelNormal)
+            break;
         }
     }
-    
-    UIView *frontView = [[window subviews] objectAtIndex:0];
-    id nextResponder  = [frontView nextResponder];
-    
-    if ([nextResponder isKindOfClass:[UIViewController class]])
-        result = nextResponder;
+    id lenderClass = objc_getClass("UILayoutContainerView"); // 通过字符串名字，获取类
+    id nextResponder;
+    UIView *rootView = [[topWindow subviews] objectAtIndex:0];
+        
+    if(IsIOS8 && ![rootView isMemberOfClass:[lenderClass class]])
+    {
+        NSArray *arr = [rootView valueForKey:@"subviewCache"];
+        if(arr.count>0)
+        {
+            UIView *v = [arr objectAtIndex:0];
+            nextResponder = [v nextResponder];
+        }
+        else
+        {
+            nextResponder = [[[rootView subviews] objectAtIndex:0] nextResponder];
+        }
+    }
     else
-        result = window.rootViewController;
-    
+    {
+        nextResponder = [rootView nextResponder];
+    }
+    if ([nextResponder isKindOfClass:[UIViewController class]])
+    {
+        result = nextResponder;
+    }
+    else if ([topWindow respondsToSelector:@selector(rootViewController)] && topWindow.rootViewController != nil)
+    {
+        result = topWindow.rootViewController;
+    }
+    else
+    {
+            
+        NSAssert(NO, @"ShareKit: Could not find a root view controller.  You can assign one manually by calling [[SHK currentHelper] setRootViewController:YOURROOTVIEWCONTROLLER].");
+    }
     return result;
 }
-
+    
++(BOOL)isContainWebView:(UIView *)rootView
+{
+    for (UIView *subview in [rootView.subviews reverseObjectEnumerator]) {
+        BOOL isWebView = [self isContainWebView:subview];
+        if (isWebView) {
+            return isWebView;
+        }
+    }
+    if ([rootView isKindOfClass:[UIWebView class]] || [rootView isKindOfClass:[objc_getClass("WKWebView") class]]) {
+        return YES;
+    }
+    return NO;
+}
+        
 #pragma mark - 
 static NSThread *WXScreencastThread;
 #define WX_SCREENCAST_THREAD_NAME @"com.taobao.devtool.bridge"

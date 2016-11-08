@@ -5,5 +5,4 @@ platform :ios, '7.0'
 inhibit_all_warnings!
 target 'TBWXDevTool' do
 	pod 'WeexSDK'
-	pod 'ATSDK-Weex'
 end

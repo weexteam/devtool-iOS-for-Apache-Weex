@@ -10,9 +10,8 @@
 #import "WXDebugger.h"
 #import "WXDevToolType.h"
 #import <WeexSDK/WeexSDK.h>
-#import <ATSDK/ATManager.h>
 
-#define WXDevtool_VERSION @"0.8.1"
+#define WXDevtool_VERSION @"0.8.2"
 
 @implementation WXDevTool
 
@@ -26,7 +25,6 @@
 
 #pragma mark weex devtool
 + (void)launchDevToolDebugWithUrl:(NSString *)url {
-    [self showATManager];
     WXDebugger *debugger = [[WXDebugger alloc] init];
     //    [debugger serverStartWithHost:@"localhost" port:9009];
     // Enable Network debugging, and automatically track network traffic that comes through any classes that implement either NSURLConnectionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate or NSURLSessionDataDelegate methods.
@@ -60,10 +58,4 @@
 {
     return WXDevtool_VERSION;
 }
-
-+ (void)showATManager
-{
-    [[ATManager shareInstance] show];
-}
-
 @end

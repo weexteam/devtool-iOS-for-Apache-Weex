@@ -406,7 +406,7 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
     UIView *rootView;
     NSNumber *nodeId = nil;
     CGPoint point = CGPointMake(locationX.floatValue, locationY.floatValue);
-    rootView = [WXPageDomainUtility getCurrentVC].view;
+    rootView = [WXPageDomainUtility getCurrentKeyController].view;
     selectView = [self p_point:point withRootView:rootView];
     if ([WXDebugger isVDom]) {
         if (selectView.wx_ref) {
@@ -444,7 +444,7 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
 
 - (CGRect)changeRectFromView:(UIView *)view
 {
-    UIView *toView = [WXPageDomainUtility getCurrentVC].view;
+    UIView *toView = [WXPageDomainUtility getCurrentKeyController].view;
     if ([view isEqual:toView]) {
         return view.frame;
     }
@@ -1431,7 +1431,7 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
 - (void)_getBoxModelNode:(UIView *)objectForNodeId callback:(void (^)(WXDOMBoxModel *boxModel, id error))callback
 {
     CGFloat scale = [WXPageDomainController defaultInstance].domain.screenScaleFactor;
-    UIView *view = [WXPageDomainUtility getCurrentVC].view;
+    UIView *view = [WXPageDomainUtility getCurrentKeyController].view;
     CGRect changeRect = [objectForNodeId.superview convertRect:objectForNodeId.frame toView:view];
     NSNumber *width = [NSNumber numberWithInteger:objectForNodeId.frame.size.width / WXScreenResizeRadio()];
     NSNumber *height = [NSNumber numberWithInteger:objectForNodeId.frame.size.height / WXScreenResizeRadio()];

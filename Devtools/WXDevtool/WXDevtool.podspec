@@ -2,7 +2,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "WXDevtool"
-  s.version      = "0.7.0"
+  s.version      = "0.8.2"
   s.summary      = "WXDevtool Source."
 
   s.description  = <<-DESC
@@ -29,5 +29,4 @@ Pod::Spec.new do |s|
 #s.vendored_frameworks = 'WXDevTool.framework'
   s.frameworks = 'Foundation','CoreData'
   s.dependency 'WeexSDK'
-  s.dependency 'ATSDK-Weex'
 end

@@ -17,7 +17,9 @@
 
 + (NSMutableDictionary *)screencastMetaDataWithScale:(float)scale;
 
-+ (UIViewController *)getCurrentVC;
++ (UIViewController *)getCurrentKeyController;
+    
++(BOOL)isContainWebView:(UIView *)rootView;
 
 
 /**
