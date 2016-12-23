@@ -391,11 +391,21 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
     [self _addController:[WXNetworkDomainController defaultInstance]];
 }
 
+- (void)disEnableNetworkTrafficDebugging
+{
+    [self _removeController:[WXNetworkDomainController defaultInstance]];
+}
+
 - (void)forwardAllNetworkTraffic;
 {
     [WXNetworkDomainController registerPrettyStringPrinter:[[WXJSONPrettyStringPrinter alloc] init]];
     [WXNetworkDomainController injectIntoAllNSURLConnectionDelegateClasses];
     [WXNetworkDomainController swizzleNSURLSessionClasses];
+}
+
+- (void)cancleAllNetworkTraffic
+{
+    
 }
 
 - (void)forwardNetworkTrafficFromDelegateClass:(Class)cls;
@@ -753,6 +763,14 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
     
     controller.domain = domain;
     domain.delegate = controller;
+}
+
+- (void)_removeController:(WXDomainController *)controller
+{
+    NSString *domainName = [self _domainNameForController:controller];
+    if ([_domains objectForKey:domainName]) {
+        [_domains removeObjectForKey:domainName];
+    }
 }
 
 - (BOOL)_isTrackingDomainController:(WXDomainController *)controller;

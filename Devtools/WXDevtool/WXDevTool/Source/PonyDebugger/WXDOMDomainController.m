@@ -47,10 +47,12 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
 @property (nonatomic, strong) UIView *inspectModeOverlay;
 
 @property (nonatomic, strong) WXComponent *rootComponent;
-@property (nonatomic, strong) NSMutableDictionary *objectsForComponentRefs;
 @property (nonatomic, strong) NSMutableDictionary *instanceIdForRoot;
 @property (nonatomic, strong) NSMutableDictionary *instancesDic;
-@property (nonatomic, strong) NSMutableDictionary *componentForRefs;
+
+
+@property (nonatomic, readwrite,strong) NSMutableDictionary *objectsForComponentRefs;
+@property (nonatomic, readwrite,strong) NSMutableDictionary *componentForRefs;
 
 @property (nonatomic, strong) NSMutableDictionary *kvoObserverRecode;
 @end
@@ -1208,15 +1210,14 @@ static NSString *const kWXDOMAttributeParsingRegex = @"[\"'](.*)[\"']";
             }
         }
         [viewRefs setObject:view forKey:[NSString stringWithFormat:@"%ld",(long)[nodeId integerValue]]];
+        
         if (self.componentForRefs.count <= 0 && !self.rootComponent) {
             return;
-        }else {
-            if (![self.componentForRefs objectForKey:ref]) {
-                WXComponent *component = [self _getComponentFromRef:ref];
-                if (component) {
-                    [self.componentForRefs setObject:component forKey:ref];
-                    [self addWXComponentRef:ref withInstanceId:nil];
-                }
+        }else if(![self.componentForRefs objectForKey:ref]){
+            WXComponent *component = [self _getComponentFromRef:ref];
+            if (component) {
+                [self.componentForRefs setObject:component forKey:ref];
+                [self addWXComponentRef:ref withInstanceId:nil];
             }
         }
     }

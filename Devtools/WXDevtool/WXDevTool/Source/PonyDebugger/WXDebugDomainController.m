@@ -84,6 +84,16 @@
     });
 }
 
+- (void)domain:(WXDynamicDebuggerDomain *)domain enableNetwork:(BOOL)enable networkCallback:(void (^)(id error))callback {
+    WXDebugger *debugger = [WXDebugger defaultInstance];
+    if (enable) {
+        [debugger enableNetworkTrafficDebugging];
+        [debugger forwardAllNetworkTraffic];
+    }else {
+        [debugger disEnableNetworkTrafficDebugging];
+    }
+}
+
 
 
 @end

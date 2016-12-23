@@ -27,4 +27,6 @@
 
 - (void)domain:(WXDynamicDebuggerDomain *)domain reloadCallback:(void (^)(id error))callback;
 
+- (void)domain:(WXDynamicDebuggerDomain *)domain enableNetwork:(BOOL)enable networkCallback:(void (^)(id error))callback;
+
 @end

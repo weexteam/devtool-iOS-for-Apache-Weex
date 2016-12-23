@@ -69,7 +69,9 @@ extern void _WXLogObjectsImpl(NSString *severity, NSArray *arguments);
 
 #pragma mark Network Debugging
 - (void)enableNetworkTrafficDebugging;
+- (void)disEnableNetworkTrafficDebugging;
 - (void)forwardAllNetworkTraffic;
+- (void)cancleAllNetworkTraffic;
 - (void)forwardNetworkTrafficFromDelegateClass:(Class)cls;
 + (void)registerPrettyStringPrinter:(id<WXPrettyStringPrinting>)prettyStringPrinter;
 + (void)unregisterPrettyStringPrinter:(id<WXPrettyStringPrinting>)prettyStringPrinter;

@@ -39,7 +39,11 @@
             responseCallback(nil,error);
         }];
     } else if ([methodName isEqualToString:@"reload"] && [self.delegate respondsToSelector:@selector(domain:reloadCallback:)]) {
-        [self. delegate domain:self reloadCallback:^(id error) {
+        [self.delegate domain:self reloadCallback:^(id error) {
+            responseCallback(nil,error);
+        }];
+    } else if ([methodName isEqualToString:@"network"] && [self.delegate respondsToSelector:@selector(domain:enableNetwork:networkCallback:)]) {
+        [self.delegate domain:self enableNetwork:[params objectForKey:@"enable"] networkCallback:^(id error) {
             responseCallback(nil,error);
         }];
     }
