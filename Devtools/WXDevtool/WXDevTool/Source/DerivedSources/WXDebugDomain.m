@@ -43,7 +43,7 @@
             responseCallback(nil,error);
         }];
     } else if ([methodName isEqualToString:@"network"] && [self.delegate respondsToSelector:@selector(domain:enableNetwork:networkCallback:)]) {
-        [self.delegate domain:self enableNetwork:[params objectForKey:@"enable"] networkCallback:^(id error) {
+        [self.delegate domain:self enableNetwork:[[params objectForKey:@"enable"] boolValue] networkCallback:^(id error) {
             responseCallback(nil,error);
         }];
     }
