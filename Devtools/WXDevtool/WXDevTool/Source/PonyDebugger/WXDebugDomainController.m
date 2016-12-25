@@ -89,8 +89,6 @@
     if (enable) {
         [debugger enableNetworkTrafficDebugging];
         [debugger forwardAllNetworkTraffic];
-    }else {
-        [debugger disEnableNetworkTrafficDebugging];
     }
 }
 
