@@ -513,6 +513,12 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
     [self callJSMethod:@"WxDebug.initJSRuntime" params:args];
 }
 
+- (void)executeJavascript:(NSString *)script
+{
+    NSDictionary *args = @{@"source":script};
+    [self callJSMethod:@"WxDebug.importScript" params:args];
+}
+
 - (void)callJSMethod:(NSString *)method params:(NSDictionary*)params {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     [dict setObject:method forKey:@"method"];
