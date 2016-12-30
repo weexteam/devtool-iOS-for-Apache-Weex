@@ -2,9 +2,6 @@
 //  ChartDataEntry.swift
 //  Charts
 //
-//  Created by Daniel Cohen Gindi on 23/2/15.
-
-//
 //  Copyright 2015 Daniel Cohen Gindi & Philipp Jahoda
 //  A port of MPAndroidChart for iOS
 //  Licensed under Apache License 2.0
@@ -14,64 +11,50 @@
 
 import Foundation
 
-public class ChartDataEntry: NSObject
+open class ChartDataEntry: ChartDataEntryBase
 {
-    /// the actual value (y axis)
-    public var value = Double(0.0)
+    /// the x value
+    open var x = Double(0.0)
     
-    /// the index on the x-axis
-    public var xIndex = Int(0)
-    
-    /// optional spot for additional data this Entry represents
-    public var data: AnyObject?
-    
-    public override required init()
+    public required init()
     {
         super.init()
     }
     
-    public init(value: Double, xIndex: Int)
+    /// An Entry represents one single entry in the chart.
+    /// - parameter x: the x value
+    /// - parameter y: the y value (the actual value of the entry)
+    public init(x: Double, y: Double)
     {
-        super.init()
+        super.init(y: y)
         
-        self.value = value
-        self.xIndex = xIndex
+        self.x = x
     }
     
-    public init(value: Double, xIndex: Int, data: AnyObject?)
+    /// An Entry represents one single entry in the chart.
+    /// - parameter x: the x value
+    /// - parameter y: the y value (the actual value of the entry)
+    /// - parameter data: Space for additional data this Entry represents.
+
+    public init(x: Double, y: Double, data: AnyObject?)
     {
-        super.init()
+        super.init(y: y)
         
-        self.value = value
-        self.xIndex = xIndex
+        self.x = x
+
         self.data = data
     }
     
     // MARK: NSObject
     
-    public override func isEqual(object: AnyObject?) -> Bool
+    open override func isEqual(_ object: Any?) -> Bool
     {
-        if (object === nil)
+        if !super.isEqual(object)
         {
             return false
         }
         
-        if (!object!.isKindOfClass(self.dynamicType))
-        {
-            return false
-        }
-        
-        if (object!.data !== data && !object!.data.isEqual(self.data))
-        {
-            return false
-        }
-        
-        if (object!.xIndex != xIndex)
-        {
-            return false
-        }
-        
-        if (fabs(object!.value - value) > 0.00001)
+        if fabs((object! as AnyObject).x - x) > DBL_EPSILON
         {
             return false
         }
@@ -81,19 +64,19 @@ public class ChartDataEntry: NSObject
     
     // MARK: NSObject
     
-    public override var description: String
+    open override var description: String
     {
-        return "ChartDataEntry, xIndex: \(xIndex), value \(value)"
+        return "ChartDataEntry, x: \(x), y \(y)"
     }
     
     // MARK: NSCopying
     
-    public func copyWithZone(zone: NSZone) -> AnyObject
+    open func copyWithZone(_ zone: NSZone?) -> AnyObject
     {
-        let copy = self.dynamicType.init()
+        let copy = type(of: self).init()
         
-        copy.value = value
-        copy.xIndex = xIndex
+        copy.x = x
+        copy.y = y
         copy.data = data
         
         return copy
@@ -102,27 +85,27 @@ public class ChartDataEntry: NSObject
 
 public func ==(lhs: ChartDataEntry, rhs: ChartDataEntry) -> Bool
 {
-    if (lhs === rhs)
+    if lhs === rhs
     {
         return true
     }
     
-    if (!lhs.isKindOfClass(rhs.dynamicType))
+    if !lhs.isKind(of: type(of: rhs))
     {
         return false
     }
     
-    if (lhs.data !== rhs.data && !lhs.data!.isEqual(rhs.data))
+    if lhs.data !== rhs.data && !lhs.data!.isEqual(rhs.data)
     {
         return false
     }
     
-    if (lhs.xIndex != rhs.xIndex)
+    if fabs(lhs.x - rhs.x) > DBL_EPSILON
     {
         return false
     }
     
-    if (fabs(lhs.value - rhs.value) > 0.00001)
+    if fabs(lhs.y - rhs.y) > DBL_EPSILON
     {
         return false
     }

@@ -2,8 +2,6 @@
 //  ScatterChartData.swift
 //  Charts
 //
-//  Created by Daniel Cohen Gindi on 26/2/15.
-//
 //  Copyright 2015 Daniel Cohen Gindi & Philipp Jahoda
 //  A port of MPAndroidChart for iOS
 //  Licensed under Apache License 2.0
@@ -14,25 +12,20 @@
 import Foundation
 import CoreGraphics
 
-public class ScatterChartData: BarLineScatterCandleBubbleChartData
+open class ScatterChartData: BarLineScatterCandleBubbleChartData
 {
     public override init()
     {
         super.init()
     }
     
-    public override init(xVals: [String?]?, dataSets: [IChartDataSet]?)
+    public override init(dataSets: [IChartDataSet]?)
     {
-        super.init(xVals: xVals, dataSets: dataSets)
+        super.init(dataSets: dataSets)
     }
     
-    public override init(xVals: [NSObject]?, dataSets: [IChartDataSet]?)
-    {
-        super.init(xVals: xVals, dataSets: dataSets)
-    }
-    
-    /// - returns: the maximum shape-size across all DataSets.
-    public func getGreatestShapeSize() -> CGFloat
+    /// - returns: The maximum shape-size across all DataSets.
+    open func getGreatestShapeSize() -> CGFloat
     {
         var max = CGFloat(0.0)
         
@@ -40,7 +33,7 @@ public class ScatterChartData: BarLineScatterCandleBubbleChartData
         {
             let scatterDataSet = set as? IScatterChartDataSet
             
-            if (scatterDataSet == nil)
+            if scatterDataSet == nil
             {
                 print("ScatterChartData: Found a DataSet which is not a ScatterChartDataSet", terminator: "\n")
             }
@@ -48,7 +41,7 @@ public class ScatterChartData: BarLineScatterCandleBubbleChartData
             {
                 let size = scatterDataSet!.scatterShapeSize
                 
-                if (size > max)
+                if size > max
                 {
                     max = size
                 }

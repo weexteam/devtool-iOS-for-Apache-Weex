@@ -2,9 +2,6 @@
 //  RadarChartDataSet.swift
 //  Charts
 //
-//  Created by Daniel Cohen Gindi on 24/2/15.
-
-//
 //  Copyright 2015 Daniel Cohen Gindi & Philipp Jahoda
 //  A port of MPAndroidChart for iOS
 //  Licensed under Apache License 2.0
@@ -16,11 +13,11 @@ import Foundation
 import CoreGraphics
 
 
-public class RadarChartDataSet: LineRadarChartDataSet, IRadarChartDataSet
+open class RadarChartDataSet: LineRadarChartDataSet, IRadarChartDataSet
 {
-    private func initialize()
+    fileprivate func initialize()
     {
-        self.valueFont = NSUIFont.systemFontOfSize(13.0)
+        self.valueFont = NSUIFont.systemFont(ofSize: 13.0)
     }
     
     public required init()
@@ -29,9 +26,9 @@ public class RadarChartDataSet: LineRadarChartDataSet, IRadarChartDataSet
         initialize()
     }
     
-    public override init(yVals: [ChartDataEntry]?, label: String?)
+    public required override init(values: [ChartDataEntry]?, label: String?)
     {
-        super.init(yVals: yVals, label: label)
+        super.init(values: values, label: label)
         initialize()
     }
     
@@ -41,22 +38,22 @@ public class RadarChartDataSet: LineRadarChartDataSet, IRadarChartDataSet
     
     /// flag indicating whether highlight circle should be drawn or not
     /// **default**: false
-    public var drawHighlightCircleEnabled: Bool = false
+    open var drawHighlightCircleEnabled: Bool = false
     
-    /// - returns: true if highlight circle should be drawn, false if not
-    public var isDrawHighlightCircleEnabled: Bool { return drawHighlightCircleEnabled }
+    /// - returns: `true` if highlight circle should be drawn, `false` ifnot
+    open var isDrawHighlightCircleEnabled: Bool { return drawHighlightCircleEnabled }
     
-    public var highlightCircleFillColor: NSUIColor? = NSUIColor.whiteColor()
+    open var highlightCircleFillColor: NSUIColor? = NSUIColor.white
     
     /// The stroke color for highlight circle.
     /// If `nil`, the color of the dataset is taken.
-    public var highlightCircleStrokeColor: NSUIColor?
+    open var highlightCircleStrokeColor: NSUIColor?
     
-    public var highlightCircleStrokeAlpha: CGFloat = 0.3
+    open var highlightCircleStrokeAlpha: CGFloat = 0.3
     
-    public var highlightCircleInnerRadius: CGFloat = 3.0
+    open var highlightCircleInnerRadius: CGFloat = 3.0
     
-    public var highlightCircleOuterRadius: CGFloat = 4.0
+    open var highlightCircleOuterRadius: CGFloat = 4.0
     
-    public var highlightCircleStrokeWidth: CGFloat = 2.0
+    open var highlightCircleStrokeWidth: CGFloat = 2.0
 }
