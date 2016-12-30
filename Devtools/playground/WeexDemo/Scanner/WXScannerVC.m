@@ -10,6 +10,8 @@
 #import "AppDelegate.h"
 #import "UIViewController+WXDemoNaviBar.h"
 #import "WXDemoViewController.h"
+#import "WXDebugTool.h"
+//#import <TBWXDevTool/WXDevTool.h>
 #import "WXDevTool.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import <WeexSDK/WeexSDK.h>
@@ -35,6 +37,7 @@
     self.edgesForExtendedLayout = UIRectEdgeNone;
     [self setupNaviBar];
     
+#if !(TARGET_IPHONE_SIMULATOR)
     self.session = [[AVCaptureSession alloc]init];
     [_session setSessionPreset:AVCaptureSessionPresetHigh];
     AVCaptureDevice * device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
@@ -50,7 +53,7 @@
     _captureLayer = [AVCaptureVideoPreviewLayer layerWithSession:_session];
     _captureLayer.videoGravity=AVLayerVideoGravityResizeAspectFill;
     _captureLayer.frame=self.view.layer.bounds;
-    
+#endif
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -101,14 +104,39 @@
     controller.url = url;
     controller.source = @"scan";
     
-    if ([url.port integerValue] == 8081) {
-        NSURL *socketURL = [NSURL URLWithString:[NSString stringWithFormat:@"ws://%@:8082", url.host]];
-        controller.hotReloadSocket = [[SRWebSocket alloc] initWithURL:socketURL protocols:@[@"echo-protocol"]];
-        controller.hotReloadSocket.delegate = controller;
-        [controller.hotReloadSocket open];
+    NSMutableDictionary *queryDict = [NSMutableDictionary new];
+    if (WX_SYS_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+        NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
+        NSArray *queryItems = [components queryItems];
+    
+        for (NSURLQueryItem *item in queryItems)
+            [queryDict setObject:item.value forKey:item.name];
+    }else {
+        queryDict = [self queryWithURL:url];
     }
+    NSString *wsport = queryDict[@"wsport"] ?: @"8082";
+    NSURL *socketURL = [NSURL URLWithString:[NSString stringWithFormat:@"ws://%@:%@", url.host, wsport]];
+    controller.hotReloadSocket = [[SRWebSocket alloc] initWithURL:socketURL protocols:@[@"echo-protocol"]];
+    controller.hotReloadSocket.delegate = controller;
+    [controller.hotReloadSocket open];
     
     [[self navigationController] pushViewController:controller animated:YES];
+}
+
+- (NSMutableDictionary*)queryWithURL:(NSURL *)url {
+    NSMutableDictionary * queryDic = nil;
+    if (![url query]) {
+        return queryDic;
+    }
+    queryDic = [NSMutableDictionary new];
+    NSArray* components = [[url query] componentsSeparatedByString:@"&"];
+    for (NSUInteger i = 0; i < [components count]; i ++) {
+        NSString * queryParam = [components objectAtIndex:i];
+        NSArray* component = [queryParam componentsSeparatedByString:@"="];
+        [queryDic setValue:component[1] forKey:component[0]];
+    }
+    
+    return  queryDic;
 }
 
 #pragma mark - Replace JS
@@ -150,7 +178,7 @@
 {
     if ([url.scheme isEqualToString:@"ws"]) {
         [WXSDKEngine connectDebugServer:url.absoluteString];
-        [WXSDKEngine initSDKEnviroment];
+        [WXSDKEngine initSDKEnvironment];
         
         return YES;
     }

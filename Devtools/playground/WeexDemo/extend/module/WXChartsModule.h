@@ -7,7 +7,7 @@
  */
 
 #import <Foundation/Foundation.h>
-#import <WeexSDK/WeexSDK.h>
+#import "WXModuleProtocol.h"
 
 @interface WXChartsModule : NSObject <WXModuleProtocol>
 

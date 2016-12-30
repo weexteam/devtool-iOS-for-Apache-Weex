@@ -2,8 +2,6 @@
 //  CombinedChartData.swift
 //  Charts
 //
-//  Created by Daniel Cohen Gindi on 26/2/15.
-//
 //  Copyright 2015 Daniel Cohen Gindi & Philipp Jahoda
 //  A port of MPAndroidChart for iOS
 //  Licensed under Apache License 2.0
@@ -13,30 +11,25 @@
 
 import Foundation
 
-public class CombinedChartData: BarLineScatterCandleBubbleChartData
+open class CombinedChartData: BarLineScatterCandleBubbleChartData
 {
-    private var _lineData: LineChartData!
-    private var _barData: BarChartData!
-    private var _scatterData: ScatterChartData!
-    private var _candleData: CandleChartData!
-    private var _bubbleData: BubbleChartData!
+    fileprivate var _lineData: LineChartData!
+    fileprivate var _barData: BarChartData!
+    fileprivate var _scatterData: ScatterChartData!
+    fileprivate var _candleData: CandleChartData!
+    fileprivate var _bubbleData: BubbleChartData!
     
     public override init()
     {
         super.init()
     }
     
-    public override init(xVals: [String?]?, dataSets: [IChartDataSet]?)
+    public override init(dataSets: [IChartDataSet]?)
     {
-        super.init(xVals: xVals, dataSets: dataSets)
+        super.init(dataSets: dataSets)
     }
     
-    public override init(xVals: [NSObject]?, dataSets: [IChartDataSet]?)
-    {
-        super.init(xVals: xVals, dataSets: dataSets)
-    }
-    
-    public var lineData: LineChartData!
+    open var lineData: LineChartData!
     {
         get
         {
@@ -45,21 +38,11 @@ public class CombinedChartData: BarLineScatterCandleBubbleChartData
         set
         {
             _lineData = newValue
-            for dataSet in newValue.dataSets
-            {
-                _dataSets.append(dataSet)
-            }
-            
-            checkIsLegal(newValue.dataSets)
-            
-            calcMinMax(start: _lastStart, end: _lastEnd)
-            calcYValueCount()
-            
-            calcXValAverageLength()
+            notifyDataChanged()
         }
     }
     
-    public var barData: BarChartData!
+    open var barData: BarChartData!
     {
         get
         {
@@ -68,21 +51,11 @@ public class CombinedChartData: BarLineScatterCandleBubbleChartData
         set
         {
             _barData = newValue
-            for dataSet in newValue.dataSets
-            {
-                _dataSets.append(dataSet)
-            }
-            
-            checkIsLegal(newValue.dataSets)
-            
-            calcMinMax(start: _lastStart, end: _lastEnd)
-            calcYValueCount()
-            
-            calcXValAverageLength()
+            notifyDataChanged()
         }
     }
     
-    public var scatterData: ScatterChartData!
+    open var scatterData: ScatterChartData!
     {
         get
         {
@@ -91,21 +64,11 @@ public class CombinedChartData: BarLineScatterCandleBubbleChartData
         set
         {
             _scatterData = newValue
-            for dataSet in newValue.dataSets
-            {
-                _dataSets.append(dataSet)
-            }
-            
-            checkIsLegal(newValue.dataSets)
-            
-            calcMinMax(start: _lastStart, end: _lastEnd)
-            calcYValueCount()
-        
-            calcXValAverageLength()
+            notifyDataChanged()
         }
     }
     
-    public var candleData: CandleChartData!
+    open var candleData: CandleChartData!
     {
         get
         {
@@ -114,21 +77,11 @@ public class CombinedChartData: BarLineScatterCandleBubbleChartData
         set
         {
             _candleData = newValue
-            for dataSet in newValue.dataSets
-            {
-                _dataSets.append(dataSet)
-            }
-            
-            checkIsLegal(newValue.dataSets)
-            
-            calcMinMax(start: _lastStart, end: _lastEnd)
-            calcYValueCount()
-            
-            calcXValAverageLength()
+            notifyDataChanged()
         }
     }
     
-    public var bubbleData: BubbleChartData!
+    open var bubbleData: BubbleChartData!
     {
         get
         {
@@ -137,22 +90,77 @@ public class CombinedChartData: BarLineScatterCandleBubbleChartData
         set
         {
             _bubbleData = newValue
-            for dataSet in newValue.dataSets
-            {
-                _dataSets.append(dataSet)
-            }
-            
-            checkIsLegal(newValue.dataSets)
-            
-            calcMinMax(start: _lastStart, end: _lastEnd)
-            calcYValueCount()
-            
-            calcXValAverageLength()
+            notifyDataChanged()
         }
     }
     
-    /// - returns: all data objects in row: line-bar-scatter-candle-bubble if not null.
-    public var allData: [ChartData]
+    open override func calcMinMax()
+    {
+        _dataSets.removeAll()
+        
+        _yMax = -DBL_MAX
+        _yMin = DBL_MAX
+        _xMax = -DBL_MAX
+        _xMin = DBL_MAX
+        
+        _leftAxisMax = -DBL_MAX
+        _leftAxisMin = DBL_MAX
+        _rightAxisMax = -DBL_MAX
+        _rightAxisMin = DBL_MAX
+        
+        let allData = self.allData
+        
+        for data in allData
+        {
+            data.calcMinMax()
+            
+            let sets = data.dataSets
+            _dataSets.append(contentsOf: sets)
+            
+            if data.yMax > _yMax
+            {
+                _yMax = data.yMax
+            }
+            
+            if data.yMin < _yMin
+            {
+                _yMin = data.yMin
+            }
+            
+            if data.xMax > _xMax
+            {
+                _xMax = data.xMax
+            }
+            
+            if data.xMin < _xMin
+            {
+                _xMin = data.xMin
+            }
+            
+            if data.yMax > _leftAxisMax
+            {
+                _leftAxisMax = data.yMax
+            }
+            
+            if data.yMin < _leftAxisMin
+            {
+                _leftAxisMin = data.yMin
+            }
+            
+            if data.yMax > _rightAxisMax
+            {
+                _rightAxisMax = data.yMax
+            }
+            
+            if data.yMin < _rightAxisMin
+            {
+                _rightAxisMin = data.yMin
+            }
+        }
+    }
+    
+    /// - returns: All data objects in row: line-bar-scatter-candle-bubble if not null.
+    open var allData: [ChartData]
     {
         var data = [ChartData]()
         
@@ -180,25 +188,72 @@ public class CombinedChartData: BarLineScatterCandleBubbleChartData
         return data
     }
     
-    public override func notifyDataChanged()
+    open func dataByIndex(_ index: Int) -> ChartData
     {
-        if (_lineData !== nil)
+        return allData[index]
+    }
+    
+    open func dataIndex(_ data: ChartData) -> Int?
+    {
+        return allData.index(of: data)
+    }
+    
+    open override func removeDataSet(_ dataSet: IChartDataSet!) -> Bool
+    {
+        let datas = allData
+        
+        var success = false
+        
+        for data in datas
+        {
+            success = data.removeDataSet(dataSet)
+            
+            if success
+            {
+                break
+            }
+        }
+        
+        return success
+    }
+    
+    open override func removeDataSetByIndex(_ index: Int) -> Bool
+    {
+        print("removeDataSet(index) not supported for CombinedData", terminator: "\n")
+        return false
+    }
+    
+    open override func removeEntry(_ entry: ChartDataEntry, dataSetIndex: Int) -> Bool
+    {
+        print("removeEntry(entry, dataSetIndex) not supported for CombinedData", terminator: "\n")
+        return false
+    }
+    
+    open override func removeEntry(xValue: Double, dataSetIndex: Int) -> Bool
+    {
+        print("removeEntry(xValue, dataSetIndex) not supported for CombinedData", terminator: "\n")
+        return false
+    }
+    
+    open override func notifyDataChanged()
+    {
+        if _lineData !== nil
         {
             _lineData.notifyDataChanged()
         }
-        if (_barData !== nil)
+        if _barData !== nil
         {
             _barData.notifyDataChanged()
         }
-        if (_scatterData !== nil)
+        if _scatterData !== nil
         {
             _scatterData.notifyDataChanged()
         }
-        if (_candleData !== nil)
+        if _candleData !== nil
         {
             _candleData.notifyDataChanged()
         }
-        if (_bubbleData !== nil)
+        if _bubbleData !== nil
         {
             _bubbleData.notifyDataChanged()
         }
@@ -210,8 +265,8 @@ public class CombinedChartData: BarLineScatterCandleBubbleChartData
     /// Get the Entry for a corresponding highlight object
     ///
     /// - parameter highlight:
-    /// - returns: the entry that is highlighted
-    public override func getEntryForHighlight(highlight: ChartHighlight) -> ChartDataEntry?
+    /// - returns: The entry that is highlighted
+    open override func entryForHighlight(_ highlight: Highlight) -> ChartDataEntry?
     {
         let dataObjects = allData
         
@@ -229,11 +284,10 @@ public class CombinedChartData: BarLineScatterCandleBubbleChartData
         else
         {
             // The value of the highlighted entry could be NaN - if we are not interested in highlighting a specific value.
-            
-            let entries = data.getDataSetByIndex(highlight.dataSetIndex).entriesForXIndex(highlight.xIndex)
+            let entries = data.getDataSetByIndex(highlight.dataSetIndex).entriesForXValue(highlight.x)
             for e in entries
             {
-                if e.value == highlight.value || isnan(highlight.value)
+                if e.y == highlight.y || highlight.y.isNaN
                 {
                     return e
                 }

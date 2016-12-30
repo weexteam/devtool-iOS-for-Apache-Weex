@@ -9,13 +9,16 @@
 #import "AppDelegate.h"
 #import "WXDemoViewController.h"
 #import "UIViewController+WXDemoNaviBar.h"
+#import "WXStreamModule.h"
 #import "WXEventModule.h"
-#import "WXChartsModule.h"
+#import "WXNavigationDefaultImpl.h"
 #import "WXImgLoaderDefaultImpl.h"
 #import "DemoDefine.h"
 #import "WXScannerVC.h"
+#import "WXSyncTestModule.h"
 #import <WeexSDK/WeexSDK.h>
 #import <AVFoundation/AVFoundation.h>
+#import <ATSDK/ATManager.h>
 
 @interface AppDelegate ()
 @end
@@ -29,16 +32,13 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor = [UIColor whiteColor];
-
+    
     [self initWeexSDK];
     
     self.window.rootViewController = [[WXRootViewController alloc] initWithRootViewController:[self demoController]];
     [self.window makeKeyAndVisible];
     
-    // Override point for customization after application launch.
     [self startSplashScreen];
-    
-    [self checkUpdate];
     
     return YES;
 }
@@ -71,30 +71,28 @@
 {
     [WXAppConfiguration setAppGroup:@"AliApp"];
     [WXAppConfiguration setAppName:@"WeexDemo"];
-    [WXAppConfiguration setAppVersion:@"1.8.3"];
     [WXAppConfiguration setExternalUserAgent:@"ExternalUA"];
     
-    [WXSDKEngine initSDKEnviroment];
+    [WXSDKEngine initSDKEnvironment];
     
     [WXSDKEngine registerHandler:[WXImgLoaderDefaultImpl new] withProtocol:@protocol(WXImgLoaderProtocol)];
     [WXSDKEngine registerHandler:[WXEventModule new] withProtocol:@protocol(WXEventModuleProtocol)];
     
     [WXSDKEngine registerComponent:@"select" withClass:NSClassFromString(@"WXSelectComponent")];
     [WXSDKEngine registerModule:@"event" withClass:[WXEventModule class]];
-    [WXSDKEngine registerComponent:@"charts" withClass:NSClassFromString(@"WXChartsComponent")];
-    [WXSDKEngine registerModule:@"charts" withClass:[WXChartsModule class]];
+    [WXSDKEngine registerModule:@"syncTest" withClass:[WXSyncTestModule class]];
     
 #if !(TARGET_IPHONE_SIMULATOR)
     [self checkUpdate];
 #endif
     
 #ifdef DEBUG
-//    [self atAddPlugin];
+    [self atAddPlugin];
     [WXDebugTool setDebug:YES];
-    [WXLog setLogLevel:WXLogLevelDebug];
+    [WXLog setLogLevel:WXLogLevelLog];
     
     #ifndef UITEST
-        //[[ATManager shareInstance] show];
+        [[ATManager shareInstance] show];
     #endif
 #else
     [WXDebugTool setDebug:NO];
@@ -108,7 +106,7 @@
     
 #if DEBUG
     //If you are debugging in device , please change the host to current IP of your computer.
-    ((WXDemoViewController *)demo).url = [NSURL URLWithString:HOME_URL];
+    ((WXDemoViewController *)demo).url = [NSURL URLWithString:BUNDLE_URL];
 #else
     ((WXDemoViewController *)demo).url = [NSURL URLWithString:BUNDLE_URL];
 #endif
@@ -178,7 +176,6 @@
 
 #pragma mark
 
-/*
 - (void)atAddPlugin {
     
     [[ATManager shareInstance] addPluginWithId:@"weex" andName:@"weex" andIconName:@"../weex" andEntry:@"" andArgs:@[@""]];
@@ -187,7 +184,6 @@
     [[ATManager shareInstance] addSubPluginWithParentId:@"weex" andSubId:@"test2" andName:@"test" andIconName:@"at_arr_refresh" andEntry:@"" andArgs:@[]];
     [[ATManager shareInstance] addSubPluginWithParentId:@"weex" andSubId:@"test3" andName:@"test" andIconName:@"at_arr_refresh" andEntry:@"" andArgs:@[]];
 }
- */
 
 - (void)checkUpdate {
     __weak typeof(self) weakSelf = self;
