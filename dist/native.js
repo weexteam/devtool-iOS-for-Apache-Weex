@@ -1,4 +1,4 @@
-(this.nativeLog || function(s) {console.log(s)})('START JS FRAMEWORK: 0.15.2 Build 20160914');
+(this.nativeLog || function(s) {console.log(s)})('START JS FRAMEWORK: 0.16.17 Build 20161230');
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
