@@ -37,6 +37,8 @@
 		0A0298541D4B402400B4BC95 /* WXDevToolType.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0298521D4B402400B4BC95 /* WXDevToolType.h */; };
 		0A0298551D4B402400B4BC95 /* WXDevToolType.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0298531D4B402400B4BC95 /* WXDevToolType.m */; };
 		0A1DCE3A1D4F004C005E87C7 /* TBWXDevTool.pch in Headers */ = {isa = PBXBuildFile; fileRef = 0A1DCE391D4F004C005E87C7 /* TBWXDevTool.pch */; };
+		0A37BCA21E1A521F00C5542E /* WXDebuggerUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A37BCA01E1A521F00C5542E /* WXDebuggerUtility.h */; };
+		0A37BCA31E1A521F00C5542E /* WXDebuggerUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A37BCA11E1A521F00C5542E /* WXDebuggerUtility.m */; };
 		0ABB39F11D3F37700091332E /* TBWXDevTool_MTL.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 0ABB39F01D3F37700091332E /* TBWXDevTool_MTL.h */; };
 		0ABB39F31D3F37700091332E /* TBWXDevTool_MTL.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ABB39F21D3F37700091332E /* TBWXDevTool_MTL.m */; };
 		0ABDFC6F1D3C7B6900206418 /* WXDebugDomain.h in Headers */ = {isa = PBXBuildFile; fileRef = 0ABDFC6D1D3C7B6900206418 /* WXDebugDomain.h */; };
@@ -204,6 +206,8 @@
 		0A0298521D4B402400B4BC95 /* WXDevToolType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXDevToolType.h; sourceTree = "<group>"; };
 		0A0298531D4B402400B4BC95 /* WXDevToolType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXDevToolType.m; sourceTree = "<group>"; };
 		0A1DCE391D4F004C005E87C7 /* TBWXDevTool.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBWXDevTool.pch; sourceTree = "<group>"; };
+		0A37BCA01E1A521F00C5542E /* WXDebuggerUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXDebuggerUtility.h; sourceTree = "<group>"; };
+		0A37BCA11E1A521F00C5542E /* WXDebuggerUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXDebuggerUtility.m; sourceTree = "<group>"; };
 		0ABB39EE1D3F37700091332E /* libTBWXDevTool_MTL.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTBWXDevTool_MTL.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		0ABB39F01D3F37700091332E /* TBWXDevTool_MTL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBWXDevTool_MTL.h; sourceTree = "<group>"; };
 		0ABB39F21D3F37700091332E /* TBWXDevTool_MTL.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TBWXDevTool_MTL.m; sourceTree = "<group>"; };
@@ -512,6 +516,8 @@
 				0ADE976E1D767B62005781C1 /* WXContainerIndex.m */,
 				0ADE976F1D767B62005781C1 /* WXDebugger.h */,
 				0ADE97701D767B62005781C1 /* WXDebugger.m */,
+				0A37BCA01E1A521F00C5542E /* WXDebuggerUtility.h */,
+				0A37BCA11E1A521F00C5542E /* WXDebuggerUtility.m */,
 				0ADE97711D767B62005781C1 /* WXDefinitions.h */,
 				0ADE97721D767B62005781C1 /* WXDefinitions.m */,
 				0A0102941D35E25300F0D592 /* WXCSSDomainController.h */,
@@ -639,6 +645,7 @@
 				0ADE977F1D767B62005781C1 /* NSError+WX_JSONObject.h in Headers */,
 				0ADE98031D767BA5005781C1 /* WXDebuggerTypes.h in Headers */,
 				0ADE97731D767B62005781C1 /* NSArray+WX_JSONObject.h in Headers */,
+				0A37BCA21E1A521F00C5542E /* WXDebuggerUtility.h in Headers */,
 				0ADE983F1D767BB7005781C1 /* WXTimelineTypes.h in Headers */,
 				0ADE98091D767BA5005781C1 /* WXDOMStorageDomain.h in Headers */,
 				0ADE98391D767BB7005781C1 /* WXRuntimeDomain.h in Headers */,
@@ -934,6 +941,7 @@
 				0ADE97781D767B62005781C1 /* NSData+WXDebugger.m in Sources */,
 				0ADE97CE1D767B93005781C1 /* WXApplicationCacheTypes.m in Sources */,
 				0ADE97B31D767B6F005781C1 /* WXObject.m in Sources */,
+				0A37BCA31E1A521F00C5542E /* WXDebuggerUtility.m in Sources */,
 				0ADE97AD1D767B6F005781C1 /* WXIndexedDBDomainController.m in Sources */,
 				0ADE978A1D767B62005781C1 /* WXConsoleDomainController.m in Sources */,
 				0ADE97D41D767B93005781C1 /* WXCSSDomain.m in Sources */,
