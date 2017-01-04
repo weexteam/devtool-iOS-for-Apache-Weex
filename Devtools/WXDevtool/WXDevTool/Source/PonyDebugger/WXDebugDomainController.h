@@ -17,4 +17,6 @@
 
 + (WXDebugDomainController *)defaultInstance;
 
+- (void)debugDomainRegisterCallNativeModule:(WXJSCallNativeModule)callNativeModuleBlock;
+
 @end

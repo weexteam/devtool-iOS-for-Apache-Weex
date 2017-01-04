@@ -8,7 +8,7 @@
 
 #import "WXDebugDomain.h"
 
-@implementation WXDebugDomain
+@implementation WXDebugDomain 
 
 @dynamic delegate;
 
@@ -45,6 +45,10 @@
     } else if ([methodName isEqualToString:@"network"] && [self.delegate respondsToSelector:@selector(domain:enableNetwork:networkCallback:)]) {
         [self.delegate domain:self enableNetwork:[[params objectForKey:@"enable"] boolValue] networkCallback:^(id error) {
             responseCallback(nil,error);
+        }];
+    } else if ([methodName isEqualToString:@"syncCall"] && [self.delegate respondsToSelector:@selector(domain:callNativeModule:callBack:)]) {
+        [self.delegate domain:self callNativeModule:params callBack:^(NSDictionary *result, id error) {
+            responseCallback(result, error);
         }];
     }
 }

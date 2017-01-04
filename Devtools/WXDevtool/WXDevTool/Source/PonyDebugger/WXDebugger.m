@@ -14,6 +14,7 @@
 #import "WXDebugger.h"
 #import "WXDynamicDebuggerDomain.h"
 #import "WXNetworkDomain.h"
+#import "WXDebugDomain.h"
 #import "WXPrettyStringPrinter.h"
 #import "WXDomainController.h"
 
@@ -135,10 +136,6 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(NSString *)message;
 {
-    if ([WXDevToolType isDebug]) {
-        [self _changeToDebugLogicMessage:message];
-    }
-    
     NSDictionary *obj = [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
 
     NSString *fullMethodName = [obj objectForKey:@"method"];
@@ -175,6 +172,10 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
         [domain handleMethodWithName:methodName parameters:[obj objectForKey:@"params"] responseCallback:[responseCallback copy]];
     } else {
         responseCallback(nil, [NSString stringWithFormat:@"unknown domain %@", domainName]);
+    }
+    
+    if ([WXDevToolType isDebug]) {
+        [self _changeToDebugLogicMessage:message];
     }
 }
 
@@ -519,14 +520,6 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
     [self callJSMethod:@"WxDebug.importScript" params:args];
 }
 
-- (void)callJSMethod:(NSString *)method params:(NSDictionary*)params {
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [dict setObject:method forKey:@"method"];
-    [dict setObject:params forKey:@"params"];
-    [_debugAry addObject:[WXUtility JSONString:dict]];
-    [self _executionDebugAry];
-}
-
 - (void)registerCallNative:(WXJSCallNative)callNative
 {
     [self _initBridgeThread];
@@ -537,11 +530,11 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
 {
     _callAddElementBlock = callAddElement;
 }
-    
-    
+
 - (void)registerCallNativeModule:(WXJSCallNativeModule)callNativeModuleBlock
 {
-    _nativeModuleBlock = callNativeModuleBlock;
+    WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
+    [debugDomainCrl debugDomainRegisterCallNativeModule:callNativeModuleBlock];
 }
     
 - (void)registerCallNativeComponent:(WXJSCallNativeComponent)callNativeComponentBlock
@@ -576,23 +569,17 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
 }
 
 #pragma mark - RPC to chrome
-    
-- (JSValue *)callSyncReturnMethodWithArgs:(id)result withSyncId:(NSString *)syncId {
-    NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-    if (result) {
-        [params setObject:result forKey:@"ret"];
-    }
-    [params setObject:syncId forKey:@"syncId"];
+
+- (void)callJSMethod:(NSString *)method params:(NSDictionary*)params {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    [dict setObject:@"WxDebug.syncReturn" forKey:@"method"];
+    [dict setObject:method forKey:@"method"];
     [dict setObject:params forKey:@"params"];
-    
     [_debugAry addObject:[WXUtility JSONString:dict]];
     [self _executionDebugAry];
-    return nil;
 }
     
-#pragma mark - notification 
+#pragma mark - notification
+
 - (void)notificationIsDebug:(NSNotification *)notification {
     if ([notification.object boolValue]) {
         _bridgeThread = nil;
@@ -691,30 +678,6 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
         WXLogDebug(@"callNativeComponent...%@,%@,%@,%@", instanceIdString, componentNameString, methodNameString, argsArray);
         
         _nativeComponentBlock(instanceIdString, componentNameString, methodNameString, argsArray, optionsDic);
-    }
-    
-    if ([method isEqualToString:@"syncCall"]) {
-        [self _evaluateSyncNative:args];
-    }
-}
-
-- (void)_evaluateSyncNative:(NSDictionary *)data {
-    NSArray *args = [data objectForKey:@"args"];
-    NSString *method = [data objectForKey:@"method"];
-    NSString *syncId = [data objectForKey:@"syncId"];
-    if ([method isEqualToString:@"callNativeModule"]) {
-        NSString *instanceIdString = args[0] ? : @"";
-        NSString *moduleNameString = args[1] ? : @"";
-        NSString *methodNameString = args[2] ? : @"";
-        NSArray *argsArray = args[3] ? : [NSArray array];
-        NSDictionary *optionsDic = args[4] ? : [NSDictionary dictionary];
-        
-        WXLog(@"callNativeModule...%@,%@,%@,%@", instanceIdString, moduleNameString, methodNameString, argsArray);
-        
-        NSInvocation *invocation = _nativeModuleBlock(instanceIdString, moduleNameString, methodNameString, argsArray, optionsDic);
-        id object = [WXDebuggerUtility switchInvocationReture:invocation];
-        
-        [self callSyncReturnMethodWithArgs:object withSyncId:syncId];
     }
 }
 

@@ -8,9 +8,15 @@
 
 #import "WXDebugDomainController.h"
 #import "WXDevToolType.h"
+#import "WXDebuggerUtility.h"
 #import <WeexSDK/WeexSDK.h>
 
-@implementation WXDebugDomainController
+#define SYNCRETURN @"WxDebug.syncReturn"
+
+@implementation WXDebugDomainController {
+    WXJSCallNativeModule _nativeModuleBlock;
+}
+
 @dynamic domain;
 
 + (WXDebugDomainController *)defaultInstance {
@@ -38,6 +44,10 @@
       @"off":@(WXLogLevelOff)
       };
     return logLevelEnumToString;
+}
+
+- (void)debugDomainRegisterCallNativeModule:(WXJSCallNativeModule)callNativeModuleBlock {
+    _nativeModuleBlock = callNativeModuleBlock;
 }
 
 #pragma mark - WXCommandDelegate
@@ -92,6 +102,34 @@
     }
 }
 
-
+- (void)domain:(WXDynamicDebuggerDomain *)domain callNativeModule:(NSDictionary *)data callBack:(void (^)(NSDictionary *result, id error))callback; {
+    NSArray *args = [data objectForKey:@"args"];
+    NSString *method = [data objectForKey:@"method"];
+    NSString *syncId = [data objectForKey:@"syncId"];
+    NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
+    [result setObject:SYNCRETURN forKey:@"method"];
+    NSError *error = nil;
+    if ([method isEqualToString:@"callNativeModule"]) {
+        NSString *instanceIdString = args[0] ? : @"";
+        NSString *moduleNameString = args[1] ? : @"";
+        NSString *methodNameString = args[2] ? : @"";
+        NSArray *argsArray = args[3] ? : [NSArray array];
+        NSDictionary *optionsDic = args[4] ? : [NSDictionary dictionary];
+        
+        WXLog(@"callNativeModule...%@,%@,%@,%@", instanceIdString, moduleNameString, methodNameString, argsArray);
+        
+        NSInvocation *invocation = _nativeModuleBlock(instanceIdString, moduleNameString, methodNameString, argsArray, optionsDic);
+        id object = [WXDebuggerUtility switchInvocationReture:invocation];
+        NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+        [params setObject:syncId forKey:@"syncId"];
+        if (object) {
+            [params setObject:object forKey:@"ret"];
+        }else {
+            error = [[NSError alloc] init];
+        }
+        [result setObject:params forKey:@"params"];
+    }
+    callback(result, error);
+}
 
 @end

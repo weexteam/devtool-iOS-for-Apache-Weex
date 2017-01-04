@@ -29,4 +29,6 @@
 
 - (void)domain:(WXDynamicDebuggerDomain *)domain enableNetwork:(BOOL)enable networkCallback:(void (^)(id error))callback;
 
+- (void)domain:(WXDynamicDebuggerDomain *)domain callNativeModule:(NSDictionary *)args callBack:(void (^)(NSDictionary *data, id error))callback;
+
 @end
