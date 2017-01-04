@@ -17,6 +17,14 @@
 
 + (WXDebugDomainController *)defaultInstance;
 
+- (void)registerDevice;
+
+- (void)debugDomainRegisterCallNative:(WXJSCallNative)callNativeBlock;
+
+- (void)debugDomainRegisterCallAddElement:(WXJSCallAddElement)callAddElement;
+
 - (void)debugDomainRegisterCallNativeModule:(WXJSCallNativeModule)callNativeModuleBlock;
+
+- (void)debugDomainRegisterCallNativeComponent:(WXJSCallNativeComponent)callNativeComponentBlock;
 
 @end

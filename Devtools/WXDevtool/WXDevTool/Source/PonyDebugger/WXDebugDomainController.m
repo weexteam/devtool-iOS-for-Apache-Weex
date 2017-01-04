@@ -8,13 +8,18 @@
 
 #import "WXDebugDomainController.h"
 #import "WXDevToolType.h"
+#import "WXDeviceInfo.h"
 #import "WXDebuggerUtility.h"
 #import <WeexSDK/WeexSDK.h>
 
 #define SYNCRETURN @"WxDebug.syncReturn"
 
 @implementation WXDebugDomainController {
+    NSThread    *_bridgeThread;
+    WXJSCallNative  _nativeCallBlock;
+    WXJSCallAddElement _callAddElementBlock;
     WXJSCallNativeModule _nativeModuleBlock;
+    WXJSCallNativeComponent _nativeComponentBlock;
 }
 
 @dynamic domain;
@@ -26,6 +31,17 @@
         defaultInstance = [[WXDebugDomainController alloc] init];
     });
     return defaultInstance;
+}
+
+- (id)init;
+{
+    self = [super init];
+    if (!self) {
+        return nil;
+    }
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationIsDebug:) name:@"WXDevtoolDebug" object:nil];
+    
+    return self;
 }
 
 + (Class)domainClass {
@@ -46,8 +62,76 @@
     return logLevelEnumToString;
 }
 
+- (void)registerDevice {
+    NSString *deviceID = [WXDeviceInfo getDeviceID];
+    NSString *machine = [WXDeviceInfo deviceName] ? : @"";
+    NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"] ?: [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                       deviceID, @"deviceId",
+                                       @"iOS", @"platform",
+                                       machine, @"model",
+                                       [WXSDKEngine SDKEngineVersion],@"weexVersion",
+                                       [WXDevTool WXDevtoolVersion],@"devtoolVersion",
+                                       appName, @"name",
+                                       [WXLog logLevelString] ?: @"error",@"logLevel",
+                                       [NSNumber numberWithBool:[WXDevToolType isDebug]],@"remoteDebug",
+                                       nil];
+    [self _registerDeviceWithParams:parameters];
+}
+
+- (void)debugDomainRegisterCallNative:(WXJSCallNative)callNativeBlock {
+    [self _initBridgeThread];
+    _nativeCallBlock = callNativeBlock;
+}
+
+- (void)debugDomainRegisterCallAddElement:(WXJSCallAddElement)callAddElement {
+    _callAddElementBlock = callAddElement;
+}
+
 - (void)debugDomainRegisterCallNativeModule:(WXJSCallNativeModule)callNativeModuleBlock {
     _nativeModuleBlock = callNativeModuleBlock;
+}
+
+- (void)debugDomainRegisterCallNativeComponent:(WXJSCallNativeComponent)callNativeComponentBlock {
+    _nativeComponentBlock = callNativeComponentBlock;
+}
+
+#pragma mark - private methods
+- (void)_initBridgeThread {
+    _bridgeThread = [NSThread currentThread];
+}
+
+- (void)_executeBridgeThead:(dispatch_block_t)block
+{
+    if([NSThread currentThread] == _bridgeThread) {
+        block();
+    } else if (_bridgeThread){
+        [self performSelector:@selector(_executeBridgeThead:)
+                     onThread:_bridgeThread
+                   withObject:[block copy]
+                waitUntilDone:NO];
+    }
+}
+
+- (void)_registerDeviceWithParams:(id)params {
+    NSDictionary *obj = [[NSDictionary alloc] initWithObjectsAndKeys:
+                         @"WxDebug.registerDevice", @"method",
+                         [params WX_JSONObject], @"params",
+                         [NSNumber numberWithInt:0],@"id",
+                         nil];
+    
+    NSData *data = [NSJSONSerialization dataWithJSONObject:obj options:0 error:nil];
+    NSString *encodedData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    [[WXDebugger defaultInstance] sendDebugMessage:encodedData onBridgeThread:_bridgeThread ? YES : NO];
+}
+
+
+#pragma mark - notification
+
+- (void)notificationIsDebug:(NSNotification *)notification {
+    if ([notification.object boolValue]) {
+        _bridgeThread = nil;
+    }
 }
 
 #pragma mark - WXCommandDelegate
@@ -61,6 +145,10 @@
 - (void)domain:(WXDynamicDebuggerDomain *)domain disableWithCallback:(void (^)(id error))callback {
     [WXDevToolType setDebug:NO];
     [WXSDKEngine restart];
+    _nativeCallBlock = nil;
+    _callAddElementBlock = nil;
+    _nativeModuleBlock = nil;
+    _nativeComponentBlock = nil;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreshInstance" object:nil];
     callback(nil);
 }
@@ -102,34 +190,80 @@
     }
 }
 
-- (void)domain:(WXDynamicDebuggerDomain *)domain callNativeModule:(NSDictionary *)data callBack:(void (^)(NSDictionary *result, id error))callback; {
-    NSArray *args = [data objectForKey:@"args"];
-    NSString *method = [data objectForKey:@"method"];
-    NSString *syncId = [data objectForKey:@"syncId"];
-    NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
-    [result setObject:SYNCRETURN forKey:@"method"];
-    NSError *error = nil;
-    if ([method isEqualToString:@"callNativeModule"]) {
-        NSString *instanceIdString = args[0] ? : @"";
-        NSString *moduleNameString = args[1] ? : @"";
-        NSString *methodNameString = args[2] ? : @"";
-        NSArray *argsArray = args[3] ? : [NSArray array];
-        NSDictionary *optionsDic = args[4] ? : [NSDictionary dictionary];
+- (void)domain:(WXDynamicDebuggerDomain *)domain callNative:(NSDictionary *)jsModule callBack:(void (^)(id error))callback {
+    __weak typeof(self) weakSelf = self;
+    [self _executeBridgeThead:^{
+        NSString *instanceId = jsModule[@"instance"];
+        NSArray *methods = jsModule[@"tasks"];
+        NSString *callbackId = jsModule[@"callback"];
         
-        WXLog(@"callNativeModule...%@,%@,%@,%@", instanceIdString, moduleNameString, methodNameString, argsArray);
-        
-        NSInvocation *invocation = _nativeModuleBlock(instanceIdString, moduleNameString, methodNameString, argsArray, optionsDic);
-        id object = [WXDebuggerUtility switchInvocationReture:invocation];
-        NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-        [params setObject:syncId forKey:@"syncId"];
-        if (object) {
-            [params setObject:object forKey:@"ret"];
-        }else {
-            error = [[NSError alloc] init];
+        // params parse
+        if(!methods || methods.count <= 0){
+            return;
         }
-        [result setObject:params forKey:@"params"];
-    }
-    callback(result, error);
+        //call native
+        WXLogInfo(@"Calling native... instancdId:%@, methods:%@, callbackId:%@", instanceId, [WXUtility JSONString:methods], callbackId);
+        _nativeCallBlock(instanceId, methods, callbackId);
+        callback(nil);
+    }];
+}
+
+- (void)domain:(WXDynamicDebuggerDomain *)domain callAddElement:(NSDictionary *)jsModule callBack:(void (^)(id error))callback {
+    __weak typeof(self) weakSelf = self;
+    [self _executeBridgeThead:^{
+        NSString *instanceId = jsModule[@"instance"] ? : @"";
+        NSDictionary *componentData = jsModule[@"dom"] ? : [NSDictionary dictionary];
+        NSString *parentRef = jsModule[@"ref"] ? : @"";
+        NSNumber *index = jsModule[@"index"] ? : [NSNumber numberWithInteger:0];
+        NSInteger insertIndex = index.integerValue;
+        
+        WXLogDebug(@"callAddElement...%@, %@, %@, %ld", instanceId, parentRef, componentData, (long)insertIndex);
+        _callAddElementBlock(instanceId, parentRef, componentData, insertIndex);
+        callback(nil);
+    }];
+}
+
+- (void)domain:(WXDynamicDebuggerDomain *)domain syncCall:(NSDictionary *)data callBack:(void (^)(NSDictionary *result, id error))callback; {
+    __weak typeof(self) weakSelf = self;
+    [self _executeBridgeThead:^{
+        NSArray *args = [data objectForKey:@"args"];
+        NSString *method = [data objectForKey:@"method"];
+        NSString *syncId = [data objectForKey:@"syncId"];
+        NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
+        [result setObject:SYNCRETURN forKey:@"method"];
+        NSError *error = nil;
+        if ([method isEqualToString:@"callNativeModule"]) {
+            NSString *instanceIdString = args[0] ? : @"";
+            NSString *moduleNameString = args[1] ? : @"";
+            NSString *methodNameString = args[2] ? : @"";
+            NSArray *argsArray = args[3] ? : [NSArray array];
+            NSDictionary *optionsDic = args[4] ? : [NSDictionary dictionary];
+            
+            WXLog(@"callNativeModule...%@,%@,%@,%@", instanceIdString, moduleNameString, methodNameString, argsArray);
+            
+            NSInvocation *invocation = _nativeModuleBlock(instanceIdString, moduleNameString, methodNameString, argsArray, optionsDic);
+            id object = [WXDebuggerUtility switchInvocationReture:invocation];
+            NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+            [params setObject:syncId forKey:@"syncId"];
+            if (object) {
+                [params setObject:object forKey:@"ret"];
+            }else {
+                error = [[NSError alloc] init];
+            }
+            [result setObject:params forKey:@"params"];
+        }else if ([method isEqualToString:@"callNativeComponent"]) {
+            NSString *instanceIdString = args[0] ? : @"";
+            NSString *moduleNameString = args[1] ? : @"";
+            NSString *methodNameString = args[2] ? : @"";
+            NSArray *argsArray = args[3] ? : [NSArray array];
+            NSDictionary *optionsDic = args[4] ? : [NSDictionary dictionary];
+            
+            WXLog(@"callNativeModule...%@,%@,%@,%@", instanceIdString, moduleNameString, methodNameString, argsArray);
+            
+            NSInvocation *invocation = _nativeModuleBlock(instanceIdString, moduleNameString, methodNameString, argsArray, optionsDic);
+        }
+        callback(result, error);
+    }];
 }
 
 @end

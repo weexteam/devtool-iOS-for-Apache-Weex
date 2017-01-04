@@ -75,4 +75,11 @@
     SecItemDelete((CFDictionaryRef)keychainQuery);
 }
 
++ (NSString *)deviceName {
+    NSString *machine = [[UIDevice currentDevice] model];
+    NSString *systemVer = [[UIDevice currentDevice] systemVersion] ? : @"";
+    NSString *model = [NSString stringWithFormat:@"%@:%@",machine,systemVer];
+    return model;
+}
+
 @end

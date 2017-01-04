@@ -59,6 +59,7 @@ extern void _WXLogObjectsImpl(NSString *severity, NSArray *arguments);
 
 - (id)domainForName:(NSString *)name;
 - (void)sendEventWithName:(NSString *)string parameters:(id)params;
+- (void)sendDebugMessage:(NSString *)message onBridgeThread:(BOOL)isBridgeThread;
 
 #pragma mark Connect/Disconnect
 - (void)autoConnect;

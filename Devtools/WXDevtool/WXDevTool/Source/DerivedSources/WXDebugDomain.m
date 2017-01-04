@@ -46,9 +46,17 @@
         [self.delegate domain:self enableNetwork:[[params objectForKey:@"enable"] boolValue] networkCallback:^(id error) {
             responseCallback(nil,error);
         }];
-    } else if ([methodName isEqualToString:@"syncCall"] && [self.delegate respondsToSelector:@selector(domain:callNativeModule:callBack:)]) {
-        [self.delegate domain:self callNativeModule:params callBack:^(NSDictionary *result, id error) {
+    } else if ([methodName isEqualToString:@"syncCall"] && [self.delegate respondsToSelector:@selector(domain:syncCall:callBack:)]) {
+        [self.delegate domain:self syncCall:params callBack:^(NSDictionary *result, id error) {
             responseCallback(result, error);
+        }];
+    } else if ([methodName isEqualToString:@"callNative"] && [self.delegate respondsToSelector:@selector(domain:callNative:callBack:)]) {
+        [self.delegate domain:self callNative:params callBack:^(id error) {
+            responseCallback(nil, error);
+        }];
+    } else if ([methodName isEqualToString:@"callAddElement"] && [self.delegate respondsToSelector:@selector(domain:callAddElement:callBack:)]) {
+        [self.delegate domain:self callAddElement:params callBack:^(id error) {
+            responseCallback(nil, error);
         }];
     }
 }

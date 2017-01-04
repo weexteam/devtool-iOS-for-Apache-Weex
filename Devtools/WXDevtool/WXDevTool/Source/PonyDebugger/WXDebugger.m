@@ -31,7 +31,6 @@
 #import "WXDebugDomainController.h"
 #import "WXDevToolType.h"
 
-#import "WXDeviceInfo.h"
 #import <WeexSDK/WeexSDK.h>
 #import "WXDebuggerUtility.h"
 
@@ -70,10 +69,6 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
     NSMutableArray  *_msgAry;
     NSMutableArray  *_debugAry;
     BOOL _isConnect;
-    WXJSCallNative  _nativeCallBlock;
-    WXJSCallAddElement _callAddElementBlock;
-    WXJSCallNativeModule _nativeModuleBlock;
-    WXJSCallNativeComponent _nativeComponentBlock;
     NSThread    *_bridgeThread;
     NSThread    *_inspectThread;
     NSString    *_registerData;
@@ -103,7 +98,6 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
     _isConnect = NO;
     _domains = [[NSMutableDictionary alloc] init];
     _controllers = [[NSMutableDictionary alloc] init];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationIsDebug:) name:@"WXDevtoolDebug" object:nil];
     
     return self;
 }
@@ -118,20 +112,9 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket;
 {
     _isConnect = YES;
-    NSString *deviceID = [WXDeviceInfo getDeviceID];
-    NSString *machine = [self _deviceName] ? : @"";
-    NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"] ?: [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
-    NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-        deviceID, @"deviceId",
-        @"iOS", @"platform",
-        machine, @"model",
-        [WXSDKEngine SDKEngineVersion],@"weexVersion",
-        [WXDevTool WXDevtoolVersion],@"devtoolVersion",
-        appName, @"name",
-        [WXLog logLevelString] ?: @"error",@"logLevel",
-        [NSNumber numberWithBool:[WXDevToolType isDebug]],@"remoteDebug",
-        nil];
-    [self _registerDeviceWithParams:parameters];
+    
+    WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
+    [debugDomainCrl registerDevice];
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(NSString *)message;
@@ -161,9 +144,7 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
 
         NSData *data = [NSJSONSerialization dataWithJSONObject:response options:0 error:nil];
         NSString *encodedData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        [self _executeBridgeThead:^() {
-            [webSocket send:encodedData];
-        }];
+        [webSocket send:encodedData];
     };
 
     WXDynamicDebuggerDomain *domain = [self domainForName:domainName];
@@ -172,10 +153,6 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
         [domain handleMethodWithName:methodName parameters:[obj objectForKey:@"params"] responseCallback:[responseCallback copy]];
     } else {
         responseCallback(nil, [NSString stringWithFormat:@"unknown domain %@", domainName]);
-    }
-    
-    if ([WXDevToolType isDebug]) {
-        [self _changeToDebugLogicMessage:message];
     }
 }
 
@@ -359,8 +336,6 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
 
 - (void)disconnect;
 {
-    _nativeCallBlock = nil;
-    _callAddElementBlock = nil;
     _msgAry = nil;
     _debugAry = nil;
     [_bonjourBrowser stop];
@@ -522,13 +497,14 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
 
 - (void)registerCallNative:(WXJSCallNative)callNative
 {
-    [self _initBridgeThread];
-    _nativeCallBlock = callNative;
+    WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
+    [debugDomainCrl debugDomainRegisterCallNative:callNative];
 }
 
 - (void)registerCallAddElement:(WXJSCallAddElement)callAddElement
 {
-    _callAddElementBlock = callAddElement;
+    WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
+    [debugDomainCrl debugDomainRegisterCallAddElement:callAddElement];
 }
 
 - (void)registerCallNativeModule:(WXJSCallNativeModule)callNativeModuleBlock
@@ -539,7 +515,8 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
     
 - (void)registerCallNativeComponent:(WXJSCallNativeComponent)callNativeComponentBlock
 {
-    _nativeComponentBlock = callNativeComponentBlock;
+    WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
+    [debugDomainCrl debugDomainRegisterCallNativeComponent:callNativeComponentBlock];
 }
 
 - (JSValue*) exception
@@ -587,99 +564,6 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
 }
 
 #pragma mark - Private Methods
-- (void)_changeToDebugLogicMessage:(NSString *)message {
-    __weak typeof(self) weakSelf = self;
-    [self _executeBridgeThead:^() {
-        [weakSelf _evaluateNative:message];
-    }];
-}
-
-- (void)_initBridgeThread {
-    _bridgeThread = [NSThread currentThread];
-}
-
-- (void)_executeBridgeThead:(dispatch_block_t)block
-{
-    if ([WXDevToolType isDebug]) {
-        if([NSThread currentThread] == _bridgeThread) {
-            block();
-        } else if (_bridgeThread){
-            [self performSelector:@selector(_executeBridgeThead:)
-                         onThread:_bridgeThread
-                       withObject:[block copy]
-                    waitUntilDone:NO];
-        }
-    } else {
-        if([NSThread currentThread] == [NSThread mainThread]) {
-            block();
-        } else {
-            [self performSelector:@selector(_executeBridgeThead:)
-                         onThread:[NSThread mainThread]
-                       withObject:[block copy]
-                    waitUntilDone:NO];
-        }
-    }
-    
-    /*
-    if([NSThread currentThread] == _bridgeThread){
-        block();
-    } else {
-        [self performSelector:@selector(_executeBridgeThead:)
-                     onThread:_curThread
-                   withObject:[block copy]
-                waitUntilDone:NO];
-    }
-     */
-}
-
--(void)_evaluateNative:(NSString *)data
-{
-    NSDictionary *dict = [WXUtility objectFromJSON:data];
-    
-    NSString *fullMethodName = [dict objectForKey:@"method"];
-    NSInteger dotPosition = [fullMethodName rangeOfString:@"."].location;
-    NSString *method = [fullMethodName substringFromIndex:dotPosition + 1];
-    
-    NSDictionary *args = [dict objectForKey:@"params"];
-    
-    if ([method isEqualToString:@"callNative"]) {
-        // call native
-        NSString *instanceId = args[@"instance"];
-        NSArray *methods = args[@"tasks"];
-        NSString *callbackId = args[@"callback"];
-        
-        // params parse
-        if(!methods || methods.count <= 0){
-            return;
-        }
-        //call native
-        WXLogInfo(@"Calling native... instancdId:%@, methods:%@, callbackId:%@", instanceId, [WXUtility JSONString:methods], callbackId);
-        _nativeCallBlock(instanceId, methods, callbackId);
-    }
-    
-    if ([method isEqualToString:@"callAddElement"]) {
-        NSString *instanceId = args[@"instance"] ? : @"";
-        NSDictionary *componentData = args[@"dom"] ? : [NSDictionary dictionary];
-        NSString *parentRef = args[@"ref"] ? : @"";
-        NSNumber *index = args[@"index"] ? : [NSNumber numberWithInteger:0];
-        NSInteger insertIndex = index.integerValue;
-        
-        WXLogDebug(@"callAddElement...%@, %@, %@, %ld", instanceId, parentRef, componentData, (long)insertIndex);
-        _callAddElementBlock(instanceId, parentRef, componentData, insertIndex);
-    }
-    
-    if ([method isEqualToString:@"callNativeComponent"]) {
-        NSString *instanceIdString = args[@"instance"] ? : @"";
-        NSString *componentNameString = args[@"componentName"] ? : @"";
-        NSString *methodNameString = args[@"methodName"] ? : @"";
-        NSArray *argsArray = args[@"args"] ? : [NSArray array];
-        NSDictionary *optionsDic = args[@"options"] ? : [NSDictionary dictionary];
-        
-        WXLogDebug(@"callNativeComponent...%@,%@,%@,%@", instanceIdString, componentNameString, methodNameString, argsArray);
-        
-        _nativeComponentBlock(instanceIdString, componentNameString, methodNameString, argsArray, optionsDic);
-    }
-}
 
 - (void)_executionDebugAry {
     if (!_isConnect) return;
@@ -701,69 +585,14 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
     [_msgAry removeAllObjects];
 }
 
-
-- (NSString *)_deviceName
-{
-    /*
-    UIDevice *device = [UIDevice currentDevice];
-#if TARGET_IPHONE_SIMULATOR
-    NSDictionary *environment = [[NSProcessInfo processInfo] environment];
-    NSString *userName = [environment objectForKey:@"USER"];
-    if (!userName) {
-        NSString *simulatorHostHome = [environment objectForKey:@"SIMULATOR_HOST_HOME"];
-        if ([simulatorHostHome hasPrefix:@"/Users/"]) {
-            userName = [simulatorHostHome substringFromIndex:7];
-        }
-    }
-    NSString *deviceName = userName ? [NSString stringWithFormat:@"%@'s Simulator", userName] : @"iOS Simulator";
-#else
-    NSString *deviceName = device.name;
-#endif
-  */
-
-//    struct utsname systemInfo;
-//    uname(&systemInfo);
-//    NSString *machine = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
-    NSString *machine = [[UIDevice currentDevice] model];
-    NSString *systemVer = [[UIDevice currentDevice] systemVersion] ? : @"";
-    NSString *model = [NSString stringWithFormat:@"%@:%@",machine,systemVer];
-    return model;
-}
-
-
-- (void)_registerDeviceWithParams:(id)params {
-    NSDictionary *obj = [[NSDictionary alloc] initWithObjectsAndKeys:
-                         @"WxDebug.registerDevice", @"method",
-                         [params WX_JSONObject], @"params",
-                         [NSNumber numberWithInt:0],@"id",
-                         nil];
-    
-    NSData *data = [NSJSONSerialization dataWithJSONObject:obj options:0 error:nil];
-    NSString *encodedData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    _registerData = encodedData;
-    
-    if (_bridgeThread) {
-        [self _executeBridgeThead:^{
-            [_debugAry insertObject:encodedData atIndex:0];
-            [self _executionDebugAry];
-        }];
+- (void)sendDebugMessage:(NSString *)message onBridgeThread:(BOOL)isBridgeThread; {
+    _registerData = message;
+    if (isBridgeThread) {
+        [_debugAry insertObject:message atIndex:0];
+        [self _executionDebugAry];
     }else {
-        [_socket send:encodedData];
+        [_socket send:message];
     }
-    
-    /*
-    if (_bridgeThread) {
-        [self _executeBridgeThead:^{
-            [_debugAry insertObject:encodedData atIndex:0];
-            [self _executionDebugAry];
-        }];
-    }else if(![WXDevToolType isDebug]) {
-        [self _executeBridgeThead:^{
-            [_msgAry insertObject:encodedData atIndex:0];
-            [self _executionMsgAry];
-        }];
-    }
-     */
 }
 
 - (void)_resolveService:(NSNetService*)service;

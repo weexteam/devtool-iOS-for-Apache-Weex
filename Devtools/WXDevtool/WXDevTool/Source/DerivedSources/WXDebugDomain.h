@@ -29,6 +29,10 @@
 
 - (void)domain:(WXDynamicDebuggerDomain *)domain enableNetwork:(BOOL)enable networkCallback:(void (^)(id error))callback;
 
-- (void)domain:(WXDynamicDebuggerDomain *)domain callNativeModule:(NSDictionary *)args callBack:(void (^)(NSDictionary *data, id error))callback;
+- (void)domain:(WXDynamicDebuggerDomain *)domain callNative:(NSDictionary *)jsModule callBack:(void (^)(id error))callback;
+
+- (void)domain:(WXDynamicDebuggerDomain *)domain callAddElement:(NSDictionary *)jsModule callBack:(void (^)(id error))callback;
+
+- (void)domain:(WXDynamicDebuggerDomain *)domain syncCall:(NSDictionary *)args callBack:(void (^)(NSDictionary *data, id error))callback;
 
 @end

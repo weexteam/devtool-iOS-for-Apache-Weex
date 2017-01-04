@@ -12,4 +12,6 @@
 
 + (NSString *)getDeviceID;
 
++ (NSString *)deviceName;
+
 @end

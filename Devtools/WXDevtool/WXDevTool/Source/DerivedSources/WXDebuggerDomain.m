@@ -135,7 +135,6 @@
 }
 
 
-
 - (void)handleMethodWithName:(NSString *)methodName parameters:(NSDictionary *)params responseCallback:(WXResponseCallback)responseCallback;
 {
     if ([methodName isEqualToString:@"causesRecompilation"] && [self.delegate respondsToSelector:@selector(domain:causesRecompilationWithCallback:)]) {
