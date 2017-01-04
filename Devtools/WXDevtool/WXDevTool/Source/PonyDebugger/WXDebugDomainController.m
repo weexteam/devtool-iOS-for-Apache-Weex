@@ -96,6 +96,13 @@
     _nativeComponentBlock = callNativeComponentBlock;
 }
 
+- (void)clearGarbage {
+    _nativeCallBlock = nil;
+    _callAddElementBlock = nil;
+    _nativeModuleBlock = nil;
+    _nativeComponentBlock = nil;
+}
+
 #pragma mark - private methods
 - (void)_initBridgeThread {
     _bridgeThread = [NSThread currentThread];
@@ -125,7 +132,6 @@
     [[WXDebugger defaultInstance] sendDebugMessage:encodedData onBridgeThread:_bridgeThread ? YES : NO];
 }
 
-
 #pragma mark - notification
 
 - (void)notificationIsDebug:(NSNotification *)notification {
@@ -145,10 +151,7 @@
 - (void)domain:(WXDynamicDebuggerDomain *)domain disableWithCallback:(void (^)(id error))callback {
     [WXDevToolType setDebug:NO];
     [WXSDKEngine restart];
-    _nativeCallBlock = nil;
-    _callAddElementBlock = nil;
-    _nativeModuleBlock = nil;
-    _nativeComponentBlock = nil;
+    [self clearGarbage];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreshInstance" object:nil];
     callback(nil);
 }
@@ -253,14 +256,16 @@
             [result setObject:params forKey:@"params"];
         }else if ([method isEqualToString:@"callNativeComponent"]) {
             NSString *instanceIdString = args[0] ? : @"";
-            NSString *moduleNameString = args[1] ? : @"";
+            NSString *componentNameString = args[1] ? : @"";
             NSString *methodNameString = args[2] ? : @"";
             NSArray *argsArray = args[3] ? : [NSArray array];
             NSDictionary *optionsDic = args[4] ? : [NSDictionary dictionary];
             
-            WXLog(@"callNativeModule...%@,%@,%@,%@", instanceIdString, moduleNameString, methodNameString, argsArray);
+            WXLog(@"callNativeComponent...%@,%@,%@,%@", instanceIdString, componentNameString, methodNameString, argsArray);
             
-            NSInvocation *invocation = _nativeModuleBlock(instanceIdString, moduleNameString, methodNameString, argsArray, optionsDic);
+            _nativeComponentBlock(instanceIdString, componentNameString, methodNameString, argsArray, optionsDic);
+            NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+            [result setObject:params forKey:@"params"];
         }
         callback(result, error);
     }];

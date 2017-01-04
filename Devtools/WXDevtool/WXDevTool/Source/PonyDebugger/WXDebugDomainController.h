@@ -27,4 +27,6 @@
 
 - (void)debugDomainRegisterCallNativeComponent:(WXJSCallNativeComponent)callNativeComponentBlock;
 
+- (void)clearGarbage;
+
 @end

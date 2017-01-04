@@ -159,6 +159,8 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean;
 {
     NSLog(@"Debugger closed");
+    WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
+    [debugDomainCrl clearGarbage];
     _socket.delegate = nil;
     _socket = nil;
     _isConnect = NO;
@@ -168,6 +170,8 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error;
 {
     NSLog(@"Debugger failed with web socket error: %@", [error localizedDescription]);
+    WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
+    [debugDomainCrl clearGarbage];
     _socket.delegate = nil;
     _socket = nil;
 }
@@ -336,6 +340,8 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
 
 - (void)disconnect;
 {
+    WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
+    [debugDomainCrl clearGarbage];
     _msgAry = nil;
     _debugAry = nil;
     [_bonjourBrowser stop];
