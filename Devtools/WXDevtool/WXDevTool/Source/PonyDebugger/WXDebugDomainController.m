@@ -194,7 +194,6 @@
 }
 
 - (void)domain:(WXDynamicDebuggerDomain *)domain callNative:(NSDictionary *)jsModule callBack:(void (^)(id error))callback {
-    __weak typeof(self) weakSelf = self;
     [self _executeBridgeThead:^{
         NSString *instanceId = jsModule[@"instance"];
         NSArray *methods = jsModule[@"tasks"];
@@ -212,7 +211,6 @@
 }
 
 - (void)domain:(WXDynamicDebuggerDomain *)domain callAddElement:(NSDictionary *)jsModule callBack:(void (^)(id error))callback {
-    __weak typeof(self) weakSelf = self;
     [self _executeBridgeThead:^{
         NSString *instanceId = jsModule[@"instance"] ? : @"";
         NSDictionary *componentData = jsModule[@"dom"] ? : [NSDictionary dictionary];
@@ -227,7 +225,6 @@
 }
 
 - (void)domain:(WXDynamicDebuggerDomain *)domain syncCall:(NSDictionary *)data callBack:(void (^)(NSDictionary *result, id error))callback; {
-    __weak typeof(self) weakSelf = self;
     [self _executeBridgeThead:^{
         NSArray *args = [data objectForKey:@"args"];
         NSString *method = [data objectForKey:@"method"];

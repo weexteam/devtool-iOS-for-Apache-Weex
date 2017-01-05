@@ -7,6 +7,7 @@
  */
 
 #import "WXDeviceInfo.h"
+#import <UIKit/UIKit.h>
 #import <Security/Security.h>
 
 #define KEY_PASSWORD  @"com.taobao.Weex.123456"
