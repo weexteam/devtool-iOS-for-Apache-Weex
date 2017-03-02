@@ -33,7 +33,7 @@
 		0A01031F1D35E25300F0D592 /* WXDeviceInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0102991D35E25300F0D592 /* WXDeviceInfo.m */; };
 		0A0103201D35E25300F0D592 /* WXDevTool.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A01029B1D35E25300F0D592 /* WXDevTool.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A0103211D35E25300F0D592 /* WXDevTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A01029C1D35E25300F0D592 /* WXDevTool.m */; };
-		0A0103221D35E27000F0D592 /* TBWXDevTool.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AFA0ECE1D2CE79E006E30BB /* TBWXDevTool.h */; };
+		0A0103221D35E27000F0D592 /* TBWXDevTool.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AFA0ECE1D2CE79E006E30BB /* TBWXDevTool.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A0298541D4B402400B4BC95 /* WXDevToolType.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0298521D4B402400B4BC95 /* WXDevToolType.h */; };
 		0A0298551D4B402400B4BC95 /* WXDevToolType.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0298531D4B402400B4BC95 /* WXDevToolType.m */; };
 		0A1DCE3A1D4F004C005E87C7 /* TBWXDevTool.pch in Headers */ = {isa = PBXBuildFile; fileRef = 0A1DCE391D4F004C005E87C7 /* TBWXDevTool.pch */; };
@@ -637,6 +637,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A0103201D35E25300F0D592 /* WXDevTool.h in Headers */,
+				0A0103221D35E27000F0D592 /* TBWXDevTool.h in Headers */,
 				0ADE97AE1D767B6F005781C1 /* WXInspectorDomainController.h in Headers */,
 				0ADE98111D767BA5005781C1 /* WXFileSystemTypes.h in Headers */,
 				0ADE977B1D767B62005781C1 /* NSDate+WXDebugger.h in Headers */,
@@ -690,7 +691,6 @@
 				0ADE981D1D767BA5005781C1 /* WXNetworkDomain.h in Headers */,
 				0ADE980F1D767BA5005781C1 /* WXFileSystemDomain.h in Headers */,
 				0ADE97791D767B62005781C1 /* NSDate+WX_JSONObject.h in Headers */,
-				0A0103221D35E27000F0D592 /* TBWXDevTool.h in Headers */,
 				0ADE98051D767BA5005781C1 /* WXDOMDebuggerDomain.h in Headers */,
 				0ADE98251D767BA5005781C1 /* WXProfilerDomain.h in Headers */,
 				0ADE98451D767BB7005781C1 /* WXWorkerDomain.h in Headers */,
