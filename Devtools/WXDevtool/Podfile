@@ -1,10 +1,8 @@
 # Uncomment this line to define a global platform for your project
-# source 'https://github.com/CocoaPods/Specs.git'
-source "git@gitlab.alibaba-inc.com:alipods/specs.git"
-source "git@gitlab.alibaba-inc.com:alipods/specs-mirror.git"
+source 'git@github.com/CocoaPods/Specs.git'
 
 platform :ios, '7.0'
 inhibit_all_warnings!
 target 'TBWXDevTool' do
-	pod 'WeexSDK', '0.9.3-SNAPSHOT'
+	pod 'WeexSDK', '0.10.0'
 end
