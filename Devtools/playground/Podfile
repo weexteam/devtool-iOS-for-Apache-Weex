@@ -4,7 +4,6 @@ platform :ios, '7.0'
 
 def common
     pod 'WeexSDK'
-    #pod 'WXDevtool', '0.8.2.1'
     pod 'WXDevtool', :path=>'../WXDevtool/'
     pod 'SDWebImage', '3.7.5'
     pod 'SocketRocket', '0.4.2'
