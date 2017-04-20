@@ -873,8 +873,8 @@ static NSArray *prettyStringPrinters = nil;
 
                 WXNetworkRequest *networkRequest = [WXNetworkRequest networkRequestWithURLRequest:request];
                 [self.domain requestWillBeSentWithRequestId:[self requestIDForConnection:connection]
-                                                    frameId:@"38888.3"
-                                                   loaderId:@"111111"
+                                                    frameId:@"3888.3"
+                                                   loaderId:@"11111"
                                                 documentURL:[request.URL absoluteString]
                                                     request:networkRequest
                                                   timestamp:[NSDate WX_timestamp]
