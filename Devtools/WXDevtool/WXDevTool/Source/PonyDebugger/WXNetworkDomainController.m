@@ -897,8 +897,8 @@ static NSArray *prettyStringPrinters = nil;
             WXNetworkResponse *networkResponse = [WXNetworkResponse networkResponseWithURLResponse:response request:[self requestForConnection:connection]];
             
             [self.domain responseReceivedWithRequestId:requestID
-                                               frameId:@"38888.3"
-                                              loaderId:@"111111"
+                                               frameId:@"3888.3"
+                                              loaderId:@"11111"
                                              timestamp:[NSDate WX_timestamp]
                                                   type:response.WX_responseType
                                               response:networkResponse];
