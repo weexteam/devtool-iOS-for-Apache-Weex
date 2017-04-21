@@ -18,7 +18,8 @@
 #import <objc/message.h>
 #import <dispatch/queue.h>
 
-
+static NSString *seed = nil;
+static NSInteger sequenceNumber = 0;
 // For reference from the private class dump
 //@interface __NSCFURLSessionConnection : NSObject
 //
@@ -121,8 +122,8 @@
 
 + (NSString *)nextRequestID;
 {
-    static NSInteger sequenceNumber = 0;
-    static NSString *seed = nil;
+    
+    
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         CFUUIDRef uuid = CFUUIDCreate(CFAllocatorGetDefault());
@@ -132,6 +133,12 @@
     
     return [[NSString alloc] initWithFormat:@"%@-%ld", seed, (long)(++sequenceNumber)];
 }
+
++ (NSString *)currentRequestID;
+{
+    return [[NSString alloc] initWithFormat:@"%@-%ld", seed, (long)(sequenceNumber)];
+}
+
 
 + (Class)domainClass;
 {
@@ -340,7 +347,8 @@ static NSArray *prettyStringPrinters = nil;
         @selector(connection:didReceiveResponse:),
         @selector(URLSession:dataTask:didReceiveResponse:completionHandler:),
         @selector(URLSession:task:didCompleteWithError:),
-        @selector(URLSession:downloadTask:didFinishDownloadingToURL:)
+        @selector(URLSession:downloadTask:didFinishDownloadingToURL:),
+        @selector(URLSession:task:didFinishCollectingMetrics:)
     };
     
     const int numSelectors = sizeof(selectors) / sizeof(SEL);
@@ -391,6 +399,7 @@ static NSArray *prettyStringPrinters = nil;
     [self injectDidReceiveResponseIntoDelegateClass:cls];
     [self injectDidFinishLoadingIntoDelegateClass:cls];
     [self injectDidFailWithErrorIntoDelegateClass:cls];
+    [self injectDidFinishCollectingMetrics:cls];
 }
 
 + (void)injectWillSendRequestIntoDelegateClass:(Class)cls;
@@ -552,6 +561,37 @@ static NSArray *prettyStringPrinters = nil;
             undefinedBlock(slf, connection, error);
         } originalImplementationBlock:^{
             ((void(*)(id, SEL, id, id))objc_msgSend)(slf, swizzledSelector, connection, error);
+        }];
+    };
+    
+    [self replaceImplementationOfSelector:selector withSelector:swizzledSelector forClass:cls withMethodDescription:methodDescription implementationBlock:implementationBlock undefinedBlock:undefinedBlock];
+}
+
++(void)injectDidFinishCollectingMetrics:(Class)cls
+{
+    NSLog(@"injectDidFinishCollectingMetrics");
+    SEL selector = @selector(URLSession:task:didFinishCollectingMetrics:);
+    SEL swizzledSelector = [self swizzledSelectorForSelector:selector];
+    
+    Protocol *protocol = @protocol(NSURLSessionTaskDelegate);
+    
+    if (![cls conformsToProtocol:protocol]) {
+        return;
+    }
+    
+    struct objc_method_description methodDescription = protocol_getMethodDescription(protocol, selector, NO, YES);
+    
+    typedef void (^NSURLConnectionDidFinishCollectingMetricsBlock)(id <NSURLSessionTaskDelegate> slf, NSURLSession *session, NSURLSessionTask* task, NSURLSessionTaskMetrics *metrics);
+    
+    NSURLConnectionDidFinishCollectingMetricsBlock undefinedBlock = ^(id <NSURLSessionTaskDelegate> slf, NSURLSession *session, NSURLSessionTask* task, NSURLSessionTaskMetrics *metrics) {
+        [[WXNetworkDomainController defaultInstance] URLSession:session task:task didFinishCollectingMetrics:metrics];
+    };
+    
+    NSURLConnectionDidFinishCollectingMetricsBlock implementationBlock = ^(id <NSURLSessionTaskDelegate> slf, NSURLSession *session, NSURLSessionTask* task, NSURLSessionTaskMetrics *metrics) {
+        [self sniffWithoutDuplicationForObject:session selector:selector sniffingBlock:^{
+            undefinedBlock(slf, session, task,metrics);
+        } originalImplementationBlock:^{
+            ((void(*)(id, SEL, id, id,id))objc_msgSend)(slf, swizzledSelector, session, task,metrics);
         }];
     };
     
@@ -724,9 +764,27 @@ static NSArray *prettyStringPrinters = nil;
     return state;
 }
 
+- (_WXRequestState *)requestStateForMetricsTask:(NSURLSessionTask *)task;
+{
+    NSValue *key = [NSValue valueWithNonretainedObject:task];
+    _WXRequestState *state = [_connectionStates objectForKey:key];
+    if (!state) {
+        state = [[_WXRequestState alloc] init];
+        state.requestID = [[self class] currentRequestID];
+        [_connectionStates setObject:state forKey:key];
+    }
+    
+    return state;
+}
+
 - (NSString *)requestIDForTask:(NSURLSessionTask *)task;
 {
     return [self requestStateForTask:task].requestID;
+}
+
+- (NSString *)requestIDForMetricsTask:(NSURLSessionTask *)task;
+{
+    return [self requestStateForMetricsTask:task].requestID;
 }
 
 - (void)setResponse:(NSURLResponse *)response forTask:(NSURLSessionTask *)task;
@@ -899,7 +957,6 @@ static NSArray *prettyStringPrinters = nil;
         [self connectionFinished:connection];
     }];
 }
-
 @end
 
 
@@ -1003,22 +1060,7 @@ static NSArray *prettyStringPrinters = nil;
 
         NSString *requestID = [self requestIDForTask:dataTask];
         WXNetworkResponse *networkResponse = [WXNetworkResponse networkResponseWithURLResponse:response request:[self requestForTask:dataTask]];
-        /*
-        WXNetworkResourceTiming *timeline = [[WXNetworkResourceTiming alloc] init];
-        timeline.requestTime = [NSNumber numberWithDouble:startDate.timeIntervalSince1970];//[NSDate WX_timestamp];
-        timeline.proxyStart = [NSNumber numberWithInt:0];
-        timeline.proxyEnd = [NSNumber numberWithInt:10001];
-        timeline.dnsStart = [NSNumber numberWithInt:89];
-        timeline.dnsEnd = [NSNumber numberWithInt:90];
-        timeline.connectStart = [NSNumber numberWithInt:23];
-        timeline.connectEnd = [NSNumber numberWithInt:34];
-        timeline.sslStart = [NSNumber numberWithInt:0];
-        timeline.sslEnd = [NSNumber numberWithInt:1];
-        timeline.sendStart = [NSDate WX_timestamp];
-        timeline.sendEnd = [NSDate WX_timestamp];
-        timeline.receiveHeadersEnd = [NSNumber numberWithDouble:startDate.timeIntervalSince1970];//[NSDate WX_timestamp];
-        networkResponse.timing = timeline;
-         */
+
         [self.domain responseReceivedWithRequestId:requestID
                                            frameId:@"3888.3"
                                           loaderId:@"11111"
@@ -1066,14 +1108,57 @@ static NSArray *prettyStringPrinters = nil;
                      response:response
                       request:[self requestForTask:task]];
         }
-
-        [self.domain loadingFinishedWithRequestId:requestID
-                                        timestamp:[NSDate WX_timestamp]];
-
+        
+//        [self.domain loadingFinishedWithRequestId:requestID timestamp:[NSDate WX_timestamp]];
         [self taskFinished:task];
     }];
 }
 
+
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didFinishCollectingMetrics:(NSURLSessionTaskMetrics *)metrics
+{
+    NSLog(@"injectDidFinishCollectingMetrics excute");
+    __weak typeof(self) weakSelf = self;
+    [self performBlock:^{
+        if(metrics && metrics.transactionMetrics && [metrics.transactionMetrics count]>0){
+            for (NSURLSessionTaskTransactionMetrics *transactionMetrics in metrics.transactionMetrics) {
+                [weakSelf parseMetrics:task transactionMetrics:transactionMetrics];
+            }
+        }
+//        [self.domain loadingFinishedWithRequestId:[self requestStateForMetricsTask:task].requestID timestamp:[NSDate WX_timestamp]];
+        
+    }];
+}
+
+-(void)parseMetrics:(NSURLSessionTask *)task transactionMetrics:(NSURLSessionTaskTransactionMetrics *)transactionMetrics
+{
+    NSString *requestID = [self requestStateForMetricsTask:task].requestID;
+    NSURLRequest *request = [self requestForTask:task];
+    NSString *documentURL = [request.URL absoluteString];
+    WXNetworkResponse *networkResponse = [WXNetworkResponse networkResponseWithURLResponse:transactionMetrics.response request:request];
+    
+    WXNetworkResourceTiming *timeline = [[WXNetworkResourceTiming alloc] init];
+    timeline.requestTime = [NSNumber numberWithDouble:transactionMetrics.requestStartDate.timeIntervalSince1970];//[NSDate WX_timestamp];
+    timeline.proxyStart = [NSNumber numberWithInt:0];
+    timeline.proxyEnd = [NSNumber numberWithInt:5];
+    timeline.dnsStart = [NSNumber numberWithInt:10];
+    timeline.dnsEnd = [NSNumber numberWithInt:20];
+    timeline.connectStart =  [NSNumber numberWithDouble:transactionMetrics.connectStartDate.timeIntervalSince1970];
+    timeline.connectEnd =  [NSNumber numberWithDouble:transactionMetrics.connectEndDate.timeIntervalSince1970];
+    timeline.sslStart = [NSNumber numberWithDouble:transactionMetrics.secureConnectionStartDate.timeIntervalSince1970];
+    timeline.sslEnd = [NSNumber numberWithDouble:transactionMetrics.secureConnectionEndDate.timeIntervalSince1970];
+    timeline.sendStart = [NSNumber numberWithDouble:transactionMetrics.requestStartDate.timeIntervalSince1970];
+    timeline.sendEnd =  [NSNumber numberWithDouble:transactionMetrics.requestEndDate.timeIntervalSince1970];
+    timeline.receiveHeadersEnd = [NSNumber numberWithDouble:transactionMetrics.responseEndDate.timeIntervalSince1970];
+    networkResponse.timing = timeline;
+    
+    [self.domain responseReceivedWithRequestId:requestID
+                                       frameId:@"3888.3"
+                                      loaderId:@"11111"
+                                     timestamp:[NSDate WX_timestamp]
+                                          type:transactionMetrics.response.WX_responseType
+                                      response:networkResponse];
+}
 @end
 
 
