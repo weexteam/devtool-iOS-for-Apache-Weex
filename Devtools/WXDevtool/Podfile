@@ -4,5 +4,5 @@ source 'git@github.com:CocoaPods/Specs.git'
 platform :ios, '7.0'
 inhibit_all_warnings!
 target 'TBWXDevTool' do
-	pod 'WeexSDK', '0.10.1'
+	pod 'WeexSDK'
 end
