@@ -1134,7 +1134,6 @@ static NSArray *prettyStringPrinters = nil;
 {
     NSString *requestID = [self requestStateForMetricsTask:task].requestID;
     NSURLRequest *request = [self requestForTask:task];
-    NSString *documentURL = [request.URL absoluteString];
     WXNetworkResponse *networkResponse = [WXNetworkResponse networkResponseWithURLResponse:transactionMetrics.response request:request];
     
     WXNetworkResourceTiming *timeline = [[WXNetworkResourceTiming alloc] init];
