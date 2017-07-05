@@ -175,6 +175,14 @@
 		0AFE81D61D8102B800C99208 /* WXPageDomainUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AFE81D41D8102B800C99208 /* WXPageDomainUtility.h */; };
 		0AFE81D71D8102B800C99208 /* WXPageDomainUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AFE81D51D8102B800C99208 /* WXPageDomainUtility.m */; };
 		75C1C0A17938023E1B39089E /* libPods-TBWXDevTool.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A04B5D4DF9E863CD1DE1B075 /* libPods-TBWXDevTool.a */; };
+		C464BD711F0B6A330017E38C /* WXTracingViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = C464BD6F1F0B6A330017E38C /* WXTracingViewController.h */; };
+		C464BD721F0B6A330017E38C /* WXTracingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C464BD701F0B6A330017E38C /* WXTracingViewController.m */; };
+		C464BD751F0B77AE0017E38C /* UIButton+WXEnlargeArea.h in Headers */ = {isa = PBXBuildFile; fileRef = C464BD731F0B77AE0017E38C /* UIButton+WXEnlargeArea.h */; };
+		C464BD761F0B77AE0017E38C /* UIButton+WXEnlargeArea.m in Sources */ = {isa = PBXBuildFile; fileRef = C464BD741F0B77AE0017E38C /* UIButton+WXEnlargeArea.m */; };
+		C464BD791F0B7F3E0017E38C /* WXRenderTracingViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = C464BD771F0B7F3E0017E38C /* WXRenderTracingViewController.h */; };
+		C464BD7A1F0B7F3E0017E38C /* WXRenderTracingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C464BD781F0B7F3E0017E38C /* WXRenderTracingViewController.m */; };
+		C464BD7D1F0B8F050017E38C /* WXTracingTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = C464BD7B1F0B8F050017E38C /* WXTracingTableViewCell.h */; };
+		C464BD7E1F0B8F050017E38C /* WXTracingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C464BD7C1F0B8F050017E38C /* WXTracingTableViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -351,6 +359,14 @@
 		421E7FD57E17C231508BA514 /* Pods-TBWXDevTool.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBWXDevTool.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TBWXDevTool/Pods-TBWXDevTool.debug.xcconfig"; sourceTree = "<group>"; };
 		A04B5D4DF9E863CD1DE1B075 /* libPods-TBWXDevTool.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TBWXDevTool.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7CA78A41D406A09A4D0B154 /* Pods-TBWXDevTool.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBWXDevTool.release.xcconfig"; path = "Pods/Target Support Files/Pods-TBWXDevTool/Pods-TBWXDevTool.release.xcconfig"; sourceTree = "<group>"; };
+		C464BD6F1F0B6A330017E38C /* WXTracingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXTracingViewController.h; sourceTree = "<group>"; };
+		C464BD701F0B6A330017E38C /* WXTracingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXTracingViewController.m; sourceTree = "<group>"; };
+		C464BD731F0B77AE0017E38C /* UIButton+WXEnlargeArea.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+WXEnlargeArea.h"; sourceTree = "<group>"; };
+		C464BD741F0B77AE0017E38C /* UIButton+WXEnlargeArea.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+WXEnlargeArea.m"; sourceTree = "<group>"; };
+		C464BD771F0B7F3E0017E38C /* WXRenderTracingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXRenderTracingViewController.h; sourceTree = "<group>"; };
+		C464BD781F0B7F3E0017E38C /* WXRenderTracingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXRenderTracingViewController.m; sourceTree = "<group>"; };
+		C464BD7B1F0B8F050017E38C /* WXTracingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXTracingTableViewCell.h; sourceTree = "<group>"; };
+		C464BD7C1F0B8F050017E38C /* WXTracingTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXTracingTableViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -597,6 +613,7 @@
 		0AFA0ED61D2CEA94006E30BB /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				C464BD6E1F0B67D90017E38C /* WXTracing */,
 				0A0102151D35E25300F0D592 /* DerivedSources */,
 				0A0102601D35E25300F0D592 /* PonyDebugger */,
 				0A01029A1D35E25300F0D592 /* WXHeader */,
@@ -629,6 +646,22 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		C464BD6E1F0B67D90017E38C /* WXTracing */ = {
+			isa = PBXGroup;
+			children = (
+				C464BD6F1F0B6A330017E38C /* WXTracingViewController.h */,
+				C464BD701F0B6A330017E38C /* WXTracingViewController.m */,
+				C464BD731F0B77AE0017E38C /* UIButton+WXEnlargeArea.h */,
+				C464BD741F0B77AE0017E38C /* UIButton+WXEnlargeArea.m */,
+				C464BD771F0B7F3E0017E38C /* WXRenderTracingViewController.h */,
+				C464BD781F0B7F3E0017E38C /* WXRenderTracingViewController.m */,
+				C464BD7B1F0B8F050017E38C /* WXTracingTableViewCell.h */,
+				C464BD7C1F0B8F050017E38C /* WXTracingTableViewCell.m */,
+			);
+			name = WXTracing;
+			path = Source/WXTracing;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -646,8 +679,10 @@
 				0ADE977F1D767B62005781C1 /* NSError+WX_JSONObject.h in Headers */,
 				0ADE98031D767BA5005781C1 /* WXDebuggerTypes.h in Headers */,
 				0ADE97731D767B62005781C1 /* NSArray+WX_JSONObject.h in Headers */,
+				C464BD711F0B6A330017E38C /* WXTracingViewController.h in Headers */,
 				0A37BCA21E1A521F00C5542E /* WXDebuggerUtility.h in Headers */,
 				0ADE983F1D767BB7005781C1 /* WXTimelineTypes.h in Headers */,
+				C464BD751F0B77AE0017E38C /* UIButton+WXEnlargeArea.h in Headers */,
 				0ADE98091D767BA5005781C1 /* WXDOMStorageDomain.h in Headers */,
 				0ADE98391D767BB7005781C1 /* WXRuntimeDomain.h in Headers */,
 				0ADE98191D767BA5005781C1 /* WXMemoryDomain.h in Headers */,
@@ -660,6 +695,7 @@
 				0ADE978B1D767B62005781C1 /* WXContainerIndex.h in Headers */,
 				0ADE97891D767B62005781C1 /* WXConsoleDomainController.h in Headers */,
 				0ADE97851D767B62005781C1 /* NSOrderedSet+WXRuntimePropertyDescriptor.h in Headers */,
+				C464BD7D1F0B8F050017E38C /* WXTracingTableViewCell.h in Headers */,
 				0ADE97AA1D767B6F005781C1 /* WXDynamicDebuggerDomain.h in Headers */,
 				0A1DCE3A1D4F004C005E87C7 /* TBWXDevTool.pch in Headers */,
 				0ADE97811D767B62005781C1 /* NSManagedObject+WXRuntimePropertyDescriptor.h in Headers */,
@@ -680,6 +716,7 @@
 				0ADE981B1D767BA5005781C1 /* WXMemoryTypes.h in Headers */,
 				0ADE980B1D767BA5005781C1 /* WXDOMStorageTypes.h in Headers */,
 				0ADE98211D767BA5005781C1 /* WXPageDomain.h in Headers */,
+				C464BD791F0B7F3E0017E38C /* WXRenderTracingViewController.h in Headers */,
 				0ADE98411D767BB7005781C1 /* WXWebGLDomain.h in Headers */,
 				0ABDFC6F1D3C7B6900206418 /* WXDebugDomain.h in Headers */,
 				0ADE977D1D767B62005781C1 /* NSDictionary+WXRuntimePropertyDescriptor.h in Headers */,
@@ -912,6 +949,7 @@
 				0ABDFC741D3C7C2000206418 /* WXDebugDomainController.m in Sources */,
 				0A01031D1D35E25300F0D592 /* WXSourceDebuggerDomainController.m in Sources */,
 				0ADE97A91D767B6F005781C1 /* WXDOMDomainController.m in Sources */,
+				C464BD7A1F0B7F3E0017E38C /* WXRenderTracingViewController.m in Sources */,
 				0ADE983E1D767BB7005781C1 /* WXTimelineDomain.m in Sources */,
 				0A0102E41D35E25300F0D592 /* WXProfilerDomainController.m in Sources */,
 				0ADE98201D767BA5005781C1 /* WXNetworkTypes.m in Sources */,
@@ -923,12 +961,14 @@
 				0ADE97D81D767B93005781C1 /* WXDatabaseDomain.m in Sources */,
 				0ADE97BA1D767B6F005781C1 /* WXRuntimeDomainController.m in Sources */,
 				0ADE97D21D767B93005781C1 /* WXConsoleTypes.m in Sources */,
+				C464BD7E1F0B8F050017E38C /* WXTracingTableViewCell.m in Sources */,
 				0A01031F1D35E25300F0D592 /* WXDeviceInfo.m in Sources */,
 				0ADE97801D767B62005781C1 /* NSError+WX_JSONObject.m in Sources */,
 				0ADE977E1D767B62005781C1 /* NSDictionary+WXRuntimePropertyDescriptor.m in Sources */,
 				0ADE98021D767BA5005781C1 /* WXDebuggerDomain.m in Sources */,
 				0ADE983C1D767BB7005781C1 /* WXRuntimeTypes.m in Sources */,
 				0A0298551D4B402400B4BC95 /* WXDevToolType.m in Sources */,
+				C464BD761F0B77AE0017E38C /* UIButton+WXEnlargeArea.m in Sources */,
 				0ADE97901D767B62005781C1 /* WXDefinitions.m in Sources */,
 				0ADE97B11D767B6F005781C1 /* WXNetworkDomainController.m in Sources */,
 				0ADE97861D767B62005781C1 /* NSOrderedSet+WXRuntimePropertyDescriptor.m in Sources */,
@@ -964,6 +1004,7 @@
 				0AFE81D71D8102B800C99208 /* WXPageDomainUtility.m in Sources */,
 				0ADE980C1D767BA5005781C1 /* WXDOMStorageTypes.m in Sources */,
 				0ADE98441D767BB7005781C1 /* WXWebGLTypes.m in Sources */,
+				C464BD721F0B6A330017E38C /* WXTracingViewController.m in Sources */,
 				0ADE97761D767B62005781C1 /* NSArray+WXRuntimePropertyDescriptor.m in Sources */,
 				0ADE98261D767BA5005781C1 /* WXProfilerDomain.m in Sources */,
 				0ADE983A1D767BB7005781C1 /* WXRuntimeDomain.m in Sources */,
