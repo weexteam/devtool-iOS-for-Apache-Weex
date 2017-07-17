@@ -6,11 +6,11 @@
 //  Copyright © 2017年 Taobao. All rights reserved.
 //
 
-#import "WXTracingTableViewCell.h"
-@interface WXTracingTableViewCell()
+#import "WXRenderTracingTableViewCell.h"
+@interface WXRenderTracingTableViewCell()
 @property(nonatomic,strong)UIColor *bgColor;
 @end
-@implementation WXTracingTableViewCell
+@implementation WXRenderTracingTableViewCell
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -63,7 +63,7 @@
     {
         self.classNameLabel.text = @"";
     }
-    self.startTimeLabel.text = [NSString stringWithFormat:@"start:%@",[self getStartTime:tracing.ts - tracing.duration]];
+    self.startTimeLabel.text = [NSString stringWithFormat:@"start:%@",[self getStartTime:tracing.ts]];
     self.durationLabel.text = [NSString stringWithFormat:@"duration:%0.f(ms)",tracing.duration];
     if(!self.bgColor){
         self.bgColor = [self randomColor];
@@ -75,13 +75,16 @@
         return;
     }
     
-    CGFloat x =  [[UIScreen mainScreen] bounds].size.width * (tracing.ts - tracing.duration -begin)/(end-begin);
-    CGFloat width = 1;
+    CGFloat x =  [[UIScreen mainScreen] bounds].size.width * (tracing.ts -begin)/(end-begin);
+    CGFloat width = 2;
     if(tracing.duration > 0.0001){
         width =  [[UIScreen mainScreen] bounds].size.width * tracing.duration/(end-begin);
+        if(width < 2){
+            width = 2;
+        }
     }
     if(x+1>[[UIScreen mainScreen] bounds].size.width){
-        x = [[UIScreen mainScreen] bounds].size.width -2;
+        x = [[UIScreen mainScreen] bounds].size.width -3;
     }
     _timeBackgroundLabel.frame = CGRectMake(x, 5, width, 70);
 }

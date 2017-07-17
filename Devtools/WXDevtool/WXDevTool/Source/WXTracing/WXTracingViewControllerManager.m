@@ -6,33 +6,49 @@
 //  Copyright © 2017年 Taobao. All rights reserved.
 //
 
-#import "WXTracingViewController.h"
+#import "WXTracingViewControllerManager.h"
 #import "UIButton+WXEnlargeArea.h"
 #import "WXRenderTracingViewController.h"
+#import "MTStatusBarOverlay.h"
+#import "FLEXWindow.h"
+#import "ScrollTestVC.h"
+#import "WXTracingLogImpl.h"
+#import <WeexSDK/WXSDKEngine.h>
 
-@interface WXTracingViewController ()
+@interface WXTracingViewControllerManager ()
 
 @property(nonatomic,strong)WXRenderTracingViewController *tracingVC;
+@property(nonatomic)BOOL isLoad;
+@property(nonatomic)BOOL isLoadTracing;
 
 @end
 
-@implementation WXTracingViewController
+@implementation WXTracingViewControllerManager
 
 + (instancetype) sharedInstance{
     
-    static WXTracingViewController *instance = nil;
+    static WXTracingViewControllerManager *instance = nil;
     static dispatch_once_t once;
     
     dispatch_once(&once, ^{
-        instance = [[WXTracingViewController alloc] init];
+        instance = [[WXTracingViewControllerManager alloc] init];
     });
     
     return instance;
 }
 
-+(void)load
++ (void)load
 {
-    [self addWeexView];
+    [self loadTracingView];
+}
+
++(void)loadTracingView
+{
+    if(![WXTracingViewControllerManager sharedInstance].isLoad){
+        [WXTracingViewControllerManager addWeexView];
+        [WXTracingViewControllerManager sharedInstance].isLoad = YES;
+        [WXLog registerExternalLog:[WXTracingLogImpl new]];
+    }
 }
 
 +(void)addWeexView
@@ -43,13 +59,20 @@
     dispatch_after(delayInNanoSeconds, concurrentQueue, ^(void){
         dispatch_async(dispatch_get_main_queue(), ^{
             UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-            button.frame = CGRectMake(100, 0, 50, 40);
+            button.frame = CGRectMake(0, 0, 50, 20);
             [button setTitle:@"weex" forState:UIControlStateNormal];
             [button addTarget:self action:@selector(showTracing) forControlEvents:UIControlEventTouchUpInside];
             button.backgroundColor = [UIColor redColor];
-            UIWindow *window = [UIApplication sharedApplication].keyWindow;
-            [window addSubview:button];
             [button setEnlargeEdgeWithTop:20 right:20.0 bottom:20.0 left:20.0];
+            UIWindow *wind = [[UIWindow alloc]initWithFrame:CGRectMake(100, 0, 70, 40)];
+            [wind addSubview:button];
+            wind.windowLevel = UIWindowLevelStatusBar+100;
+            wind.backgroundColor = [UIColor colorWithWhite:0 alpha:0];
+            wind.userInteractionEnabled = YES;
+            wind.hidden = NO;
+            [[UIApplication sharedApplication].keyWindow addSubview:wind];
+            [WXTracingViewControllerManager sharedInstance].textView = [UITextView new];
+
         });
     });
     
@@ -67,10 +90,25 @@
 
 +(void)showTracing
 {
-    WXTracingViewController *manager = [WXTracingViewController sharedInstance];
-    UINavigationController *nav = [[WXTracingViewController sharedInstance] visibleNavigationController];
-    manager.tracingVC = [[WXRenderTracingViewController alloc] initWithFrame:[[WXTracingViewController sharedInstance] mainWindow].bounds];
-    [nav pushViewController:manager.tracingVC animated:YES];
+    
+    if(![WXTracingViewControllerManager sharedInstance].isLoadTracing){
+        WXTracingViewControllerManager *manager = [WXTracingViewControllerManager sharedInstance];
+        UINavigationController *nav = [[WXTracingViewControllerManager sharedInstance] visibleNavigationController];
+        //    CGRect rect = [UIScreen mainScreen].bounds;
+        manager.tracingVC = [[ScrollTestVC alloc]init];
+        manager.tracingVC.view.backgroundColor = [UIColor whiteColor];
+        //    manager.tracingVC = [[WXRenderTracingViewController alloc] initWithFrame:CGRectMake(0, rect.size.height/2-64, rect.size.width, rect.size.height/2)];
+        [nav.visibleViewController addChildViewController:manager.tracingVC];
+        [nav.visibleViewController.view addSubview:manager.tracingVC.view];
+        [WXTracingViewControllerManager sharedInstance].isLoadTracing = YES;
+    }else{
+        WXTracingViewControllerManager *manager = [WXTracingViewControllerManager sharedInstance];
+        [manager.tracingVC removeFromParentViewController];
+        [manager.tracingVC.view removeFromSuperview];
+        [WXTracingViewControllerManager sharedInstance].isLoadTracing = NO;
+    }
+    
+    
 }
 
 
@@ -99,6 +137,9 @@
 }
 
 - (UINavigationController *)visibleNavigationController {
+    if([[self visibleViewController] isKindOfClass:[UINavigationController class]]){
+        return [self visibleViewController];
+    }
     return [[self visibleViewController] navigationController];
 }
 

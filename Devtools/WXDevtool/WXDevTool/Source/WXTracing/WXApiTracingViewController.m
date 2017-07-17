@@ -6,22 +6,23 @@
 //  Copyright © 2017年 Taobao. All rights reserved.
 //
 
-#import "WXRenderTracingViewController.h"
+#import "WXApiTracingViewController.h"
 #import <UIKit/UIKit.h>
 #import "WXTracingManager.h"
 #import "WXRenderTracingTableViewCell.h"
+#import "WXTracingApiTableViewCell.h"
 
-@interface WXRenderTracingViewController ()<UITableViewDelegate,UITableViewDataSource>
+@interface WXApiTracingViewController ()<UITableViewDelegate,UITableViewDataSource>
 
 @property (strong,nonatomic) UITableView *table;
 @property (strong,nonatomic) NSArray     *content;
-@property (strong,nonatomic) NSMutableArray *tasks;
+@property (strong,nonatomic) NSMutableArray *apis;
 @property (nonatomic) NSTimeInterval begin;
 @property (nonatomic) NSTimeInterval end;
 
 @end
 
-@implementation WXRenderTracingViewController
+@implementation WXApiTracingViewController
 
 - (instancetype)initWithFrame:(CGRect )frame
 {
@@ -36,24 +37,22 @@
     self.view.backgroundColor = [UIColor redColor];
     CGRect rect = [UIScreen mainScreen].bounds;
     self.view.frame =  CGRectMake(0, 0, rect.size.width, rect.size.height-64);
+    NSDictionary *dict = [WXTracingManager getTacingApi];
     [self cofigureTableview];
-    self.tasks = [NSMutableArray new];
-    WXTracingTask *task = [WXTracingManager getTracingData];
-    for (WXTracing *tracing in task.tracings) {
-        if(![WXTracingEnd isEqualToString:tracing.ph]){
-            [self.tasks addObject:tracing];
-            if(self.begin <0.0001){
-                self.begin = tracing.ts;
-            }
-            
-            if(tracing.ts < self.begin){
-                self.begin = tracing.ts;
-            }
-            if((tracing.ts +tracing.duration) > self.end){
-                self.end = tracing.ts +tracing.duration ;
-            }
-            
-//            NSLog(@"%@ %@  %@  %@  %f %f %@  %@",tracing.iid,tracing.fName,tracing.name,tracing.className,tracing.ts,tracing.duration,tracing.ref,tracing.parentRef);
+    self.apis = [NSMutableArray new];
+    if([dict objectForKey:@"module"]){
+        for (NSDictionary *d in [dict objectForKey:@"module"]) {
+            [self.apis addObject:d];
+        }
+    }
+    if([dict objectForKey:@"componet"]){
+        for (NSDictionary *d in [dict objectForKey:@"componet"]) {
+            [self.apis addObject:d];
+        }
+    }
+    if([dict objectForKey:@"module"]){
+        for (NSDictionary *d in [dict objectForKey:@"handle"]) {
+            [self.apis addObject:d];
         }
     }
 }
@@ -72,20 +71,20 @@
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.tasks count];
+    return [self.apis count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *cellIdentifier = @"cellIdentifier";
     
-    WXRenderTracingTableViewCell *cell = [self.table dequeueReusableCellWithIdentifier:cellIdentifier];
+    WXTracingApiTableViewCell *cell = [self.table dequeueReusableCellWithIdentifier:cellIdentifier];
     
     if(cell == nil) {
-        cell = [[WXRenderTracingTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+        cell = [[WXTracingApiTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }
     NSInteger row = [indexPath row];
-    [cell config:self.tasks[row] begin:self.begin end:self.end];
+    [cell config:self.apis[row]];
     return cell;
 }
 

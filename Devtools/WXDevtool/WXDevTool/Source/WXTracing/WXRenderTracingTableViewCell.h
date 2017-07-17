@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "WXTracingManager.h"
 
-@interface WXTracingTableViewCell : UITableViewCell
+@interface WXRenderTracingTableViewCell : UITableViewCell
 
 @property (nonatomic, strong) UILabel *timeBackgroundLabel;
 @property (nonatomic, strong) UILabel *refLabel;

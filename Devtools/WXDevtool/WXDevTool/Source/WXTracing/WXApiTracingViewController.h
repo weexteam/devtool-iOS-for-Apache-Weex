@@ -1,5 +1,5 @@
 //
-//  WXTracingViewController.h
+//  WXRenderTracingViewController.h
 //  TBWXDevTool
 //
 //  Created by 齐山 on 2017/7/4.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface WXTracingViewController : UIViewController
+@interface WXApiTracingViewController : UIViewController
 
-+ (instancetype) sharedInstance;
+- (instancetype)initWithFrame:(CGRect )frame;
 @end
