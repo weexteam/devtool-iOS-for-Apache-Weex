@@ -1,5 +1,5 @@
 //
-//  FLEXWebViewController.m
+//  WXWebViewController.m
 //  Flipboard
 //
 //  Created by Ryan Olson on 6/10/14.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FLEXWebViewController : UIViewController
+@interface WXWebViewController : UIViewController
 
 - (id)initWithURL:(NSURL *)url;
 - (id)initWithText:(NSString *)text;

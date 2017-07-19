@@ -1,5 +1,5 @@
 //
-//  FLEXNetworkHistoryTableViewController.h
+//  WXNetworkHistoryTableViewController.h
 //  Flipboard
 //
 //  Created by Ryan Olson on 2/8/15.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FLEXNetworkHistoryTableViewController : UITableViewController
+@interface WXNetworkHistoryTableViewController : UITableViewController
 
 @end

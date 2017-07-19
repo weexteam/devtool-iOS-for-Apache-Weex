@@ -1,5 +1,5 @@
 //
-//  FLEXNetworkRecorder.h
+//  WXNetworkRecorder.h
 //  Flipboard
 //
 //  Created by Ryan Olson on 2/4/15.
@@ -9,14 +9,14 @@
 #import <Foundation/Foundation.h>
 
 // Notifications posted when the record is updated
-extern NSString *const kFLEXNetworkRecorderNewTransactionNotification;
-extern NSString *const kFLEXNetworkRecorderTransactionUpdatedNotification;
-extern NSString *const kFLEXNetworkRecorderUserInfoTransactionKey;
-extern NSString *const kFLEXNetworkRecorderTransactionsClearedNotification;
+extern NSString *const kWXNetworkRecorderNewTransactionNotification;
+extern NSString *const kWXNetworkRecorderTransactionUpdatedNotification;
+extern NSString *const kWXNetworkRecorderUserInfoTransactionKey;
+extern NSString *const kWXNetworkRecorderTransactionsClearedNotification;
 
-@class FLEXNetworkTransaction;
+@class WXNetworkTransaction;
 
-@interface FLEXNetworkRecorder : NSObject
+@interface WXNetworkRecorder : NSObject
 
 /// In general, it only makes sense to have one recorder for the entire application.
 + (instancetype)defaultRecorder;
@@ -29,11 +29,11 @@ extern NSString *const kFLEXNetworkRecorderTransactionsClearedNotification;
 
 // Accessing recorded network activity
 
-/// Array of FLEXNetworkTransaction objects ordered by start time with the newest first.
+/// Array of WXNetworkTransaction objects ordered by start time with the newest first.
 - (NSArray *)networkTransactions;
 
 /// The full response data IFF it hasn't been purged due to memory pressure.
-- (NSData *)cachedResponseBodyForTransaction:(FLEXNetworkTransaction *)transaction;
+- (NSData *)cachedResponseBodyForTransaction:(WXNetworkTransaction *)transaction;
 
 /// Dumps all network transactions and cached response bodies.
 - (void)clearRecordedActivity;

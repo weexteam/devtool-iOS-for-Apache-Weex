@@ -1,15 +1,15 @@
 //
-//  FLEXImagePreviewViewController.m
+//  WXImagePreviewViewController.m
 //  Flipboard
 //
 //  Created by Ryan Olson on 6/12/14.
 //  Copyright (c) 2014 Flipboard. All rights reserved.
 //
 
-#import "FLEXImagePreviewViewController.h"
-#import "FLEXUtility.h"
+#import "WXImagePreviewViewController.h"
+#import "WXTracingUtility.h"
 
-@interface FLEXImagePreviewViewController () <UIScrollViewDelegate>
+@interface WXImagePreviewViewController () <UIScrollViewDelegate>
 
 @property (nonatomic, strong) UIImage *image;
 
@@ -18,7 +18,7 @@
 
 @end
 
-@implementation FLEXImagePreviewViewController
+@implementation WXImagePreviewViewController
 
 - (id)initWithImage:(UIImage *)image
 {
@@ -34,7 +34,7 @@
 {
     [super viewDidLoad];
     
-    self.view.backgroundColor = [FLEXUtility scrollViewGrayColor];
+    self.view.backgroundColor = [WXTracingUtility scrollViewGrayColor];
     
     self.imageView = [[UIImageView alloc] initWithImage:self.image];
     self.scrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];

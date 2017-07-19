@@ -1,18 +1,18 @@
 //
-//  FLEXUtility.m
+//  WXTracingUtility.m
 //  Flipboard
 //
 //  Created by Ryan Olson on 4/18/14.
 //  Copyright (c) 2014 Flipboard. All rights reserved.
 //
 
-#import "FLEXUtility.h"
-#import "FLEXResources.h"
+#import "WXTracingUtility.h"
+#import "WXResources.h"
 #import <ImageIO/ImageIO.h>
 #import <zlib.h>
 #import <objc/runtime.h>
 
-@implementation FLEXUtility
+@implementation WXTracingUtility
 
 + (UIColor *)consistentRandomColorForObject:(id)object
 {
@@ -97,7 +97,7 @@
     static UIColor *patternColor = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        UIImage *indentationPatternImage = [FLEXResources hierarchyIndentPattern];
+        UIImage *indentationPatternImage = [WXResources hierarchyIndentPattern];
         patternColor = [UIColor colorWithPatternImage:indentationPatternImage];
     });
     return patternColor;
@@ -110,7 +110,7 @@
 
 + (NSString *)applicationName
 {
-    return [[[FLEXUtility applicationImageName] componentsSeparatedByString:@"/"] lastObject];
+    return [[[WXTracingUtility applicationImageName] componentsSeparatedByString:@"/"] lastObject];
 }
 
 + (NSString *)safeDescriptionForObject:(id)object

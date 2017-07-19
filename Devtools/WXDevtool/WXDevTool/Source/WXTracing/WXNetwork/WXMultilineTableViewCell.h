@@ -1,5 +1,5 @@
 //
-//  FLEXMultilineTableViewCell.h
+//  WXMultilineTableViewCell.h
 //  UICatalog
 //
 //  Created by Ryan Olson on 2/13/15.
@@ -10,7 +10,7 @@
 
 extern NSString *const kFLEXMultilineTableViewCellIdentifier;
 
-@interface FLEXMultilineTableViewCell : UITableViewCell
+@interface WXMultilineTableViewCell : UITableViewCell
 
 + (CGFloat)preferredHeightWithAttributedText:(NSAttributedString *)attributedText inTableViewWidth:(CGFloat)tableViewWidth style:(UITableViewStyle)style showsAccessory:(BOOL)showsAccessory;
 

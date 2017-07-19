@@ -1,5 +1,5 @@
 //
-//  FLEXNetworkObserver.h
+//  WXNetworkObserver.h
 //  Derived from:
 //
 //  PDAFNetworkDomainController.h
@@ -12,11 +12,11 @@
 
 #import <Foundation/Foundation.h>
 
-extern NSString *const kFLEXNetworkObserverEnabledStateChangedNotification;
+extern NSString *const kWXNetworkObserverEnabledStateChangedNotification;
 
 /// This class swizzles NSURLConnection and NSURLSession delegate methods to observe events in the URL loading system.
-/// High level network events are sent to the default FLEXNetworkRecorder instance which maintains the request history and caches response bodies.
-@interface FLEXNetworkObserver : NSObject
+/// High level network events are sent to the default WXNetworkRecorder instance which maintains the request history and caches response bodies.
+@interface WXNetworkObserver : NSObject
 
 /// Swizzling occurs when the observer is enabled for the first time.
 /// This reduces the impact of FLEX if network debugging is not desired.

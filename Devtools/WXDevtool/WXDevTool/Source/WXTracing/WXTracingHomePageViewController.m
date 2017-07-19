@@ -12,9 +12,9 @@
 #import "WXLogViewController.h"
 #import "WXApiTracingViewController.h"
 #import "WXEnviromentViewController.h"
-#import "FLEXNetworkHistoryTableViewController.h"
+#import "WXNetworkHistoryTableViewController.h"
 #import "WXTracingSettingViewController.h"
-#import "FLEXNetworkSettingsTableViewController.h"
+#import "WXNetworkSettingsTableViewController.h"
 
 @interface WXTracingHomePageViewController ()<WXTagListViewDelegate,ViewPagerDataSource, ViewPagerDelegate>
 {
@@ -24,7 +24,7 @@
 @property (nonatomic, strong) NSMutableArray *tableViewArr;
 @property (nonatomic) long long fundIndex;
 @property (nonatomic) NSInteger slideIndex;
-@property (nonatomic, strong) ViewPagerController *productVC;
+@property (nonatomic, strong) WXViewPagerController *productVC;
 
 @end
 
@@ -61,7 +61,7 @@
         CGRect rect = [UIScreen mainScreen].bounds;
         UIViewController *subVC;
         if(index == 1){
-            subVC = [[FLEXNetworkHistoryTableViewController alloc] init];
+            subVC = [[WXNetworkHistoryTableViewController alloc] init];
             
         }else if(index == 2){
             subVC = [[WXLogViewController alloc] initWithFrame:CGRectMake(0, 0, rect.size.width, rect.size.height)];
@@ -73,7 +73,7 @@
             subVC = [[WXEnviromentViewController alloc] initWithFrame:CGRectMake(0, 0, rect.size.width, rect.size.height)];
             
         }else if(index == 5){
-            subVC = [[FLEXNetworkSettingsTableViewController alloc] init];
+            subVC = [[WXNetworkSettingsTableViewController alloc] init];
             
         }else {
             subVC = [[WXRenderTracingViewController alloc] initWithFrame:CGRectMake(0, 0, rect.size.width, rect.size.height)];
@@ -105,12 +105,12 @@
     // Dispose of any resources that can be recreated.
 }
 #pragma mark - ViewPagerDataSource
-- (NSUInteger)numberOfTabsForViewPager:(ViewPagerController *)viewPager
+- (NSUInteger)numberOfTabsForViewPager:(WXViewPagerController *)viewPager
 {
     //    return 10;
     return [self.tableViewArr count];
 }
-- (UIView *)viewPager:(ViewPagerController *)viewPager viewForTabAtIndex:(NSUInteger)index
+- (UIView *)viewPager:(WXViewPagerController *)viewPager viewForTabAtIndex:(NSUInteger)index
 {
     
     UILabel *label = [UILabel new];
@@ -125,16 +125,16 @@
     return label;
 }
 
-- (UIViewController *)viewPager:(ViewPagerController *)viewPager
+- (UIViewController *)viewPager:(WXViewPagerController *)viewPager
 contentViewControllerForTabAtIndex:(NSUInteger)index
 {
-    ViewPagerController *vc = [self.tableViewArr objectAtIndex:index];
+    WXViewPagerController *vc = [self.tableViewArr objectAtIndex:index];
     
 //    vc.isApply = self.isApply;
     return vc;
 }
 #pragma mark - ViewPagerDelegate
-- (void)viewPager:(ViewPagerController *)viewPager didChangeTabToIndex:(NSUInteger)index
+- (void)viewPager:(WXViewPagerController *)viewPager didChangeTabToIndex:(NSUInteger)index
 {
     self.productVC = [self.tableViewArr objectAtIndex:index];
 //    [self.productVC updateTable];
@@ -143,7 +143,7 @@ contentViewControllerForTabAtIndex:(NSUInteger)index
     [self.tagListView setHighLightIndex:index];
 }
 
-- (CGFloat)viewPager:(ViewPagerController *)viewPager
+- (CGFloat)viewPager:(WXViewPagerController *)viewPager
       valueForOption:(ViewPagerOption)option
          withDefault:(CGFloat)value
 {
@@ -164,7 +164,7 @@ contentViewControllerForTabAtIndex:(NSUInteger)index
     }
 }
 
-- (UIColor *)viewPager:(ViewPagerController *)viewPager
+- (UIColor *)viewPager:(WXViewPagerController *)viewPager
      colorForComponent:(ViewPagerComponent)component
            withDefault:(UIColor *)color
 {

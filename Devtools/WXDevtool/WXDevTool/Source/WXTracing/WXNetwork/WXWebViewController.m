@@ -1,22 +1,22 @@
 //
-//  FLEXWebViewController.m
+//  WXWebViewController.m
 //  Flipboard
 //
 //  Created by Ryan Olson on 6/10/14.
 //  Copyright (c) 2014 Flipboard. All rights reserved.
 //
 
-#import "FLEXWebViewController.h"
-#import "FLEXUtility.h"
+#import "WXWebViewController.h"
+#import "WXTracingUtility.h"
 
-@interface FLEXWebViewController () <UIWebViewDelegate>
+@interface WXWebViewController () <UIWebViewDelegate>
 
 @property (nonatomic, strong) UIWebView *webView;
 @property (nonatomic, strong) NSString *originalText;
 
 @end
 
-@implementation FLEXWebViewController
+@implementation WXWebViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -35,7 +35,7 @@
     self = [self initWithNibName:nil bundle:nil];
     if (self) {
         self.originalText = text;
-        NSString *htmlString = [NSString stringWithFormat:@"<head><meta name='viewport' content='initial-scale=1.0'></head><body><pre>%@</pre></body>", [FLEXUtility stringByEscapingHTMLEntitiesInString:text]];
+        NSString *htmlString = [NSString stringWithFormat:@"<head><meta name='viewport' content='initial-scale=1.0'></head><body><pre>%@</pre></body>", [WXTracingUtility stringByEscapingHTMLEntitiesInString:text]];
         [self.webView loadHTMLString:htmlString baseURL:nil];
     }
     return self;
@@ -89,7 +89,7 @@
     } else {
         // For clicked links, push another web view controller onto the navigation stack so that hitting the back button works as expected.
         // Don't allow the current web view do handle the navigation.
-        FLEXWebViewController *webVC = [[[self class] alloc] initWithURL:[request URL]];
+        WXWebViewController *webVC = [[[self class] alloc] initWithURL:[request URL]];
         webVC.title = [[request URL] absoluteString];
         [self.navigationController pushViewController:webVC animated:YES];
     }

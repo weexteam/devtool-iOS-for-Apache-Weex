@@ -1,5 +1,5 @@
 //
-//  ViewPagerController.h
+//  WXViewPagerController.h
 //  ICViewPager
 //
 //  Created by Ilter Cengiz on 28/08/2013.
@@ -31,7 +31,7 @@ typedef NS_ENUM(NSUInteger, ViewPagerOption) {
 };
 
 /**
- * Main parts of the ViewPagerController
+ * Main parts of the WXViewPagerController
  *
  * ViewPagerIndicator: The colored line in the view of the active tab
  * ViewPagerTabsView: The tabs view itself
@@ -46,7 +46,7 @@ typedef NS_ENUM(NSUInteger, ViewPagerComponent) {
 @protocol ViewPagerDataSource;
 @protocol ViewPagerDelegate;
 
-@interface ViewPagerController : UIViewController
+@interface WXViewPagerController : UIViewController
 
 @property (nonatomic) NSUInteger activeTabIndex;
 
@@ -97,7 +97,7 @@ typedef NS_ENUM(NSUInteger, ViewPagerComponent) {
  * Call this method to get the value of a given option.
  * Returns NAN for any undefined option.
  *
- * @param option The option key. Keys are defined in ViewPagerController.h
+ * @param option The option key. Keys are defined in WXViewPagerController.h
  *
  * @return A CGFloat, defining the setting for the given option
  */
@@ -107,7 +107,7 @@ typedef NS_ENUM(NSUInteger, ViewPagerComponent) {
  * Call this method to get the color of a given component.
  * Returns [UIColor clearColor] for any undefined component.
  *
- * @param component The component key. Keys are defined in ViewPagerController.h
+ * @param component The component key. Keys are defined in WXViewPagerController.h
  *
  * @return A UIColor for the given component
  */
@@ -123,7 +123,7 @@ typedef NS_ENUM(NSUInteger, ViewPagerComponent) {
  * @param viewPager The viewPager that's subject to
  * @return Number of tabs
  */
-- (NSUInteger)numberOfTabsForViewPager:(ViewPagerController *)viewPager;
+- (NSUInteger)numberOfTabsForViewPager:(WXViewPagerController *)viewPager;
 /**
  * Asks dataSource to give a view to display as a tab item.
  * It is suggested to return a view with a clearColor background.
@@ -134,7 +134,7 @@ typedef NS_ENUM(NSUInteger, ViewPagerComponent) {
  *
  * @return A view that will be shown as tab at the given index
  */
-- (UIView *)viewPager:(ViewPagerController *)viewPager viewForTabAtIndex:(NSUInteger)index;
+- (UIView *)viewPager:(WXViewPagerController *)viewPager viewForTabAtIndex:(NSUInteger)index;
 
 @optional
 /**
@@ -145,7 +145,7 @@ typedef NS_ENUM(NSUInteger, ViewPagerComponent) {
  *
  * @return A viewController whose view will be shown as content
  */
-- (UIViewController *)viewPager:(ViewPagerController *)viewPager contentViewControllerForTabAtIndex:(NSUInteger)index;
+- (UIViewController *)viewPager:(WXViewPagerController *)viewPager contentViewControllerForTabAtIndex:(NSUInteger)index;
 /**
  * The content for any tab. Return a view and ViewPager will use it to show as content.
  *
@@ -154,7 +154,7 @@ typedef NS_ENUM(NSUInteger, ViewPagerComponent) {
  *
  * @return A view which will be shown as content
  */
-- (UIView *)viewPager:(ViewPagerController *)viewPager contentViewForTabAtIndex:(NSUInteger)index;
+- (UIView *)viewPager:(WXViewPagerController *)viewPager contentViewForTabAtIndex:(NSUInteger)index;
 
 @end
 
@@ -168,7 +168,7 @@ typedef NS_ENUM(NSUInteger, ViewPagerComponent) {
  * @param viewPager The viewPager that's subject to
  * @param index The index of the active tab
  */
-- (void)viewPager:(ViewPagerController *)viewPager didChangeTabToIndex:(NSUInteger)index;
+- (void)viewPager:(WXViewPagerController *)viewPager didChangeTabToIndex:(NSUInteger)index;
 /**
  * Every time -reloadData method called, ViewPager will ask its delegate for option values.
  * So you don't have to set options from ViewPager itself.
@@ -176,12 +176,12 @@ typedef NS_ENUM(NSUInteger, ViewPagerComponent) {
  * Just return the values for the interested options and return the given 'value' parameter for the rest.
  *
  * @param viewPager The viewPager that's subject to
- * @param option The option key. Keys are defined in ViewPagerController.h
+ * @param option The option key. Keys are defined in WXViewPagerController.h
  * @param value The default value for the given option
  *
  * @return A CGFloat, defining the setting for the given option
  */
-- (CGFloat)viewPager:(ViewPagerController *)viewPager valueForOption:(ViewPagerOption)option withDefault:(CGFloat)value;
+- (CGFloat)viewPager:(WXViewPagerController *)viewPager valueForOption:(ViewPagerOption)option withDefault:(CGFloat)value;
 
 /**
  * Use this method to customize the look and feel.
@@ -192,11 +192,11 @@ typedef NS_ENUM(NSUInteger, ViewPagerComponent) {
  * and indicator will change its own color.
  *
  * @param viewPager The viewPager that's subject to
- * @param component The component key. Keys are defined in ViewPagerController.h
+ * @param component The component key. Keys are defined in WXViewPagerController.h
  * @param color The default color for the given component
  *
  * @return A UIColor for the given component
  */
-- (UIColor *)viewPager:(ViewPagerController *)viewPager colorForComponent:(ViewPagerComponent)component withDefault:(UIColor *)color;
+- (UIColor *)viewPager:(WXViewPagerController *)viewPager colorForComponent:(ViewPagerComponent)component withDefault:(UIColor *)color;
 
 @end

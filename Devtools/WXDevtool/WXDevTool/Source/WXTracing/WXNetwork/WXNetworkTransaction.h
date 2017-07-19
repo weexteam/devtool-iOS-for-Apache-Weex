@@ -1,5 +1,5 @@
 //
-//  FLEXNetworkTransaction.h
+//  WXNetworkTransaction.h
 //  Flipboard
 //
 //  Created by Ryan Olson on 2/8/15.
@@ -9,22 +9,22 @@
 #import <Foundation/Foundation.h>
 #import "UIKit/UIKit.h"
 
-typedef NS_ENUM(NSInteger, FLEXNetworkTransactionState) {
-    FLEXNetworkTransactionStateUnstarted,
-    FLEXNetworkTransactionStateAwaitingResponse,
-    FLEXNetworkTransactionStateReceivingData,
-    FLEXNetworkTransactionStateFinished,
-    FLEXNetworkTransactionStateFailed
+typedef NS_ENUM(NSInteger, WXNetworkTransactionState) {
+    WXNetworkTransactionStateUnstarted,
+    WXNetworkTransactionStateAwaitingResponse,
+    WXNetworkTransactionStateReceivingData,
+    WXNetworkTransactionStateFinished,
+    WXNetworkTransactionStateFailed
 };
 
-@interface FLEXNetworkTransaction : NSObject
+@interface WXNetworkTransaction : NSObject
 
 @property (nonatomic, copy) NSString *requestID;
 
 @property (nonatomic, strong) NSURLRequest *request;
 @property (nonatomic, strong) NSURLResponse *response;
 @property (nonatomic, copy) NSString *requestMechanism;
-@property (nonatomic, assign) FLEXNetworkTransactionState transactionState;
+@property (nonatomic, assign) WXNetworkTransactionState transactionState;
 @property (nonatomic, strong) NSError *error;
 
 @property (nonatomic, strong) NSDate *startTime;
@@ -39,6 +39,6 @@ typedef NS_ENUM(NSInteger, FLEXNetworkTransactionState) {
 /// Populated lazily. Handles both normal HTTPBody data and HTTPBodyStreams.
 @property (nonatomic, strong, readonly) NSData *cachedRequestBody;
 
-+ (NSString *)readableStringFromTransactionState:(FLEXNetworkTransactionState)state;
++ (NSString *)readableStringFromTransactionState:(WXNetworkTransactionState)state;
 
 @end

@@ -1,20 +1,20 @@
 //
-//  FLEXNetworkTransaction.m
+//  WXNetworkTransaction.m
 //  Flipboard
 //
 //  Created by Ryan Olson on 2/8/15.
 //  Copyright (c) 2015 Flipboard. All rights reserved.
 //
 
-#import "FLEXNetworkTransaction.h"
+#import "WXNetworkTransaction.h"
 
-@interface FLEXNetworkTransaction ()
+@interface WXNetworkTransaction ()
 
 @property (nonatomic, strong, readwrite) NSData *cachedRequestBody;
 
 @end
 
-@implementation FLEXNetworkTransaction
+@implementation WXNetworkTransaction
 
 - (NSString *)description
 {
@@ -50,27 +50,27 @@
     return _cachedRequestBody;
 }
 
-+ (NSString *)readableStringFromTransactionState:(FLEXNetworkTransactionState)state
++ (NSString *)readableStringFromTransactionState:(WXNetworkTransactionState)state
 {
     NSString *readableString = nil;
     switch (state) {
-        case FLEXNetworkTransactionStateUnstarted:
+        case WXNetworkTransactionStateUnstarted:
             readableString = @"Unstarted";
             break;
 
-        case FLEXNetworkTransactionStateAwaitingResponse:
+        case WXNetworkTransactionStateAwaitingResponse:
             readableString = @"Awaiting Response";
             break;
 
-        case FLEXNetworkTransactionStateReceivingData:
+        case WXNetworkTransactionStateReceivingData:
             readableString = @"Receiving Data";
             break;
 
-        case FLEXNetworkTransactionStateFinished:
+        case WXNetworkTransactionStateFinished:
             readableString = @"Finished";
             break;
 
-        case FLEXNetworkTransactionStateFailed:
+        case WXNetworkTransactionStateFailed:
             readableString = @"Failed";
             break;
     }

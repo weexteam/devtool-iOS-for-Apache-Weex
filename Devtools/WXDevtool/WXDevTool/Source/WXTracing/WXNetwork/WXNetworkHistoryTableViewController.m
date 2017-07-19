@@ -1,20 +1,20 @@
 //
-//  FLEXNetworkHistoryTableViewController.m
+//  WXNetworkHistoryTableViewController.m
 //  Flipboard
 //
 //  Created by Ryan Olson on 2/8/15.
 //  Copyright (c) 2015 Flipboard. All rights reserved.
 //
 
-#import "FLEXNetworkHistoryTableViewController.h"
-#import "FLEXNetworkTransaction.h"
-#import "FLEXNetworkTransactionTableViewCell.h"
-#import "FLEXNetworkRecorder.h"
-#import "FLEXNetworkTransactionDetailTableViewController.h"
-#import "FLEXNetworkObserver.h"
-#import "FLEXNetworkSettingsTableViewController.h"
+#import "WXNetworkHistoryTableViewController.h"
+#import "WXNetworkTransaction.h"
+#import "WXNetworkTransactionTableViewCell.h"
+#import "WXNetworkRecorder.h"
+#import "WXNetworkTransactionDetailTableViewController.h"
+#import "WXNetworkObserver.h"
+#import "WXNetworkSettingsTableViewController.h"
 
-@interface FLEXNetworkHistoryTableViewController () <UISearchResultsUpdating, UISearchControllerDelegate>
+@interface WXNetworkHistoryTableViewController () <UISearchResultsUpdating, UISearchControllerDelegate>
 
 /// Backing model
 @property (nonatomic, copy) NSArray *networkTransactions;
@@ -29,16 +29,16 @@
 
 @end
 
-@implementation FLEXNetworkHistoryTableViewController
+@implementation WXNetworkHistoryTableViewController
 
 - (instancetype)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
     if (self) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleNewTransactionRecordedNotification:) name:kFLEXNetworkRecorderNewTransactionNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleTransactionUpdatedNotification:) name:kFLEXNetworkRecorderTransactionUpdatedNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleTransactionsClearedNotification:) name:kFLEXNetworkRecorderTransactionsClearedNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleNetworkObserverEnabledStateChangedNotification:) name:kFLEXNetworkObserverEnabledStateChangedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleNewTransactionRecordedNotification:) name:kWXNetworkRecorderNewTransactionNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleTransactionUpdatedNotification:) name:kWXNetworkRecorderTransactionUpdatedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleTransactionsClearedNotification:) name:kWXNetworkRecorderTransactionsClearedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleNetworkObserverEnabledStateChangedNotification:) name:kWXNetworkObserverEnabledStateChangedNotification object:nil];
         self.title = @"📡  网络";
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"设置" style:UIBarButtonItemStylePlain target:self action:@selector(settingsButtonTapped:)];
     }
@@ -61,9 +61,9 @@
 {
     [super viewDidLoad];
 
-    [self.tableView registerClass:[FLEXNetworkTransactionTableViewCell class] forCellReuseIdentifier:kFLEXNetworkTransactionCellIdentifier];
+    [self.tableView registerClass:[WXNetworkTransactionTableViewCell class] forCellReuseIdentifier:kWXNetworkTransactionCellIdentifier];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.tableView.rowHeight = [FLEXNetworkTransactionTableViewCell preferredCellHeight];
+    self.tableView.rowHeight = [WXNetworkTransactionTableViewCell preferredCellHeight];
 
     self.searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
     self.searchController.delegate = self;
@@ -83,7 +83,7 @@
 
 - (void)settingsButtonTapped:(id)sender
 {
-    FLEXNetworkSettingsTableViewController *settingsViewController = [[FLEXNetworkSettingsTableViewController alloc] init];
+    WXNetworkSettingsTableViewController *settingsViewController = [[WXNetworkSettingsTableViewController alloc] init];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"设置" style:UIBarButtonItemStylePlain target:self action:@selector(settingsButtonTapped:)];
     settingsViewController.navigationItem.rightBarButtonItem =
     [[UIBarButtonItem alloc] initWithTitle:@"完成" style:UIBarButtonItemStylePlain target:self action:@selector(settingsViewControllerDoneTapped:)];
@@ -99,7 +99,7 @@
 
 - (void)updateTransactions
 {
-    self.networkTransactions = [[FLEXNetworkRecorder defaultRecorder] networkTransactions];
+    self.networkTransactions = [[WXNetworkRecorder defaultRecorder] networkTransactions];
 }
 
 - (void)setNetworkTransactions:(NSArray *)networkTransactions
@@ -114,7 +114,7 @@
 - (void)updateBytesReceived
 {
     long long bytesReceived = 0;
-    for (FLEXNetworkTransaction *transaction in self.networkTransactions) {
+    for (WXNetworkTransaction *transaction in self.networkTransactions) {
         bytesReceived += transaction.receivedDataLength;
     }
     self.bytesReceived = bytesReceived;
@@ -132,7 +132,7 @@
 - (void)updateFilteredBytesReceived
 {
     long long filteredBytesReceived = 0;
-    for (FLEXNetworkTransaction *transaction in self.filteredNetworkTransactions) {
+    for (WXNetworkTransaction *transaction in self.filteredNetworkTransactions) {
         filteredBytesReceived += transaction.receivedDataLength;
     }
     self.filteredBytesReceived = filteredBytesReceived;
@@ -152,7 +152,7 @@
 - (NSString *)headerText
 {
     NSString *headerText = nil;
-    if ([FLEXNetworkObserver isEnabled]) {
+    if ([WXNetworkObserver isEnabled]) {
         long long bytesReceived = 0;
         NSInteger totalRequests = 0;
         if (self.searchController.isActive) {
@@ -231,10 +231,10 @@
     [self updateBytesReceived];
     [self updateFilteredBytesReceived];
 
-    FLEXNetworkTransaction *transaction = notification.userInfo[kFLEXNetworkRecorderUserInfoTransactionKey];
+    WXNetworkTransaction *transaction = notification.userInfo[kWXNetworkRecorderUserInfoTransactionKey];
 
     // Update both the main table view and search table view if needed.
-    for (FLEXNetworkTransactionTableViewCell *cell in [self.tableView visibleCells]) {
+    for (WXNetworkTransactionTableViewCell *cell in [self.tableView visibleCells]) {
         if ([cell.transaction isEqual:transaction]) {
             // Using -[UITableView reloadRowsAtIndexPaths:withRowAnimation:] is overkill here and kicks off a lot of
             // work that can make the table view somewhat unresponseive when lots of updates are streaming in.
@@ -287,7 +287,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    FLEXNetworkTransactionTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kFLEXNetworkTransactionCellIdentifier forIndexPath:indexPath];
+    WXNetworkTransactionTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kWXNetworkTransactionCellIdentifier forIndexPath:indexPath];
     cell.transaction = [self transactionAtIndexPath:indexPath inTableView:tableView];
 
     // Since we insert from the top, assign background colors bottom up to keep them consistent for each transaction.
@@ -303,7 +303,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    FLEXNetworkTransactionDetailTableViewController *detailViewController = [[FLEXNetworkTransactionDetailTableViewController alloc] init];
+    WXNetworkTransactionDetailTableViewController *detailViewController = [[WXNetworkTransactionDetailTableViewController alloc] init];
     detailViewController.transaction = [self transactionAtIndexPath:indexPath inTableView:tableView];
     [self.navigationController setNavigationBarHidden:NO];
     [self.navigationController pushViewController:detailViewController animated:YES];
@@ -324,13 +324,13 @@
 - (void)tableView:(UITableView *)tableView performAction:(SEL)action forRowAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender
 {
     if (action == @selector(copy:)) {
-        FLEXNetworkTransaction *transaction = [self transactionAtIndexPath:indexPath inTableView:tableView];
+        WXNetworkTransaction *transaction = [self transactionAtIndexPath:indexPath inTableView:tableView];
         NSString *requestURLString = transaction.request.URL.absoluteString ?: @"";
         [[UIPasteboard generalPasteboard] setString:requestURLString];
     }
 }
 
-- (FLEXNetworkTransaction *)transactionAtIndexPath:(NSIndexPath *)indexPath inTableView:(UITableView *)tableView
+- (WXNetworkTransaction *)transactionAtIndexPath:(NSIndexPath *)indexPath inTableView:(UITableView *)tableView
 {
     return self.searchController.isActive ? self.filteredNetworkTransactions[indexPath.row] : self.networkTransactions[indexPath.row];
 }
@@ -346,7 +346,7 @@
 {
     NSString *searchString = self.searchController.searchBar.text;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSArray *filteredNetworkTransactions = [self.networkTransactions filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(FLEXNetworkTransaction *transaction, NSDictionary *bindings) {
+        NSArray *filteredNetworkTransactions = [self.networkTransactions filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(WXNetworkTransaction *transaction, NSDictionary *bindings) {
             return [[transaction.request.URL absoluteString] rangeOfString:searchString options:NSCaseInsensitiveSearch].length > 0;
         }]];
         dispatch_async(dispatch_get_main_queue(), ^{

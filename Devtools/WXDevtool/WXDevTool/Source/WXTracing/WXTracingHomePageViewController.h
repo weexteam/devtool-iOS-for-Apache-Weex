@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ViewPagerController.h"
+#import "WXViewPagerController.h"
 
-@interface WXTracingHomePageViewController : ViewPagerController
+@interface WXTracingHomePageViewController : WXViewPagerController
 
 @end

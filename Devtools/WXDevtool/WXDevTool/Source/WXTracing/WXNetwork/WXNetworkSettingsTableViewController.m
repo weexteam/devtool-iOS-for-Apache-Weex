@@ -1,19 +1,19 @@
 //
-//  FLEXNetworkSettingsTableViewController.m
+//  WXNetworkSettingsTableViewController.m
 //  FLEXInjected
 //
 //  Created by Ryan Olson on 2/20/15.
 //
 //
 
-#import "FLEXNetworkSettingsTableViewController.h"
-#import "FLEXNetworkObserver.h"
-#import "FLEXNetworkRecorder.h"
-#import "FLEXUtility.h"
+#import "WXNetworkSettingsTableViewController.h"
+#import "WXNetworkObserver.h"
+#import "WXNetworkRecorder.h"
+#import "WXTracingUtility.h"
 #import <WeexSDK/WXLog.h>
 #import "WXLogSettingViewController.h"
 
-@interface FLEXNetworkSettingsTableViewController () <UIActionSheetDelegate,WXLogSettingViewControllerDelegate>
+@interface WXNetworkSettingsTableViewController () <UIActionSheetDelegate,WXLogSettingViewControllerDelegate>
 
 @property (nonatomic, copy) NSArray *cells;
 
@@ -21,7 +21,7 @@
 
 @end
 
-@implementation FLEXNetworkSettingsTableViewController
+@implementation WXNetworkSettingsTableViewController
 
 - (instancetype)initWithStyle:(UITableViewStyle)style
 {
@@ -48,13 +48,13 @@
     UITableViewCell *logDebuggingCell = [self logCellWithTitle:@"日志级别" logLevel:loglevel];
     [mutableCells addObject:logDebuggingCell];
     
-    UITableViewCell *networkDebuggingCell = [self switchCellWithTitle:@"网络调试" toggleAction:@selector(networkDebuggingToggled:) isOn:[FLEXNetworkObserver isEnabled]];
+    UITableViewCell *networkDebuggingCell = [self switchCellWithTitle:@"网络调试" toggleAction:@selector(networkDebuggingToggled:) isOn:[WXNetworkObserver isEnabled]];
     [mutableCells addObject:networkDebuggingCell];
     
     UITableViewCell *cacheMediaResponsesCell = [self switchCellWithTitle:@"多媒体缓存" toggleAction:@selector(cacheMediaResponsesToggled:) isOn:NO];
     [mutableCells addObject:cacheMediaResponsesCell];
     
-    NSUInteger currentCacheLimit = [[FLEXNetworkRecorder defaultRecorder] responseCacheByteLimit];
+    NSUInteger currentCacheLimit = [[WXNetworkRecorder defaultRecorder] responseCacheByteLimit];
     const NSUInteger fiftyMega = 50 * 1024 * 1024;
     NSString *cacheLimitTitle = [self titleForCacheLimitCellWithValue:currentCacheLimit];
     self.cacheLimitCell = [self sliderCellWithTitle:cacheLimitTitle changedAction:@selector(cacheLimitAdjusted:) minimum:0.0 maximum:fiftyMega initialValue:currentCacheLimit];
@@ -76,7 +76,7 @@
 
 - (void)networkDebuggingToggled:(UISwitch *)sender
 {
-    [FLEXNetworkObserver setEnabled:sender.isOn];
+    [WXNetworkObserver setEnabled:sender.isOn];
 }
 
 - (void)logLevelDebuggingToggled
@@ -159,12 +159,12 @@
 
 - (void)cacheMediaResponsesToggled:(UISwitch *)sender
 {
-    [[FLEXNetworkRecorder defaultRecorder] setShouldCacheMediaResponses:sender.isOn];
+    [[WXNetworkRecorder defaultRecorder] setShouldCacheMediaResponses:sender.isOn];
 }
 
 - (void)cacheLimitAdjusted:(UISlider *)sender
 {
-    [[FLEXNetworkRecorder defaultRecorder] setResponseCacheByteLimit:sender.value];
+    [[WXNetworkRecorder defaultRecorder] setResponseCacheByteLimit:sender.value];
     self.cacheLimitCell.textLabel.text = [self titleForCacheLimitCellWithValue:sender.value];
 }
 
@@ -196,7 +196,7 @@
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex != actionSheet.cancelButtonIndex) {
-        [[FLEXNetworkRecorder defaultRecorder] clearRecordedActivity];
+        [[WXNetworkRecorder defaultRecorder] clearRecordedActivity];
     }
 }
 
@@ -332,7 +332,7 @@
 
 + (UIFont *)cellTitleFont
 {
-    return [FLEXUtility defaultFontOfSize:14.0];
+    return [WXTracingUtility defaultFontOfSize:14.0];
 }
 
 #pragma mark -

@@ -1,5 +1,5 @@
 //
-//  FLEXNetworkObserver.m
+//  WXNetworkObserver.m
 //  Derived from:
 //
 //  PDAFNetworkDomainController.m
@@ -10,9 +10,9 @@
 
 //
 
-#import "FLEXNetworkObserver.h"
-#import "FLEXNetworkRecorder.h"
-#import "FLEXUtility.h"
+#import "WXNetworkObserver.h"
+#import "WXNetworkRecorder.h"
+#import "WXTracingUtility.h"
 
 #import <objc/runtime.h>
 #import <objc/message.h>
@@ -21,8 +21,8 @@
 //#import "PDNetworkDomainController.h"
 #import "NSDate+WXDebugger.h"
 
-NSString *const kFLEXNetworkObserverEnabledStateChangedNotification = @"kFLEXNetworkObserverEnabledStateChangedNotification";
-static NSString *const kFLEXNetworkObserverEnabledDefaultsKey = @"com.flex.FLEXNetworkObserver.enableOnLaunch";
+NSString *const kWXNetworkObserverEnabledStateChangedNotification = @"kWXNetworkObserverEnabledStateChangedNotification";
+static NSString *const kWXNetworkObserverEnabledDefaultsKey = @"com.flex.WXNetworkObserver.enableOnLaunch";
 
 typedef void (^NSURLSessionAsyncCompletion)(id fileURLOrData, NSURLResponse *response, NSError *error);
 
@@ -43,7 +43,7 @@ typedef void (^NSURLSessionAsyncCompletion)(id fileURLOrData, NSURLResponse *res
 
 @end
 
-@interface FLEXNetworkObserver (NSURLConnectionHelpers)
+@interface WXNetworkObserver (NSURLConnectionHelpers)
 
 - (void)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)response delegate:(id <NSURLConnectionDelegate>)delegate;
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response delegate:(id <NSURLConnectionDelegate>)delegate;
@@ -58,7 +58,7 @@ typedef void (^NSURLSessionAsyncCompletion)(id fileURLOrData, NSURLResponse *res
 @end
 
 
-@interface FLEXNetworkObserver (NSURLSessionTaskHelpers)
+@interface WXNetworkObserver (NSURLSessionTaskHelpers)
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task willPerformHTTPRedirection:(NSHTTPURLResponse *)response newRequest:(NSURLRequest *)request completionHandler:(void (^)(NSURLRequest *))completionHandler delegate:(id <NSURLSessionDelegate>)delegate;
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler delegate:(id <NSURLSessionDelegate>)delegate;
@@ -73,14 +73,14 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
 
 @end
 
-@interface FLEXNetworkObserver ()
+@interface WXNetworkObserver ()
 
 @property (nonatomic, strong) NSMutableDictionary *requestStatesForRequestIDs;
 @property (nonatomic, strong) dispatch_queue_t queue;
 
 @end
 
-@implementation FLEXNetworkObserver
+@implementation WXNetworkObserver
 
 #pragma mark - Public Methods
 
@@ -88,7 +88,7 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
 {
     BOOL previouslyEnabled = [self isEnabled];
     
-    [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:kFLEXNetworkObserverEnabledDefaultsKey];
+    [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:kWXNetworkObserverEnabledDefaultsKey];
     
     if (enabled) {
         // Inject if needed. This injection is protected with a dispatch_once, so we're ok calling it multiple times.
@@ -97,13 +97,13 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
     }
     
     if (previouslyEnabled != enabled) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:kFLEXNetworkObserverEnabledStateChangedNotification object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kWXNetworkObserverEnabledStateChangedNotification object:self];
     }
 }
 
 + (BOOL)isEnabled
 {
-    return [[[NSUserDefaults standardUserDefaults] objectForKey:kFLEXNetworkObserverEnabledDefaultsKey] boolValue];
+    return [[[NSUserDefaults standardUserDefaults] objectForKey:kWXNetworkObserverEnabledDefaultsKey] boolValue];
 }
 
 + (void)load
@@ -120,7 +120,7 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
 
 + (instancetype)sharedObserver
 {
-    static FLEXNetworkObserver *sharedObserver = nil;
+    static WXNetworkObserver *sharedObserver = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         sharedObserver = [[[self class] alloc] init];
@@ -202,7 +202,7 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
             for (NSInteger classIndex = 0; classIndex < numClasses; ++classIndex) {
                 Class class = classes[classIndex];
 
-                if (class == [FLEXNetworkObserver class]) {
+                if (class == [WXNetworkObserver class]) {
                     continue;
                 }
 
@@ -271,11 +271,11 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
     dispatch_once(&onceToken, ^{
         Class class = [NSURLConnection class];
         SEL selector = @selector(cancel);
-        SEL swizzledSelector = [FLEXUtility swizzledSelectorForSelector:selector];
+        SEL swizzledSelector = [WXTracingUtility swizzledSelectorForSelector:selector];
         Method originalCancel = class_getInstanceMethod(class, selector);
 
         void (^swizzleBlock)(NSURLConnection *) = ^(NSURLConnection *slf) {
-            [[FLEXNetworkObserver sharedObserver] connectionWillCancel:slf];
+            [[WXNetworkObserver sharedObserver] connectionWillCancel:slf];
             ((void(*)(id, SEL))objc_msgSend)(slf, swizzledSelector);
         };
 
@@ -302,12 +302,12 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
             class = NSClassFromString([@[@"__", @"NSC", @"FURLS", @"ession", @"Task"] componentsJoinedByString:@""]);
         }
         SEL selector = @selector(resume);
-        SEL swizzledSelector = [FLEXUtility swizzledSelectorForSelector:selector];
+        SEL swizzledSelector = [WXTracingUtility swizzledSelectorForSelector:selector];
 
         Method originalResume = class_getInstanceMethod(class, selector);
 
         void (^swizzleBlock)(NSURLSessionTask *) = ^(NSURLSessionTask *slf) {
-            [[FLEXNetworkObserver sharedObserver] URLSessionTaskWillResume:slf];
+            [[WXNetworkObserver sharedObserver] URLSessionTaskWillResume:slf];
             ((void(*)(id, SEL))objc_msgSend)(slf, swizzledSelector);
         };
 
@@ -324,23 +324,23 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
     dispatch_once(&onceToken, ^{
         Class class = objc_getMetaClass(class_getName([NSURLConnection class]));
         SEL selector = @selector(sendAsynchronousRequest:queue:completionHandler:);
-        SEL swizzledSelector = [FLEXUtility swizzledSelectorForSelector:selector];
+        SEL swizzledSelector = [WXTracingUtility swizzledSelectorForSelector:selector];
 
         typedef void (^NSURLConnectionAsyncCompletion)(NSURLResponse* response, NSData* data, NSError* connectionError);
 
         void (^asyncSwizzleBlock)(Class, NSURLRequest *, NSOperationQueue *, NSURLConnectionAsyncCompletion) = ^(Class slf, NSURLRequest *request, NSOperationQueue *queue, NSURLConnectionAsyncCompletion completion) {
-            if ([FLEXNetworkObserver isEnabled]) {
+            if ([WXNetworkObserver isEnabled]) {
                 NSString *requestID = [self nextRequestID];
-                [[FLEXNetworkRecorder defaultRecorder] recordRequestWillBeSentWithRequestID:requestID request:request redirectResponse:nil];
+                [[WXNetworkRecorder defaultRecorder] recordRequestWillBeSentWithRequestID:requestID request:request redirectResponse:nil];
                 NSString *mechanism = [self mechansimFromClassMethod:selector onClass:class];
-                [[FLEXNetworkRecorder defaultRecorder] recordMechanism:mechanism forRequestID:requestID];
+                [[WXNetworkRecorder defaultRecorder] recordMechanism:mechanism forRequestID:requestID];
                 NSURLConnectionAsyncCompletion completionWrapper = ^(NSURLResponse *response, NSData *data, NSError *connectionError) {
-                    [[FLEXNetworkRecorder defaultRecorder] recordResponseReceivedWithRequestID:requestID response:response];
-                    [[FLEXNetworkRecorder defaultRecorder] recordDataReceivedWithRequestID:requestID dataLength:[data length]];
+                    [[WXNetworkRecorder defaultRecorder] recordResponseReceivedWithRequestID:requestID response:response];
+                    [[WXNetworkRecorder defaultRecorder] recordDataReceivedWithRequestID:requestID dataLength:[data length]];
                     if (connectionError) {
-                        [[FLEXNetworkRecorder defaultRecorder] recordLoadingFailedWithRequestID:requestID error:connectionError];
+                        [[WXNetworkRecorder defaultRecorder] recordLoadingFailedWithRequestID:requestID error:connectionError];
                     } else {
-                        [[FLEXNetworkRecorder defaultRecorder] recordLoadingFinishedWithRequestID:requestID responseBody:data];
+                        [[WXNetworkRecorder defaultRecorder] recordLoadingFinishedWithRequestID:requestID responseBody:data];
                     }
 
                     // Call through to the original completion handler
@@ -354,7 +354,7 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
             }
         };
         
-        [FLEXUtility replaceImplementationOfKnownSelector:selector onClass:class withBlock:asyncSwizzleBlock swizzledSelector:swizzledSelector];
+        [WXTracingUtility replaceImplementationOfKnownSelector:selector onClass:class withBlock:asyncSwizzleBlock swizzledSelector:swizzledSelector];
     });
 }
 
@@ -364,24 +364,24 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
     dispatch_once(&onceToken, ^{
         Class class = objc_getMetaClass(class_getName([NSURLConnection class]));
         SEL selector = @selector(sendSynchronousRequest:returningResponse:error:);
-        SEL swizzledSelector = [FLEXUtility swizzledSelectorForSelector:selector];
+        SEL swizzledSelector = [WXTracingUtility swizzledSelectorForSelector:selector];
 
         NSData *(^syncSwizzleBlock)(Class, NSURLRequest *, NSURLResponse **, NSError **) = ^NSData *(Class slf, NSURLRequest *request, NSURLResponse **response, NSError **error) {
             NSData *data = nil;
-            if ([FLEXNetworkObserver isEnabled]) {
+            if ([WXNetworkObserver isEnabled]) {
                 NSString *requestID = [self nextRequestID];
-                [[FLEXNetworkRecorder defaultRecorder] recordRequestWillBeSentWithRequestID:requestID request:request redirectResponse:nil];
+                [[WXNetworkRecorder defaultRecorder] recordRequestWillBeSentWithRequestID:requestID request:request redirectResponse:nil];
                 NSString *mechanism = [self mechansimFromClassMethod:selector onClass:class];
-                [[FLEXNetworkRecorder defaultRecorder] recordMechanism:mechanism forRequestID:requestID];
+                [[WXNetworkRecorder defaultRecorder] recordMechanism:mechanism forRequestID:requestID];
                 NSError *temporaryError = nil;
                 NSURLResponse *temporaryResponse = nil;
                 data = ((id(*)(id, SEL, id, NSURLResponse **, NSError **))objc_msgSend)(slf, swizzledSelector, request, &temporaryResponse, &temporaryError);
-                [[FLEXNetworkRecorder defaultRecorder] recordResponseReceivedWithRequestID:requestID response:temporaryResponse];
-                [[FLEXNetworkRecorder defaultRecorder] recordDataReceivedWithRequestID:requestID dataLength:[data length]];
+                [[WXNetworkRecorder defaultRecorder] recordResponseReceivedWithRequestID:requestID response:temporaryResponse];
+                [[WXNetworkRecorder defaultRecorder] recordDataReceivedWithRequestID:requestID dataLength:[data length]];
                 if (temporaryError) {
-                    [[FLEXNetworkRecorder defaultRecorder] recordLoadingFailedWithRequestID:requestID error:temporaryError];
+                    [[WXNetworkRecorder defaultRecorder] recordLoadingFailedWithRequestID:requestID error:temporaryError];
                 } else {
-                    [[FLEXNetworkRecorder defaultRecorder] recordLoadingFinishedWithRequestID:requestID responseBody:data];
+                    [[WXNetworkRecorder defaultRecorder] recordLoadingFinishedWithRequestID:requestID responseBody:data];
                 }
                 if (error) {
                     *error = temporaryError;
@@ -396,7 +396,7 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
             return data;
         };
         
-        [FLEXUtility replaceImplementationOfKnownSelector:selector onClass:class withBlock:syncSwizzleBlock swizzledSelector:swizzledSelector];
+        [WXTracingUtility replaceImplementationOfKnownSelector:selector onClass:class withBlock:syncSwizzleBlock swizzledSelector:swizzledSelector];
     });
 }
 
@@ -419,9 +419,9 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
 
         for (int selectorIndex = 0; selectorIndex < numSelectors; selectorIndex++) {
             SEL selector = selectors[selectorIndex];
-            SEL swizzledSelector = [FLEXUtility swizzledSelectorForSelector:selector];
+            SEL swizzledSelector = [WXTracingUtility swizzledSelectorForSelector:selector];
 
-            if ([FLEXUtility instanceRespondsButDoesNotImplementSelector:selector class:class]) {
+            if ([WXTracingUtility instanceRespondsButDoesNotImplementSelector:selector class:class]) {
                 // iOS 7 does not implement these methods on NSURLSession. We actually want to
                 // swizzle __NSCFURLSession, which we can get from the class of the shared session
                 class = [[NSURLSession sharedSession] class];
@@ -432,7 +432,7 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
                 // If completion block was not provided sender expect to receive delegated methods or does not
                 // interested in callback at all. In this case we should just call original method implementation
                 // with nil completion block.
-                if ([FLEXNetworkObserver isEnabled] && completion) {
+                if ([WXNetworkObserver isEnabled] && completion) {
                     NSString *requestID = [self nextRequestID];
                     NSString *mechanism = [self mechansimFromClassMethod:selector onClass:class];
                     NSURLSessionAsyncCompletion completionWrapper = [self asyncCompletionWrapperForRequestID:requestID mechanism:mechanism completion:completion];
@@ -444,7 +444,7 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
                 return task;
             };
             
-            [FLEXUtility replaceImplementationOfKnownSelector:selector onClass:class withBlock:asyncDataOrDownloadSwizzleBlock swizzledSelector:swizzledSelector];
+            [WXTracingUtility replaceImplementationOfKnownSelector:selector onClass:class withBlock:asyncDataOrDownloadSwizzleBlock swizzledSelector:swizzledSelector];
         }
     });
 }
@@ -466,9 +466,9 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
 
         for (int selectorIndex = 0; selectorIndex < numSelectors; selectorIndex++) {
             SEL selector = selectors[selectorIndex];
-            SEL swizzledSelector = [FLEXUtility swizzledSelectorForSelector:selector];
+            SEL swizzledSelector = [WXTracingUtility swizzledSelectorForSelector:selector];
 
-            if ([FLEXUtility instanceRespondsButDoesNotImplementSelector:selector class:class]) {
+            if ([WXTracingUtility instanceRespondsButDoesNotImplementSelector:selector class:class]) {
                 // iOS 7 does not implement these methods on NSURLSession. We actually want to
                 // swizzle __NSCFURLSession, which we can get from the class of the shared session
                 class = [[NSURLSession sharedSession] class];
@@ -476,7 +476,7 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
 
             NSURLSessionUploadTask *(^asyncUploadTaskSwizzleBlock)(Class, NSURLRequest *, id, NSURLSessionAsyncCompletion) = ^NSURLSessionUploadTask *(Class slf, NSURLRequest *request, id argument, NSURLSessionAsyncCompletion completion) {
                 NSURLSessionUploadTask *task = nil;
-                if ([FLEXNetworkObserver isEnabled]) {
+                if ([WXNetworkObserver isEnabled]) {
                     NSString *requestID = [self nextRequestID];
                     NSString *mechanism = [self mechansimFromClassMethod:selector onClass:class];
                     NSURLSessionAsyncCompletion completionWrapper = [self asyncCompletionWrapperForRequestID:requestID mechanism:mechanism completion:completion];
@@ -488,7 +488,7 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
                 return task;
             };
             
-            [FLEXUtility replaceImplementationOfKnownSelector:selector onClass:class withBlock:asyncUploadTaskSwizzleBlock swizzledSelector:swizzledSelector];
+            [WXTracingUtility replaceImplementationOfKnownSelector:selector onClass:class withBlock:asyncUploadTaskSwizzleBlock swizzledSelector:swizzledSelector];
         }
     });
 }
@@ -501,19 +501,19 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
 + (NSURLSessionAsyncCompletion)asyncCompletionWrapperForRequestID:(NSString *)requestID mechanism:(NSString *)mechanism completion:(NSURLSessionAsyncCompletion)completion
 {
     NSURLSessionAsyncCompletion completionWrapper = ^(id fileURLOrData, NSURLResponse *response, NSError *error) {
-        [[FLEXNetworkRecorder defaultRecorder] recordMechanism:mechanism forRequestID:requestID];
-        [[FLEXNetworkRecorder defaultRecorder] recordResponseReceivedWithRequestID:requestID response:response];
+        [[WXNetworkRecorder defaultRecorder] recordMechanism:mechanism forRequestID:requestID];
+        [[WXNetworkRecorder defaultRecorder] recordResponseReceivedWithRequestID:requestID response:response];
         NSData *data = nil;
         if ([fileURLOrData isKindOfClass:[NSURL class]]) {
             data = [NSData dataWithContentsOfURL:fileURLOrData];
         } else if ([fileURLOrData isKindOfClass:[NSData class]]) {
             data = fileURLOrData;
         }
-        [[FLEXNetworkRecorder defaultRecorder] recordDataReceivedWithRequestID:requestID dataLength:[data length]];
+        [[WXNetworkRecorder defaultRecorder] recordDataReceivedWithRequestID:requestID dataLength:[data length]];
         if (error) {
-            [[FLEXNetworkRecorder defaultRecorder] recordLoadingFailedWithRequestID:requestID error:error];
+            [[WXNetworkRecorder defaultRecorder] recordLoadingFailedWithRequestID:requestID error:error];
         } else {
-            [[FLEXNetworkRecorder defaultRecorder] recordLoadingFinishedWithRequestID:requestID responseBody:data];
+            [[WXNetworkRecorder defaultRecorder] recordLoadingFinishedWithRequestID:requestID responseBody:data];
         }
 
         // Call through to the original completion handler
@@ -527,7 +527,7 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
 + (void)injectWillSendRequestIntoDelegateClass:(Class)cls
 {
     SEL selector = @selector(connection:willSendRequest:redirectResponse:);
-    SEL swizzledSelector = [FLEXUtility swizzledSelectorForSelector:selector];
+    SEL swizzledSelector = [WXTracingUtility swizzledSelectorForSelector:selector];
     
     Protocol *protocol = @protocol(NSURLConnectionDataDelegate);
     if (!protocol) {
@@ -539,7 +539,7 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
     typedef NSURLRequest *(^NSURLConnectionWillSendRequestBlock)(id <NSURLConnectionDelegate> slf, NSURLConnection *connection, NSURLRequest *request, NSURLResponse *response);
     
     NSURLConnectionWillSendRequestBlock undefinedBlock = ^NSURLRequest *(id <NSURLConnectionDelegate> slf, NSURLConnection *connection, NSURLRequest *request, NSURLResponse *response) {
-        [[FLEXNetworkObserver sharedObserver] connection:connection willSendRequest:request redirectResponse:response delegate:slf];
+        [[WXNetworkObserver sharedObserver] connection:connection willSendRequest:request redirectResponse:response delegate:slf];
         return request;
     };
     
@@ -553,13 +553,13 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
         return returnValue;
     };
     
-    [FLEXUtility replaceImplementationOfSelector:selector withSelector:swizzledSelector forClass:cls withMethodDescription:methodDescription implementationBlock:implementationBlock undefinedBlock:undefinedBlock];
+    [WXTracingUtility replaceImplementationOfSelector:selector withSelector:swizzledSelector forClass:cls withMethodDescription:methodDescription implementationBlock:implementationBlock undefinedBlock:undefinedBlock];
 }
 
 + (void)injectDidReceiveResponseIntoDelegateClass:(Class)cls
 {
     SEL selector = @selector(connection:didReceiveResponse:);
-    SEL swizzledSelector = [FLEXUtility swizzledSelectorForSelector:selector];
+    SEL swizzledSelector = [WXTracingUtility swizzledSelectorForSelector:selector];
     
     Protocol *protocol = @protocol(NSURLConnectionDataDelegate);
     if (!protocol) {
@@ -571,7 +571,7 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
     typedef void (^NSURLConnectionDidReceiveResponseBlock)(id <NSURLConnectionDelegate> slf, NSURLConnection *connection, NSURLResponse *response);
     
     NSURLConnectionDidReceiveResponseBlock undefinedBlock = ^(id <NSURLConnectionDelegate> slf, NSURLConnection *connection, NSURLResponse *response) {
-        [[FLEXNetworkObserver sharedObserver] connection:connection didReceiveResponse:response delegate:slf];
+        [[WXNetworkObserver sharedObserver] connection:connection didReceiveResponse:response delegate:slf];
     };
     
     NSURLConnectionDidReceiveResponseBlock implementationBlock = ^(id <NSURLConnectionDelegate> slf, NSURLConnection *connection, NSURLResponse *response) {
@@ -582,13 +582,13 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
         }];
     };
     
-    [FLEXUtility replaceImplementationOfSelector:selector withSelector:swizzledSelector forClass:cls withMethodDescription:methodDescription implementationBlock:implementationBlock undefinedBlock:undefinedBlock];
+    [WXTracingUtility replaceImplementationOfSelector:selector withSelector:swizzledSelector forClass:cls withMethodDescription:methodDescription implementationBlock:implementationBlock undefinedBlock:undefinedBlock];
 }
 
 + (void)injectDidReceiveDataIntoDelegateClass:(Class)cls
 {
     SEL selector = @selector(connection:didReceiveData:);
-    SEL swizzledSelector = [FLEXUtility swizzledSelectorForSelector:selector];
+    SEL swizzledSelector = [WXTracingUtility swizzledSelectorForSelector:selector];
     
     Protocol *protocol = @protocol(NSURLConnectionDataDelegate);
     if (!protocol) {
@@ -600,7 +600,7 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
     typedef void (^NSURLConnectionDidReceiveDataBlock)(id <NSURLConnectionDelegate> slf, NSURLConnection *connection, NSData *data);
     
     NSURLConnectionDidReceiveDataBlock undefinedBlock = ^(id <NSURLConnectionDelegate> slf, NSURLConnection *connection, NSData *data) {
-        [[FLEXNetworkObserver sharedObserver] connection:connection didReceiveData:data delegate:slf];
+        [[WXNetworkObserver sharedObserver] connection:connection didReceiveData:data delegate:slf];
     };
     
     NSURLConnectionDidReceiveDataBlock implementationBlock = ^(id <NSURLConnectionDelegate> slf, NSURLConnection *connection, NSData *data) {
@@ -611,13 +611,13 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
         }];
     };
     
-    [FLEXUtility replaceImplementationOfSelector:selector withSelector:swizzledSelector forClass:cls withMethodDescription:methodDescription implementationBlock:implementationBlock undefinedBlock:undefinedBlock];
+    [WXTracingUtility replaceImplementationOfSelector:selector withSelector:swizzledSelector forClass:cls withMethodDescription:methodDescription implementationBlock:implementationBlock undefinedBlock:undefinedBlock];
 }
 
 + (void)injectDidFinishLoadingIntoDelegateClass:(Class)cls
 {
     SEL selector = @selector(connectionDidFinishLoading:);
-    SEL swizzledSelector = [FLEXUtility swizzledSelectorForSelector:selector];
+    SEL swizzledSelector = [WXTracingUtility swizzledSelectorForSelector:selector];
     
     Protocol *protocol = @protocol(NSURLConnectionDataDelegate);
     if (!protocol) {
@@ -629,7 +629,7 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
     typedef void (^NSURLConnectionDidFinishLoadingBlock)(id <NSURLConnectionDelegate> slf, NSURLConnection *connection);
     
     NSURLConnectionDidFinishLoadingBlock undefinedBlock = ^(id <NSURLConnectionDelegate> slf, NSURLConnection *connection) {
-        [[FLEXNetworkObserver sharedObserver] connectionDidFinishLoading:connection delegate:slf];
+        [[WXNetworkObserver sharedObserver] connectionDidFinishLoading:connection delegate:slf];
     };
     
     NSURLConnectionDidFinishLoadingBlock implementationBlock = ^(id <NSURLConnectionDelegate> slf, NSURLConnection *connection) {
@@ -640,13 +640,13 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
         }];
     };
     
-    [FLEXUtility replaceImplementationOfSelector:selector withSelector:swizzledSelector forClass:cls withMethodDescription:methodDescription implementationBlock:implementationBlock undefinedBlock:undefinedBlock];
+    [WXTracingUtility replaceImplementationOfSelector:selector withSelector:swizzledSelector forClass:cls withMethodDescription:methodDescription implementationBlock:implementationBlock undefinedBlock:undefinedBlock];
 }
 
 + (void)injectDidFailWithErrorIntoDelegateClass:(Class)cls
 {
     SEL selector = @selector(connection:didFailWithError:);
-    SEL swizzledSelector = [FLEXUtility swizzledSelectorForSelector:selector];
+    SEL swizzledSelector = [WXTracingUtility swizzledSelectorForSelector:selector];
     
     Protocol *protocol = @protocol(NSURLConnectionDelegate);
     struct objc_method_description methodDescription = protocol_getMethodDescription(protocol, selector, NO, YES);
@@ -654,7 +654,7 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
     typedef void (^NSURLConnectionDidFailWithErrorBlock)(id <NSURLConnectionDelegate> slf, NSURLConnection *connection, NSError *error);
     
     NSURLConnectionDidFailWithErrorBlock undefinedBlock = ^(id <NSURLConnectionDelegate> slf, NSURLConnection *connection, NSError *error) {
-        [[FLEXNetworkObserver sharedObserver] connection:connection didFailWithError:error delegate:slf];
+        [[WXNetworkObserver sharedObserver] connection:connection didFailWithError:error delegate:slf];
     };
     
     NSURLConnectionDidFailWithErrorBlock implementationBlock = ^(id <NSURLConnectionDelegate> slf, NSURLConnection *connection, NSError *error) {
@@ -665,13 +665,13 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
         }];
     };
     
-    [FLEXUtility replaceImplementationOfSelector:selector withSelector:swizzledSelector forClass:cls withMethodDescription:methodDescription implementationBlock:implementationBlock undefinedBlock:undefinedBlock];
+    [WXTracingUtility replaceImplementationOfSelector:selector withSelector:swizzledSelector forClass:cls withMethodDescription:methodDescription implementationBlock:implementationBlock undefinedBlock:undefinedBlock];
 }
 
 + (void)injectTaskWillPerformHTTPRedirectionIntoDelegateClass:(Class)cls
 {
     SEL selector = @selector(URLSession:task:willPerformHTTPRedirection:newRequest:completionHandler:);
-    SEL swizzledSelector = [FLEXUtility swizzledSelectorForSelector:selector];
+    SEL swizzledSelector = [WXTracingUtility swizzledSelectorForSelector:selector];
 
     Protocol *protocol = @protocol(NSURLSessionTaskDelegate);
 
@@ -680,7 +680,7 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
     typedef void (^NSURLSessionWillPerformHTTPRedirectionBlock)(id <NSURLSessionTaskDelegate> slf, NSURLSession *session, NSURLSessionTask *task, NSHTTPURLResponse *response, NSURLRequest *newRequest, void(^completionHandler)(NSURLRequest *));
     
     NSURLSessionWillPerformHTTPRedirectionBlock undefinedBlock = ^(id <NSURLSessionTaskDelegate> slf, NSURLSession *session, NSURLSessionTask *task, NSHTTPURLResponse *response, NSURLRequest *newRequest, void(^completionHandler)(NSURLRequest *)) {
-        [[FLEXNetworkObserver sharedObserver] URLSession:session task:task willPerformHTTPRedirection:response newRequest:newRequest completionHandler:completionHandler delegate:slf];
+        [[WXNetworkObserver sharedObserver] URLSession:session task:task willPerformHTTPRedirection:response newRequest:newRequest completionHandler:completionHandler delegate:slf];
     };
 
     NSURLSessionWillPerformHTTPRedirectionBlock implementationBlock = ^(id <NSURLSessionTaskDelegate> slf, NSURLSession *session, NSURLSessionTask *task, NSHTTPURLResponse *response, NSURLRequest *newRequest, void(^completionHandler)(NSURLRequest *)) {
@@ -691,14 +691,14 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
         }];
     };
 
-    [FLEXUtility replaceImplementationOfSelector:selector withSelector:swizzledSelector forClass:cls withMethodDescription:methodDescription implementationBlock:implementationBlock undefinedBlock:undefinedBlock];
+    [WXTracingUtility replaceImplementationOfSelector:selector withSelector:swizzledSelector forClass:cls withMethodDescription:methodDescription implementationBlock:implementationBlock undefinedBlock:undefinedBlock];
 
 }
 
 + (void)injectTaskDidReceiveDataIntoDelegateClass:(Class)cls
 {
     SEL selector = @selector(URLSession:dataTask:didReceiveData:);
-    SEL swizzledSelector = [FLEXUtility swizzledSelectorForSelector:selector];
+    SEL swizzledSelector = [WXTracingUtility swizzledSelectorForSelector:selector];
     
     Protocol *protocol = @protocol(NSURLSessionDataDelegate);
     
@@ -707,7 +707,7 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
     typedef void (^NSURLSessionDidReceiveDataBlock)(id <NSURLSessionDataDelegate> slf, NSURLSession *session, NSURLSessionDataTask *dataTask, NSData *data);
     
     NSURLSessionDidReceiveDataBlock undefinedBlock = ^(id <NSURLSessionDataDelegate> slf, NSURLSession *session, NSURLSessionDataTask *dataTask, NSData *data) {
-        [[FLEXNetworkObserver sharedObserver] URLSession:session dataTask:dataTask didReceiveData:data delegate:slf];
+        [[WXNetworkObserver sharedObserver] URLSession:session dataTask:dataTask didReceiveData:data delegate:slf];
     };
     
     NSURLSessionDidReceiveDataBlock implementationBlock = ^(id <NSURLSessionDataDelegate> slf, NSURLSession *session, NSURLSessionDataTask *dataTask, NSData *data) {
@@ -718,14 +718,14 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
         }];
     };
     
-    [FLEXUtility replaceImplementationOfSelector:selector withSelector:swizzledSelector forClass:cls withMethodDescription:methodDescription implementationBlock:implementationBlock undefinedBlock:undefinedBlock];
+    [WXTracingUtility replaceImplementationOfSelector:selector withSelector:swizzledSelector forClass:cls withMethodDescription:methodDescription implementationBlock:implementationBlock undefinedBlock:undefinedBlock];
 
 }
 
 + (void)injectDataTaskDidBecomeDownloadTaskIntoDelegateClass:(Class)cls
 {
     SEL selector = @selector(URLSession:dataTask:didBecomeDownloadTask:);
-    SEL swizzledSelector = [FLEXUtility swizzledSelectorForSelector:selector];
+    SEL swizzledSelector = [WXTracingUtility swizzledSelectorForSelector:selector];
 
     Protocol *protocol = @protocol(NSURLSessionDataDelegate);
 
@@ -734,7 +734,7 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
     typedef void (^NSURLSessionDidBecomeDownloadTaskBlock)(id <NSURLSessionDataDelegate> slf, NSURLSession *session, NSURLSessionDataTask *dataTask, NSURLSessionDownloadTask *downloadTask);
 
     NSURLSessionDidBecomeDownloadTaskBlock undefinedBlock = ^(id <NSURLSessionDataDelegate> slf, NSURLSession *session, NSURLSessionDataTask *dataTask, NSURLSessionDownloadTask *downloadTask) {
-        [[FLEXNetworkObserver sharedObserver] URLSession:session dataTask:dataTask didBecomeDownloadTask:downloadTask delegate:slf];
+        [[WXNetworkObserver sharedObserver] URLSession:session dataTask:dataTask didBecomeDownloadTask:downloadTask delegate:slf];
     };
 
     NSURLSessionDidBecomeDownloadTaskBlock implementationBlock = ^(id <NSURLSessionDataDelegate> slf, NSURLSession *session, NSURLSessionDataTask *dataTask, NSURLSessionDownloadTask *downloadTask) {
@@ -745,13 +745,13 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
         }];
     };
 
-    [FLEXUtility replaceImplementationOfSelector:selector withSelector:swizzledSelector forClass:cls withMethodDescription:methodDescription implementationBlock:implementationBlock undefinedBlock:undefinedBlock];
+    [WXTracingUtility replaceImplementationOfSelector:selector withSelector:swizzledSelector forClass:cls withMethodDescription:methodDescription implementationBlock:implementationBlock undefinedBlock:undefinedBlock];
 }
 
 + (void)injectTaskDidReceiveResponseIntoDelegateClass:(Class)cls
 {
     SEL selector = @selector(URLSession:dataTask:didReceiveResponse:completionHandler:);
-    SEL swizzledSelector = [FLEXUtility swizzledSelectorForSelector:selector];
+    SEL swizzledSelector = [WXTracingUtility swizzledSelectorForSelector:selector];
     
     Protocol *protocol = @protocol(NSURLSessionDataDelegate);
     
@@ -760,7 +760,7 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
     typedef void (^NSURLSessionDidReceiveResponseBlock)(id <NSURLSessionDelegate> slf, NSURLSession *session, NSURLSessionDataTask *dataTask, NSURLResponse *response, void(^completionHandler)(NSURLSessionResponseDisposition disposition));
     
     NSURLSessionDidReceiveResponseBlock undefinedBlock = ^(id <NSURLSessionDelegate> slf, NSURLSession *session, NSURLSessionDataTask *dataTask, NSURLResponse *response, void(^completionHandler)(NSURLSessionResponseDisposition disposition)) {
-        [[FLEXNetworkObserver sharedObserver] URLSession:session dataTask:dataTask didReceiveResponse:response completionHandler:completionHandler delegate:slf];
+        [[WXNetworkObserver sharedObserver] URLSession:session dataTask:dataTask didReceiveResponse:response completionHandler:completionHandler delegate:slf];
     };
     
     NSURLSessionDidReceiveResponseBlock implementationBlock = ^(id <NSURLSessionDelegate> slf, NSURLSession *session, NSURLSessionDataTask *dataTask, NSURLResponse *response, void(^completionHandler)(NSURLSessionResponseDisposition disposition)) {
@@ -771,14 +771,14 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
         }];
     };
     
-    [FLEXUtility replaceImplementationOfSelector:selector withSelector:swizzledSelector forClass:cls withMethodDescription:methodDescription implementationBlock:implementationBlock undefinedBlock:undefinedBlock];
+    [WXTracingUtility replaceImplementationOfSelector:selector withSelector:swizzledSelector forClass:cls withMethodDescription:methodDescription implementationBlock:implementationBlock undefinedBlock:undefinedBlock];
 
 }
 
 + (void)injectTaskDidCompleteWithErrorIntoDelegateClass:(Class)cls
 {
     SEL selector = @selector(URLSession:task:didCompleteWithError:);
-    SEL swizzledSelector = [FLEXUtility swizzledSelectorForSelector:selector];
+    SEL swizzledSelector = [WXTracingUtility swizzledSelectorForSelector:selector];
     
     Protocol *protocol = @protocol(NSURLSessionTaskDelegate);
     struct objc_method_description methodDescription = protocol_getMethodDescription(protocol, selector, NO, YES);
@@ -786,7 +786,7 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
     typedef void (^NSURLSessionTaskDidCompleteWithErrorBlock)(id <NSURLSessionTaskDelegate> slf, NSURLSession *session, NSURLSessionTask *task, NSError *error);
 
     NSURLSessionTaskDidCompleteWithErrorBlock undefinedBlock = ^(id <NSURLSessionTaskDelegate> slf, NSURLSession *session, NSURLSessionTask *task, NSError *error) {
-        [[FLEXNetworkObserver sharedObserver] URLSession:session task:task didCompleteWithError:error delegate:slf];
+        [[WXNetworkObserver sharedObserver] URLSession:session task:task didCompleteWithError:error delegate:slf];
     };
 
     NSURLSessionTaskDidCompleteWithErrorBlock implementationBlock = ^(id <NSURLSessionTaskDelegate> slf, NSURLSession *session, NSURLSessionTask *task, NSError *error) {
@@ -797,14 +797,14 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
         }];
     };
 
-    [FLEXUtility replaceImplementationOfSelector:selector withSelector:swizzledSelector forClass:cls withMethodDescription:methodDescription implementationBlock:implementationBlock undefinedBlock:undefinedBlock];
+    [WXTracingUtility replaceImplementationOfSelector:selector withSelector:swizzledSelector forClass:cls withMethodDescription:methodDescription implementationBlock:implementationBlock undefinedBlock:undefinedBlock];
 }
 
 // Used for overriding AFNetworking behavior
 + (void)injectRespondsToSelectorIntoDelegateClass:(Class)cls
 {
     SEL selector = @selector(respondsToSelector:);
-    SEL swizzledSelector = [FLEXUtility swizzledSelectorForSelector:selector];
+    SEL swizzledSelector = [WXTracingUtility swizzledSelectorForSelector:selector];
 
     //Protocol *protocol = @protocol(NSURLSessionTaskDelegate);
     Method method = class_getInstanceMethod(cls, selector);
@@ -821,14 +821,14 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
         return ((BOOL(*)(id, SEL, SEL))objc_msgSend)(slf, swizzledSelector, sel);
     };
 
-    [FLEXUtility replaceImplementationOfSelector:selector withSelector:swizzledSelector forClass:cls withMethodDescription:methodDescription implementationBlock:implementationBlock undefinedBlock:undefinedBlock];
+    [WXTracingUtility replaceImplementationOfSelector:selector withSelector:swizzledSelector forClass:cls withMethodDescription:methodDescription implementationBlock:implementationBlock undefinedBlock:undefinedBlock];
 }
 
 
 + (void)injectDownloadTaskDidFinishDownloadingIntoDelegateClass:(Class)cls
 {
     SEL selector = @selector(URLSession:downloadTask:didFinishDownloadingToURL:);
-    SEL swizzledSelector = [FLEXUtility swizzledSelectorForSelector:selector];
+    SEL swizzledSelector = [WXTracingUtility swizzledSelectorForSelector:selector];
 
     Protocol *protocol = @protocol(NSURLSessionDownloadDelegate);
     struct objc_method_description methodDescription = protocol_getMethodDescription(protocol, selector, NO, YES);
@@ -837,7 +837,7 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
 
     NSURLSessionDownloadTaskDidFinishDownloadingBlock undefinedBlock = ^(id <NSURLSessionTaskDelegate> slf, NSURLSession *session, NSURLSessionDownloadTask *task, NSURL *location) {
         NSData *data = [NSData dataWithContentsOfFile:location.relativePath];
-        [[FLEXNetworkObserver sharedObserver] URLSession:session task:task didFinishDownloadingToURL:location data:data delegate:slf];
+        [[WXNetworkObserver sharedObserver] URLSession:session task:task didFinishDownloadingToURL:location data:data delegate:slf];
     };
 
     NSURLSessionDownloadTaskDidFinishDownloadingBlock implementationBlock = ^(id <NSURLSessionTaskDelegate> slf, NSURLSession *session, NSURLSessionDownloadTask *task, NSURL *location) {
@@ -848,13 +848,13 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
         }];
     };
 
-    [FLEXUtility replaceImplementationOfSelector:selector withSelector:swizzledSelector forClass:cls withMethodDescription:methodDescription implementationBlock:implementationBlock undefinedBlock:undefinedBlock];
+    [WXTracingUtility replaceImplementationOfSelector:selector withSelector:swizzledSelector forClass:cls withMethodDescription:methodDescription implementationBlock:implementationBlock undefinedBlock:undefinedBlock];
 }
 
 + (void)injectDownloadTaskDidWriteDataIntoDelegateClass:(Class)cls
 {
     SEL selector = @selector(URLSession:downloadTask:didWriteData:totalBytesWritten:totalBytesExpectedToWrite:);
-    SEL swizzledSelector = [FLEXUtility swizzledSelectorForSelector:selector];
+    SEL swizzledSelector = [WXTracingUtility swizzledSelectorForSelector:selector];
 
     Protocol *protocol = @protocol(NSURLSessionDownloadDelegate);
     struct objc_method_description methodDescription = protocol_getMethodDescription(protocol, selector, NO, YES);
@@ -862,7 +862,7 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
     typedef void (^NSURLSessionDownloadTaskDidWriteDataBlock)(id <NSURLSessionTaskDelegate> slf, NSURLSession *session, NSURLSessionDownloadTask *task, int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite);
 
     NSURLSessionDownloadTaskDidWriteDataBlock undefinedBlock = ^(id <NSURLSessionTaskDelegate> slf, NSURLSession *session, NSURLSessionDownloadTask *task, int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
-        [[FLEXNetworkObserver sharedObserver] URLSession:session downloadTask:task didWriteData:bytesWritten totalBytesWritten:totalBytesWritten totalBytesExpectedToWrite:totalBytesExpectedToWrite delegate:slf];
+        [[WXNetworkObserver sharedObserver] URLSession:session downloadTask:task didWriteData:bytesWritten totalBytesWritten:totalBytesWritten totalBytesExpectedToWrite:totalBytesExpectedToWrite delegate:slf];
     };
 
     NSURLSessionDownloadTaskDidWriteDataBlock implementationBlock = ^(id <NSURLSessionTaskDelegate> slf, NSURLSession *session, NSURLSessionDownloadTask *task, int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
@@ -873,7 +873,7 @@ didBecomeDownloadTask:(NSURLSessionDownloadTask *)downloadTask delegate:(id <NSU
         }];
     };
 
-    [FLEXUtility replaceImplementationOfSelector:selector withSelector:swizzledSelector forClass:cls withMethodDescription:methodDescription implementationBlock:implementationBlock undefinedBlock:undefinedBlock];
+    [WXTracingUtility replaceImplementationOfSelector:selector withSelector:swizzledSelector forClass:cls withMethodDescription:methodDescription implementationBlock:implementationBlock undefinedBlock:undefinedBlock];
 
 }
 
@@ -901,7 +901,7 @@ static char const * const kFLEXRequestIDKey = "kFLEXRequestIDKey";
     self = [super init];
     if (self) {
         self.requestStatesForRequestIDs = [[NSMutableDictionary alloc] init];
-        self.queue = dispatch_queue_create("com.flex.FLEXNetworkObserver", DISPATCH_QUEUE_SERIAL);
+        self.queue = dispatch_queue_create("com.flex.WXNetworkObserver", DISPATCH_QUEUE_SERIAL);
     }
     return self;
 }
@@ -933,7 +933,7 @@ static char const * const kFLEXRequestIDKey = "kFLEXRequestIDKey";
 @end
 
 
-@implementation FLEXNetworkObserver (NSURLConnectionHelpers)
+@implementation WXNetworkObserver (NSURLConnectionHelpers)
 
 - (void)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)response delegate:(id<NSURLConnectionDelegate>)delegate
 {
@@ -941,9 +941,9 @@ static char const * const kFLEXRequestIDKey = "kFLEXRequestIDKey";
         NSString *requestID = [[self class] requestIDForConnectionOrTask:connection];
         FLEXInternalRequestState *requestState = [self requestStateForRequestID:requestID];
         requestState.request = request;
-        [[FLEXNetworkRecorder defaultRecorder] recordRequestWillBeSentWithRequestID:requestID request:request redirectResponse:response];
+        [[WXNetworkRecorder defaultRecorder] recordRequestWillBeSentWithRequestID:requestID request:request redirectResponse:response];
         NSString *mechanism = [NSString stringWithFormat:@"NSURLConnection (delegate: %@)", [delegate class]];
-        [[FLEXNetworkRecorder defaultRecorder] recordMechanism:mechanism forRequestID:requestID];
+        [[WXNetworkRecorder defaultRecorder] recordMechanism:mechanism forRequestID:requestID];
         
         //remote
 //        [[PDNetworkDomainController defaultInstance] ex_connection:connection willSendRequest:request redirectResponse:response];
@@ -964,7 +964,7 @@ static char const * const kFLEXRequestIDKey = "kFLEXRequestIDKey";
         }
         requestState.dataAccumulator = dataAccumulator;
 
-        [[FLEXNetworkRecorder defaultRecorder] recordResponseReceivedWithRequestID:requestID response:response];
+        [[WXNetworkRecorder defaultRecorder] recordResponseReceivedWithRequestID:requestID response:response];
         
         
         
@@ -982,7 +982,7 @@ static char const * const kFLEXRequestIDKey = "kFLEXRequestIDKey";
         NSString *requestID = [[self class] requestIDForConnectionOrTask:connection];
         FLEXInternalRequestState *requestState = [self requestStateForRequestID:requestID];
         [requestState.dataAccumulator appendData:data];
-        [[FLEXNetworkRecorder defaultRecorder] recordDataReceivedWithRequestID:requestID dataLength:data.length];
+        [[WXNetworkRecorder defaultRecorder] recordDataReceivedWithRequestID:requestID dataLength:data.length];
         
         
         //remote
@@ -995,7 +995,7 @@ static char const * const kFLEXRequestIDKey = "kFLEXRequestIDKey";
     [self performBlock:^{
         NSString *requestID = [[self class] requestIDForConnectionOrTask:connection];
         FLEXInternalRequestState *requestState = [self requestStateForRequestID:requestID];
-        [[FLEXNetworkRecorder defaultRecorder] recordLoadingFinishedWithRequestID:requestID responseBody:requestState.dataAccumulator];
+        [[WXNetworkRecorder defaultRecorder] recordLoadingFinishedWithRequestID:requestID responseBody:requestState.dataAccumulator];
         [self removeRequestStateForRequestID:requestID];
         
         
@@ -1013,7 +1013,7 @@ static char const * const kFLEXRequestIDKey = "kFLEXRequestIDKey";
         // Cancellations can occur prior to the willSendRequest:... NSURLConnection delegate call.
         // These are pretty common and clutter up the logs. Only record the failure if the recorder already knows about the request through willSendRequest:...
         if (requestState.request) {
-            [[FLEXNetworkRecorder defaultRecorder] recordLoadingFailedWithRequestID:requestID error:error];
+            [[WXNetworkRecorder defaultRecorder] recordLoadingFailedWithRequestID:requestID error:error];
         }
         
         [self removeRequestStateForRequestID:requestID];
@@ -1037,13 +1037,13 @@ static char const * const kFLEXRequestIDKey = "kFLEXRequestIDKey";
 @end
 
 
-@implementation FLEXNetworkObserver (NSURLSessionTaskHelpers)
+@implementation WXNetworkObserver (NSURLSessionTaskHelpers)
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task willPerformHTTPRedirection:(NSHTTPURLResponse *)response newRequest:(NSURLRequest *)request completionHandler:(void (^)(NSURLRequest *))completionHandler delegate:(id<NSURLSessionDelegate>)delegate
 {
     [self performBlock:^{
         NSString *requestID = [[self class] requestIDForConnectionOrTask:task];
-        [[FLEXNetworkRecorder defaultRecorder] recordRequestWillBeSentWithRequestID:requestID request:request redirectResponse:response];
+        [[WXNetworkRecorder defaultRecorder] recordRequestWillBeSentWithRequestID:requestID request:request redirectResponse:response];
         
         
         //remote
@@ -1067,9 +1067,9 @@ static char const * const kFLEXRequestIDKey = "kFLEXRequestIDKey";
         requestState.dataAccumulator = dataAccumulator;
 
         NSString *requestMechanism = [NSString stringWithFormat:@"NSURLSessionDataTask (delegate: %@)", [delegate class]];
-        [[FLEXNetworkRecorder defaultRecorder] recordMechanism:requestMechanism forRequestID:requestID];
+        [[WXNetworkRecorder defaultRecorder] recordMechanism:requestMechanism forRequestID:requestID];
 
-        [[FLEXNetworkRecorder defaultRecorder] recordResponseReceivedWithRequestID:requestID response:response];
+        [[WXNetworkRecorder defaultRecorder] recordResponseReceivedWithRequestID:requestID response:response];
         
         //remote
 //        [[PDNetworkDomainController defaultInstance] ex_URLSession:session dataTask:dataTask didReceiveResponse:response];
@@ -1096,7 +1096,7 @@ static char const * const kFLEXRequestIDKey = "kFLEXRequestIDKey";
 
         [requestState.dataAccumulator appendData:data];
 
-        [[FLEXNetworkRecorder defaultRecorder] recordDataReceivedWithRequestID:requestID dataLength:data.length];
+        [[WXNetworkRecorder defaultRecorder] recordDataReceivedWithRequestID:requestID dataLength:data.length];
         
         //remote
 //        [[PDNetworkDomainController defaultInstance] ex_URLSession:session dataTask:dataTask didReceiveData:data];
@@ -1111,9 +1111,9 @@ static char const * const kFLEXRequestIDKey = "kFLEXRequestIDKey";
         FLEXInternalRequestState *requestState = [self requestStateForRequestID:requestID];
 
         if (error) {
-            [[FLEXNetworkRecorder defaultRecorder] recordLoadingFailedWithRequestID:requestID error:error];
+            [[WXNetworkRecorder defaultRecorder] recordLoadingFailedWithRequestID:requestID error:error];
         } else {
-            [[FLEXNetworkRecorder defaultRecorder] recordLoadingFinishedWithRequestID:requestID responseBody:requestState.dataAccumulator];
+            [[WXNetworkRecorder defaultRecorder] recordLoadingFinishedWithRequestID:requestID responseBody:requestState.dataAccumulator];
         }
 
         [self removeRequestStateForRequestID:requestID];
@@ -1132,13 +1132,13 @@ static char const * const kFLEXRequestIDKey = "kFLEXRequestIDKey";
         if (!requestState.dataAccumulator) {
             NSUInteger unsignedBytesExpectedToWrite = totalBytesExpectedToWrite > 0 ? (NSUInteger)totalBytesExpectedToWrite : 0;
             requestState.dataAccumulator = [[NSMutableData alloc] initWithCapacity:unsignedBytesExpectedToWrite];
-            [[FLEXNetworkRecorder defaultRecorder] recordResponseReceivedWithRequestID:requestID response:downloadTask.response];
+            [[WXNetworkRecorder defaultRecorder] recordResponseReceivedWithRequestID:requestID response:downloadTask.response];
 
             NSString *requestMechanism = [NSString stringWithFormat:@"NSURLSessionDownloadTask (delegate: %@)", [delegate class]];
-            [[FLEXNetworkRecorder defaultRecorder] recordMechanism:requestMechanism forRequestID:requestID];
+            [[WXNetworkRecorder defaultRecorder] recordMechanism:requestMechanism forRequestID:requestID];
         }
 
-        [[FLEXNetworkRecorder defaultRecorder] recordDataReceivedWithRequestID:requestID dataLength:bytesWritten];
+        [[WXNetworkRecorder defaultRecorder] recordDataReceivedWithRequestID:requestID dataLength:bytesWritten];
     }];
 }
 
@@ -1162,7 +1162,7 @@ static char const * const kFLEXRequestIDKey = "kFLEXRequestIDKey";
         if (!requestState.request) {
             requestState.request = task.currentRequest;
 
-            [[FLEXNetworkRecorder defaultRecorder] recordRequestWillBeSentWithRequestID:requestID request:task.currentRequest redirectResponse:nil];
+            [[WXNetworkRecorder defaultRecorder] recordRequestWillBeSentWithRequestID:requestID request:task.currentRequest redirectResponse:nil];
         }
     }];
 }

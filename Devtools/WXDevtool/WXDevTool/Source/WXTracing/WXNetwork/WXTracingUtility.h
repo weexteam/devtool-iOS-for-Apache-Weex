@@ -1,5 +1,5 @@
 //
-//  FLEXUtility.h
+//  WXTracingUtility.h
 //  Flipboard
 //
 //  Created by Ryan Olson on 4/18/14.
@@ -12,7 +12,7 @@
 
 #define FLEXFloor(x) (floor([[UIScreen mainScreen] scale] * (x)) / [[UIScreen mainScreen] scale])
 
-@interface FLEXUtility : NSObject
+@interface WXTracingUtility : NSObject
 
 + (UIColor *)consistentRandomColorForObject:(id)object;
 + (NSString *)descriptionForView:(UIView *)view includingFrame:(BOOL)includeFrame;

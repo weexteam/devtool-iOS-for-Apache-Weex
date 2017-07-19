@@ -1,16 +1,16 @@
 //
-//  FLEXMultilineTableViewCell.m
+//  WXMultilineTableViewCell.m
 //  UICatalog
 //
 //  Created by Ryan Olson on 2/13/15.
 //  Copyright (c) 2015 f. All rights reserved.
 //
 
-#import "FLEXMultilineTableViewCell.h"
+#import "WXMultilineTableViewCell.h"
 
 NSString *const kFLEXMultilineTableViewCellIdentifier = @"kFLEXMultilineTableViewCellIdentifier";
 
-@implementation FLEXMultilineTableViewCell
+@implementation WXMultilineTableViewCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {

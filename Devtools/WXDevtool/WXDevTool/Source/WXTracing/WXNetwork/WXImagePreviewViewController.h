@@ -1,5 +1,5 @@
 //
-//  FLEXImagePreviewViewController.h
+//  WXImagePreviewViewController.h
 //  Flipboard
 //
 //  Created by Ryan Olson on 6/12/14.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FLEXImagePreviewViewController : UIViewController
+@interface WXImagePreviewViewController : UIViewController
 
 - (id)initWithImage:(UIImage *)image;
 

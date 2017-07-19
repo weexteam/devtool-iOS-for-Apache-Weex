@@ -1,19 +1,19 @@
 //
-//  FLEXNetworkTransactionTableViewCell.m
+//  WXNetworkTransactionTableViewCell.m
 //  Flipboard
 //
 //  Created by Ryan Olson on 2/8/15.
 //  Copyright (c) 2015 Flipboard. All rights reserved.
 //
 
-#import "FLEXNetworkTransactionTableViewCell.h"
-#import "FLEXNetworkTransaction.h"
-#import "FLEXUtility.h"
-#import "FLEXResources.h"
+#import "WXNetworkTransactionTableViewCell.h"
+#import "WXNetworkTransaction.h"
+#import "WXTracingUtility.h"
+#import "WXResources.h"
 
-NSString *const kFLEXNetworkTransactionCellIdentifier = @"kFLEXNetworkTransactionCellIdentifier";
+NSString *const kWXNetworkTransactionCellIdentifier = @"kWXNetworkTransactionCellIdentifier";
 
-@interface FLEXNetworkTransactionTableViewCell ()
+@interface WXNetworkTransactionTableViewCell ()
 
 @property (nonatomic, strong) UIImageView *thumbnailImageView;
 @property (nonatomic, strong) UILabel *nameLabel;
@@ -22,7 +22,7 @@ NSString *const kFLEXNetworkTransactionCellIdentifier = @"kFLEXNetworkTransactio
 
 @end
 
-@implementation FLEXNetworkTransactionTableViewCell
+@implementation WXNetworkTransactionTableViewCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -31,11 +31,11 @@ NSString *const kFLEXNetworkTransactionCellIdentifier = @"kFLEXNetworkTransactio
         self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
         self.nameLabel = [[UILabel alloc] init];
-        self.nameLabel.font = [FLEXUtility defaultTableViewCellLabelFont];
+        self.nameLabel.font = [WXTracingUtility defaultTableViewCellLabelFont];
         [self.contentView addSubview:self.nameLabel];
 
         self.pathLabel = [[UILabel alloc] init];
-        self.pathLabel.font = [FLEXUtility defaultTableViewCellLabelFont];
+        self.pathLabel.font = [WXTracingUtility defaultTableViewCellLabelFont];
         self.pathLabel.textColor = [UIColor colorWithWhite:0.4 alpha:1.0];
         [self.contentView addSubview:self.pathLabel];
 
@@ -46,14 +46,14 @@ NSString *const kFLEXNetworkTransactionCellIdentifier = @"kFLEXNetworkTransactio
         [self.contentView addSubview:self.thumbnailImageView];
 
         self.transactionDetailsLabel = [[UILabel alloc] init];
-        self.transactionDetailsLabel.font = [FLEXUtility defaultFontOfSize:10.0];
+        self.transactionDetailsLabel.font = [WXTracingUtility defaultFontOfSize:10.0];
         self.transactionDetailsLabel.textColor = [UIColor colorWithWhite:0.65 alpha:1.0];
         [self.contentView addSubview:self.transactionDetailsLabel];
     }
     return self;
 }
 
-- (void)setTransaction:(FLEXNetworkTransaction *)transaction
+- (void)setTransaction:(WXNetworkTransaction *)transaction
 {
     if (_transaction != transaction) {
         _transaction = transaction;
@@ -137,8 +137,8 @@ NSString *const kFLEXNetworkTransactionCellIdentifier = @"kFLEXNetworkTransactio
         [detailComponents addObject:httpMethod];
     }
 
-    if (self.transaction.transactionState == FLEXNetworkTransactionStateFinished || self.transaction.transactionState == FLEXNetworkTransactionStateFailed) {
-        NSString *statusCodeString = [FLEXUtility statusCodeStringFromURLResponse:self.transaction.response];
+    if (self.transaction.transactionState == WXNetworkTransactionStateFinished || self.transaction.transactionState == WXNetworkTransactionStateFailed) {
+        NSString *statusCodeString = [WXTracingUtility statusCodeStringFromURLResponse:self.transaction.response];
         if ([statusCodeString length] > 0) {
             [detailComponents addObject:statusCodeString];
         }
@@ -148,13 +148,13 @@ NSString *const kFLEXNetworkTransactionCellIdentifier = @"kFLEXNetworkTransactio
             [detailComponents addObject:responseSize];
         }
 
-        NSString *totalDuration = [FLEXUtility stringFromRequestDuration:self.transaction.duration];
-        NSString *latency = [FLEXUtility stringFromRequestDuration:self.transaction.latency];
+        NSString *totalDuration = [WXTracingUtility stringFromRequestDuration:self.transaction.duration];
+        NSString *latency = [WXTracingUtility stringFromRequestDuration:self.transaction.latency];
         NSString *duration = [NSString stringWithFormat:@"%@ (%@)", totalDuration, latency];
         [detailComponents addObject:duration];
     } else {
         // Unstarted, Awaiting Response, Receiving Data, etc.
-        NSString *state = [FLEXNetworkTransaction readableStringFromTransactionState:self.transaction.transactionState];
+        NSString *state = [WXNetworkTransaction readableStringFromTransactionState:self.transaction.transactionState];
         [detailComponents addObject:state];
     }
 

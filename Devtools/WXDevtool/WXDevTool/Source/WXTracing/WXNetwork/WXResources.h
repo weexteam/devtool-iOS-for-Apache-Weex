@@ -1,5 +1,5 @@
 //
-//  FLEXResources.h
+//  WXResources.h
 //  FLEX
 //
 //  Created by Ryan Olson on 6/8/14.
@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@interface FLEXResources : NSObject
+@interface WXResources : NSObject
 
 + (UIImage *)closeIcon;
 + (UIImage *)dragHandle;
