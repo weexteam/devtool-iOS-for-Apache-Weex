@@ -1,19 +1,19 @@
 //
-//  PMTagListView.m
+//  WXTagListView.m
 //  ipaimai
 //
 //  Created by Jun.Shi on 1/27/15.
 //  Copyright (c) 2015 taobao. All rights reserved.
 //
 
-#import "PMTagListView.h"
+#import "WXTagListView.h"
 
 static int kSegmentedPadding = 40;
 static int kAlphaPadding = 5;
 // static int kHeight = 400;
 #define kHeight ([UIScreen mainScreen].bounds.size.height - 64)
 
-@interface PMTagListView ()
+@interface WXTagListView ()
 
 @property (assign) BOOL isExpand;
 @property (strong) UIImageView *arrowImageView;
@@ -23,7 +23,7 @@ static int kAlphaPadding = 5;
 
 @end
 
-@implementation PMTagListView
+@implementation WXTagListView
 
 - (instancetype)init
 {
@@ -46,7 +46,7 @@ static int kAlphaPadding = 5;
 - (void)__initSegmentedControl
 {
     _segmentedControl = ({
-        HMSegmentedControl *segmented = [[HMSegmentedControl alloc]
+        WXSegmentedControl *segmented = [[WXSegmentedControl alloc]
             initWithFrame:CGRectMake(0, 0, self.bounds.size.width - kSegmentedPadding + kAlphaPadding,
                                      self.bounds.size.height)];
         segmented.font = [UIFont boldSystemFontOfSize:16];
@@ -54,12 +54,12 @@ static int kAlphaPadding = 5;
         segmented.selectedTextColor = [UIColor redColor];
         segmented.autoresizingMask =
             UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth;
-        segmented.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
-        segmented.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
+        segmented.selectionStyle = WXSegmentedControlSelectionStyleTextWidthStripe;
+        segmented.selectionIndicatorLocation = WXSegmentedControlSelectionIndicatorLocationDown;
         segmented.selectionIndicatorHeight = 2.0;
         segmented.selectionIndicatorColor = [UIColor redColor];
-        segmented.type = HMSegmentedControlTypeText;
-        segmented.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
+        segmented.type = WXSegmentedControlTypeText;
+        segmented.segmentWidthStyle = WXSegmentedControlSegmentWidthStyleDynamic;
         [segmented addTarget:self
                       action:@selector(segmentedControlChangedValue:)
             forControlEvents:UIControlEventValueChanged];
@@ -164,10 +164,10 @@ static int kAlphaPadding = 5;
 {
 }
 
-#pragma mark - HMSegmentedControl
+#pragma mark - WXSegmentedControl
 - (void)segmentedControlChangedValue:(id)sender
 {
-    HMSegmentedControl *segmentControl = (HMSegmentedControl *)sender;
+    WXSegmentedControl *segmentControl = (WXSegmentedControl *)sender;
     if (self.delegate && [self.delegate respondsToSelector:@selector(selectedTag:withIndex:)]) {
         NSInteger index = segmentControl.selectedSegmentIndex;
         NSString *title = segmentControl.sectionImages[index];

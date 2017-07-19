@@ -9,19 +9,18 @@
 #import "WXTracingViewControllerManager.h"
 #import "UIButton+WXEnlargeArea.h"
 #import "WXRenderTracingViewController.h"
-#import "MTStatusBarOverlay.h"
-#import "FLEXWindow.h"
+#import "WXWindow.h"
 #import "WXTracingLogImpl.h"
 #import <WeexSDK/WXSDKEngine.h>
 #import "WXTracingHomePageViewController.h"
 #import "WXTracingManager.h"
 #define WXWeexButtonTag 1001
 
-@interface WXTracingViewControllerManager ()<FLEXWindowEventDelegate>
+@interface WXTracingViewControllerManager ()<WXWindowEventDelegate>
 
 @property(nonatomic,strong)WXTracingHomePageViewController *tracingVC;
 @property(nonatomic,strong)UINavigationController *nav;
-@property(nonatomic,strong) FLEXWindow *wind;
+@property(nonatomic,strong) WXWindow *wind;
 @property(nonatomic)BOOL isLoad;
 @property(nonatomic)BOOL isLoadTracing;
 
@@ -75,7 +74,7 @@
             button.tag = WXWeexButtonTag;
             [button setEnlargeEdgeWithTop:20 right:20.0 bottom:20.0 left:20.0];
             WXTracingViewControllerManager *instance = [WXTracingViewControllerManager sharedInstance];
-            instance.wind = [[FLEXWindow alloc]initWithFrame:CGRectMake(100, 0, 50, 40)];
+            instance.wind = [[WXWindow alloc]initWithFrame:CGRectMake(100, 0, 50, 40)];
             instance.wind.eventDelegate = instance;
             [instance.wind addSubview:button];
             instance.wind.windowLevel = UIWindowLevelStatusBar+100;
@@ -138,7 +137,7 @@
     
 }
 
-#pragma mark - FLEXWindowEventDelegate
+#pragma mark - WXWindowEventDelegate
 
 - (BOOL)shouldHandleTouchAtPoint:(CGPoint)pointInWindow
 {

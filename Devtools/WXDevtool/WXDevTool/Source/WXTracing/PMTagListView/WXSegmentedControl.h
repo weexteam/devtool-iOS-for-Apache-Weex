@@ -1,6 +1,6 @@
 //
-//  HMSegmentedControl.h
-//  HMSegmentedControl
+//  WXSegmentedControl.h
+//  WXSegmentedControl
 //
 //  Created by Hesham Abd-Elmegid on 23/12/12.
 //  Copyright (c) 2012 Hesham Abd-Elmegid. All rights reserved.
@@ -11,34 +11,34 @@
 typedef void (^IndexChangeBlock)(NSInteger index);
 
 typedef enum {
-    HMSegmentedControlSelectionStyleTextWidthStripe, // Indicator width will only be as big as the text width
-    HMSegmentedControlSelectionStyleFullWidthStripe, // Indicator width will fill the whole segment
-    HMSegmentedControlSelectionStyleBox, // A rectangle that covers the whole segment
-    HMSegmentedControlSelectionStyleArrow // An arrow in the middle of the segment pointing up or down depending on `HMSegmentedControlSelectionIndicatorLocation`
-} HMSegmentedControlSelectionStyle;
+    WXSegmentedControlSelectionStyleTextWidthStripe, // Indicator width will only be as big as the text width
+    WXSegmentedControlSelectionStyleFullWidthStripe, // Indicator width will fill the whole segment
+    WXSegmentedControlSelectionStyleBox, // A rectangle that covers the whole segment
+    WXSegmentedControlSelectionStyleArrow // An arrow in the middle of the segment pointing up or down depending on `WXSegmentedControlSelectionIndicatorLocation`
+} WXSegmentedControlSelectionStyle;
 
 typedef enum {
-    HMSegmentedControlSelectionIndicatorLocationUp,
-    HMSegmentedControlSelectionIndicatorLocationDown,
-	HMSegmentedControlSelectionIndicatorLocationNone // No selection indicator
-} HMSegmentedControlSelectionIndicatorLocation;
+    WXSegmentedControlSelectionIndicatorLocationUp,
+    WXSegmentedControlSelectionIndicatorLocationDown,
+	WXSegmentedControlSelectionIndicatorLocationNone // No selection indicator
+} WXSegmentedControlSelectionIndicatorLocation;
 
 typedef enum {
-    HMSegmentedControlSegmentWidthStyleFixed, // Segment width is fixed
-    HMSegmentedControlSegmentWidthStyleDynamic, // Segment width will only be as big as the text width (including inset)
-} HMSegmentedControlSegmentWidthStyle;
+    WXSegmentedControlSegmentWidthStyleFixed, // Segment width is fixed
+    WXSegmentedControlSegmentWidthStyleDynamic, // Segment width will only be as big as the text width (including inset)
+} WXSegmentedControlSegmentWidthStyle;
 
 enum {
-    HMSegmentedControlNoSegment = -1   // Segment index for no selected segment
+    WXSegmentedControlNoSegment = -1   // Segment index for no selected segment
 };
 
 typedef enum {
-    HMSegmentedControlTypeText,
-    HMSegmentedControlTypeImages,
-	HMSegmentedControlTypeTextImages
-} HMSegmentedControlType;
+    WXSegmentedControlTypeText,
+    WXSegmentedControlTypeImages,
+	WXSegmentedControlTypeTextImages
+} WXSegmentedControlType;
 
-@interface HMSegmentedControl : UIControl
+@interface WXSegmentedControl : UIControl
 
 @property (nonatomic, strong) NSArray *sectionTitles;
 @property (nonatomic, strong) NSArray *sectionImages;
@@ -52,21 +52,21 @@ typedef enum {
 @property (nonatomic, copy) IndexChangeBlock indexChangeBlock;
 
 /*
- Font for segments names when segmented control type is `HMSegmentedControlTypeText`
+ Font for segments names when segmented control type is `WXSegmentedControlTypeText`
  
  Default is [UIFont fontWithName:@"STHeitiSC-Light" size:18.0f]
  */
 @property (nonatomic, strong) UIFont *font;
 
 /*
- Text color for segments names when segmented control type is `HMSegmentedControlTypeText`
+ Text color for segments names when segmented control type is `WXSegmentedControlTypeText`
  
  Default is [UIColor blackColor]
  */
 @property (nonatomic, strong) UIColor *textColor;
 
 /* 
- Text color for selected segment name when segmented control type is `HMSegmentedControlTypeText`
+ Text color for selected segment name when segmented control type is `WXSegmentedControlTypeText`
  
  Default is [UIColor blackColor]
  */
@@ -96,30 +96,30 @@ typedef enum {
 /*
  Specifies the style of the control
  
- Default is `HMSegmentedControlTypeText`
+ Default is `WXSegmentedControlTypeText`
  */
-@property (nonatomic, assign) HMSegmentedControlType type;
+@property (nonatomic, assign) WXSegmentedControlType type;
 
 /*
  Specifies the style of the selection indicator.
  
- Default is `HMSegmentedControlSelectionStyleTextWidthStripe`
+ Default is `WXSegmentedControlSelectionStyleTextWidthStripe`
  */
-@property (nonatomic, assign) HMSegmentedControlSelectionStyle selectionStyle;
+@property (nonatomic, assign) WXSegmentedControlSelectionStyle selectionStyle;
 
 /*
  Specifies the style of the segment's width.
  
- Default is `HMSegmentedControlSegmentWidthStyleFixed`
+ Default is `WXSegmentedControlSegmentWidthStyleFixed`
  */
-@property (nonatomic, assign) HMSegmentedControlSegmentWidthStyle segmentWidthStyle;
+@property (nonatomic, assign) WXSegmentedControlSegmentWidthStyle segmentWidthStyle;
 
 /*
  Specifies the location of the selection indicator.
  
- Default is `HMSegmentedControlSelectionIndicatorLocationUp`
+ Default is `WXSegmentedControlSelectionIndicatorLocationUp`
  */
-@property (nonatomic, assign) HMSegmentedControlSelectionIndicatorLocation selectionIndicatorLocation;
+@property (nonatomic, assign) WXSegmentedControlSelectionIndicatorLocation selectionIndicatorLocation;
 
 /*
  Default is NO. Set to YES to allow for adding more tabs than the screen width could fit.
@@ -148,7 +148,7 @@ typedef enum {
 @property (nonatomic, assign) NSInteger selectedSegmentIndex;
 
 /*
- Height of the selection indicator. Only effective when `HMSegmentedControlSelectionStyle` is either `HMSegmentedControlSelectionStyleTextWidthStripe` or `HMSegmentedControlSelectionStyleFullWidthStripe`.
+ Height of the selection indicator. Only effective when `WXSegmentedControlSelectionStyle` is either `WXSegmentedControlSelectionStyleTextWidthStripe` or `WXSegmentedControlSelectionStyleFullWidthStripe`.
  
  Default is 5.0
  */
@@ -156,11 +156,11 @@ typedef enum {
 
 /*
  Edge insets for the selection indicator.
- NOTE: This does not affect the bounding box of HMSegmentedControlSelectionStyleBox
+ NOTE: This does not affect the bounding box of WXSegmentedControlSelectionStyleBox
  
- When HMSegmentedControlSelectionIndicatorLocationUp is selected, bottom edge insets are not used
+ When WXSegmentedControlSelectionIndicatorLocationUp is selected, bottom edge insets are not used
  
- When HMSegmentedControlSelectionIndicatorLocationDown is selected, top edge insets are not used
+ When WXSegmentedControlSelectionIndicatorLocationDown is selected, top edge insets are not used
  
  Defaults are top: 0.0f
              left: 0.0f

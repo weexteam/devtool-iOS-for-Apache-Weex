@@ -1,5 +1,5 @@
 //
-//  PMTagListView.h
+//  WXTagListView.h
 //  ipaimai
 //
 //  Created by Jun.Shi on 1/27/15.
@@ -7,19 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "HMSegmentedControl.h"
+#import "WXSegmentedControl.h"
 
-@protocol PMTagListViewDelegate <NSObject>
+@protocol WXTagListViewDelegate <NSObject>
 
 @optional
 - (void)selectedTag:(NSString *)tagName withIndex:(NSInteger)tagIndex;
 
 @end
 
-@interface PMTagListView : UIView
+@interface WXTagListView : UIView
 
-@property (strong) HMSegmentedControl *segmentedControl;
-@property (weak) id<PMTagListViewDelegate> delegate;
+@property (strong) WXSegmentedControl *segmentedControl;
+@property (weak) id<WXTagListViewDelegate> delegate;
 
 - (instancetype)initWithFrame:(CGRect)frame;
 - (void)bindData:(NSArray *)titles;

@@ -1,6 +1,6 @@
 //
-//  FLEXWindow.h
-//  Flipboard
+//  WXWindow.h
+//  
 //
 //  Created by Ryan Olson on 4/13/14.
 //  Copyright (c) 2014 Flipboard. All rights reserved.
@@ -8,15 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol FLEXWindowEventDelegate;
+@protocol WXWindowEventDelegate;
 
-@interface FLEXWindow : UIWindow
+@interface WXWindow : UIWindow
 
-@property (nonatomic, weak) id <FLEXWindowEventDelegate> eventDelegate;
+@property (nonatomic, weak) id <WXWindowEventDelegate> eventDelegate;
 
 @end
 
-@protocol FLEXWindowEventDelegate <NSObject>
+@protocol WXWindowEventDelegate <NSObject>
 
 - (BOOL)shouldHandleTouchAtPoint:(CGPoint)pointInWindow;
 - (BOOL)canBecomeKeyWindow;

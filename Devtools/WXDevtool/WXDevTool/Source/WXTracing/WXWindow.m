@@ -1,15 +1,15 @@
 //
-//  FLEXWindow.m
+//  WXWindow.m
 //  Flipboard
 //
 //  Created by Ryan Olson on 4/13/14.
 //  Copyright (c) 2014 Flipboard. All rights reserved.
 //
 
-#import "FLEXWindow.h"
+#import "WXWindow.h"
 #import <objc/runtime.h>
 
-@implementation FLEXWindow
+@implementation WXWindow
 
 - (id)initWithFrame:(CGRect)frame
 {

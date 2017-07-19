@@ -7,7 +7,7 @@
 //
 
 #import "WXTracingHomePageViewController.h"
-#import "PMTagListView.h"
+#import "WXTagListView.h"
 #import "WXRenderTracingViewController.h"
 #import "WXLogViewController.h"
 #import "WXApiTracingViewController.h"
@@ -16,11 +16,11 @@
 #import "WXTracingSettingViewController.h"
 #import "FLEXNetworkSettingsTableViewController.h"
 
-@interface WXTracingHomePageViewController ()<PMTagListViewDelegate,ViewPagerDataSource, ViewPagerDelegate>
+@interface WXTracingHomePageViewController ()<WXTagListViewDelegate,ViewPagerDataSource, ViewPagerDelegate>
 {
 }
 @property (nonatomic, strong) NSArray *titleArr;
-@property (strong) PMTagListView *tagListView;
+@property (strong) WXTagListView *tagListView;
 @property (nonatomic, strong) NSMutableArray *tableViewArr;
 @property (nonatomic) long long fundIndex;
 @property (nonatomic) NSInteger slideIndex;
@@ -44,9 +44,9 @@
 
     self.dataSource = self;
     self.delegate = self;
-    // PMTagListView
+    // WXTagListView
 
-    self.tagListView = [[PMTagListView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 44)];
+    self.tagListView = [[WXTagListView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 44)];
     [self.tagListView bindData:self.titleArr];
     self.tagListView.delegate = self;
     [self.view addSubview:self.tagListView];
@@ -92,7 +92,7 @@
 }
 
 
-#pragma mark - PMTagListViewDelegate
+#pragma mark - WXTagListViewDelegate
 
 - (void)selectedTag:(NSString *)tagName withIndex:(NSInteger)tagIndex
 {
