@@ -23,7 +23,7 @@ WX_PlUGIN_EXPORT_HANDLER(WXTracingExceptionImpl,WXJSExceptionProtocol)
         WXTracingTask *task = [WXTracingManager getTracingData];
         UITextView *textView = [WXTracingViewControllerManager sharedInstance].textView;
         NSMutableAttributedString *attrStr = [textView.attributedText mutableCopy];
-        NSString *strTmp = [NSString stringWithFormat:@"bundleJSType:%@\r\n%@\r\n",task.bundleJSType,exception.description];
+        NSString *strTmp = [NSString stringWithFormat:@"<weex>[exception]bundleJSType:%@\r\n%@\r\n",task.bundleJSType,exception.description];
         if(strTmp.length>0){
             NSMutableAttributedString *exceptionStr = [[NSMutableAttributedString alloc]initWithString:strTmp];
             [exceptionStr addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(0, strTmp.length)];

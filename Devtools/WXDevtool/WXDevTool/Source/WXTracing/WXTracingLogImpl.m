@@ -13,6 +13,10 @@
 
 - (WXLogLevel)logLevel
 {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if([defaults objectForKey:@"wxloglevel"]) {
+        return [[defaults objectForKey:@"wxloglevel"] integerValue];
+    }
     return WXLogLevelLog;
 }
 - (void)log:(WXLogFlag)flag message:(NSString *)message

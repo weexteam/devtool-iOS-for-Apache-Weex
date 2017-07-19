@@ -11,13 +11,17 @@
 #import "WXRenderTracingViewController.h"
 #import "MTStatusBarOverlay.h"
 #import "FLEXWindow.h"
-#import "ScrollTestVC.h"
 #import "WXTracingLogImpl.h"
 #import <WeexSDK/WXSDKEngine.h>
+#import "WXTracingHomePageViewController.h"
+#import "WXTracingManager.h"
+#define WXWeexButtonTag 1001
 
-@interface WXTracingViewControllerManager ()
+@interface WXTracingViewControllerManager ()<FLEXWindowEventDelegate>
 
-@property(nonatomic,strong)WXRenderTracingViewController *tracingVC;
+@property(nonatomic,strong)WXTracingHomePageViewController *tracingVC;
+@property(nonatomic,strong)UINavigationController *nav;
+@property(nonatomic,strong) FLEXWindow *wind;
 @property(nonatomic)BOOL isLoad;
 @property(nonatomic)BOOL isLoadTracing;
 
@@ -44,6 +48,10 @@
 
 +(void)loadTracingView
 {
+    [WXTracingManager switchTracing:YES];
+    if(![WXTracingManager isTracing]) {
+        return;
+    }
     if(![WXTracingViewControllerManager sharedInstance].isLoad){
         [WXTracingViewControllerManager addWeexView];
         [WXTracingViewControllerManager sharedInstance].isLoad = YES;
@@ -54,6 +62,7 @@
 +(void)addWeexView
 {
     double delayInSeconds = 2.0;
+    __weak __typeof__(self) weakSelf = self;
     dispatch_time_t delayInNanoSeconds =dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
     dispatch_queue_t concurrentQueue =dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_after(delayInNanoSeconds, concurrentQueue, ^(void){
@@ -61,17 +70,26 @@
             UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
             button.frame = CGRectMake(0, 0, 50, 20);
             [button setTitle:@"weex" forState:UIControlStateNormal];
-            [button addTarget:self action:@selector(showTracing) forControlEvents:UIControlEventTouchUpInside];
+            [button addTarget:weakSelf action:@selector(showTracing) forControlEvents:UIControlEventTouchUpInside];
             button.backgroundColor = [UIColor redColor];
+            button.tag = WXWeexButtonTag;
             [button setEnlargeEdgeWithTop:20 right:20.0 bottom:20.0 left:20.0];
-            UIWindow *wind = [[UIWindow alloc]initWithFrame:CGRectMake(100, 0, 70, 40)];
-            [wind addSubview:button];
-            wind.windowLevel = UIWindowLevelStatusBar+100;
-            wind.backgroundColor = [UIColor colorWithWhite:0 alpha:0];
-            wind.userInteractionEnabled = YES;
-            wind.hidden = NO;
-            [[UIApplication sharedApplication].keyWindow addSubview:wind];
+            WXTracingViewControllerManager *instance = [WXTracingViewControllerManager sharedInstance];
+            instance.wind = [[FLEXWindow alloc]initWithFrame:CGRectMake(100, 0, 50, 40)];
+            instance.wind.eventDelegate = instance;
+            [instance.wind addSubview:button];
+            instance.wind.windowLevel = UIWindowLevelStatusBar+100;
+            instance.wind.backgroundColor = [UIColor colorWithWhite:0 alpha:0];
+            instance.wind.userInteractionEnabled = YES;
+            instance.wind.hidden = NO;
+            [[UIApplication sharedApplication].keyWindow addSubview:instance.wind];
             [WXTracingViewControllerManager sharedInstance].textView = [UITextView new];
+            [WXTracingViewControllerManager sharedInstance].textView.font = [UIFont systemFontOfSize:16];
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            if(![defaults objectForKey:@"wxloglevel"]) {
+                [defaults setObject:@(WXLogLevelLog) forKey:@"wxloglevel"];
+                [defaults synchronize];
+            }
 
         });
     });
@@ -93,57 +111,52 @@
     
     if(![WXTracingViewControllerManager sharedInstance].isLoadTracing){
         WXTracingViewControllerManager *manager = [WXTracingViewControllerManager sharedInstance];
-        UINavigationController *nav = [[WXTracingViewControllerManager sharedInstance] visibleNavigationController];
-        //    CGRect rect = [UIScreen mainScreen].bounds;
-        manager.tracingVC = [[ScrollTestVC alloc]init];
+        manager.wind.frame = [UIScreen mainScreen].bounds;
+        UIView *view = [manager.wind viewWithTag:WXWeexButtonTag];
+        view.frame = CGRectMake(100, 0, 50, 20);
+        manager.tracingVC = [[WXTracingHomePageViewController alloc]init];
+        manager.nav = [[UINavigationController alloc] initWithRootViewController:manager.tracingVC];;
         manager.tracingVC.view.backgroundColor = [UIColor whiteColor];
-        //    manager.tracingVC = [[WXRenderTracingViewController alloc] initWithFrame:CGRectMake(0, rect.size.height/2-64, rect.size.width, rect.size.height/2)];
-        [nav.visibleViewController addChildViewController:manager.tracingVC];
-        [nav.visibleViewController.view addSubview:manager.tracingVC.view];
+        manager.wind.rootViewController = manager.nav;
+        [manager.nav setNavigationBarHidden:YES];
+        manager.tracingVC.view.frame = CGRectMake(manager.wind.frame.origin.x, manager.wind.frame.origin.y+20, manager.wind.frame.size.width, manager.wind.frame.size.height-20);
+        [manager.wind addSubview:manager.nav.view];
+        manager.nav.view.frame = CGRectMake(manager.wind.frame.origin.x, manager.wind.frame.origin.y+20, manager.wind.frame.size.width, manager.wind.frame.size.height-20);
+        manager.nav.view.backgroundColor = [UIColor whiteColor];
         [WXTracingViewControllerManager sharedInstance].isLoadTracing = YES;
     }else{
         WXTracingViewControllerManager *manager = [WXTracingViewControllerManager sharedInstance];
         [manager.tracingVC removeFromParentViewController];
         [manager.tracingVC.view removeFromSuperview];
+        [manager.nav.view removeFromSuperview];
+        manager.wind.frame = CGRectMake(100, 0, 50, 40);
+        UIView *view = [manager.wind viewWithTag:WXWeexButtonTag];
+        view.frame = CGRectMake(0, 0, 50, 20);
         [WXTracingViewControllerManager sharedInstance].isLoadTracing = NO;
     }
     
     
 }
 
+#pragma mark - FLEXWindowEventDelegate
 
-- (UIWindow *)mainWindow {
-    return [UIApplication sharedApplication].keyWindow;
-}
-
-- (UIViewController *)visibleViewController {
-    UIViewController *rootViewController = [self.mainWindow rootViewController];
-    return [self getVisibleViewControllerFrom:rootViewController];
-}
-
-- (UIViewController *) getVisibleViewControllerFrom:(UIViewController *) vc {
-    if ([vc isKindOfClass:[UINavigationController class]]) {
-        return [self getVisibleViewControllerFrom:[((UINavigationController *) vc) visibleViewController]];
-    } else if ([vc isKindOfClass:[UITabBarController class]]) {
-        return [self getVisibleViewControllerFrom:[((UITabBarController *) vc) selectedViewController]];
-    } else {
-        if (vc.presentedViewController) {
-            return [self getVisibleViewControllerFrom:vc.presentedViewController];
-        } else {
-            return vc;
-        }
+- (BOOL)shouldHandleTouchAtPoint:(CGPoint)pointInWindow
+{
+    BOOL shouldReceiveTouch = YES;
+    // Ask the explorer view controller
+    UIView *view = [[WXTracingViewControllerManager sharedInstance].wind viewWithTag:WXWeexButtonTag];
+    if (CGRectContainsPoint(view.frame, pointInWindow)) {
+        shouldReceiveTouch = YES;
     }
-    
+    return shouldReceiveTouch;
 }
 
-- (UINavigationController *)visibleNavigationController {
-    if([[self visibleViewController] isKindOfClass:[UINavigationController class]]){
-        return [self visibleViewController];
-    }
-    return [[self visibleViewController] navigationController];
+- (BOOL)canBecomeKeyWindow
+{
+    // Only when the explorer view controller wants it because it needs to accept key input & affect
+    // the status bar.
+    return NO;
 }
-
-
 /*
 #pragma mark - Navigation
 

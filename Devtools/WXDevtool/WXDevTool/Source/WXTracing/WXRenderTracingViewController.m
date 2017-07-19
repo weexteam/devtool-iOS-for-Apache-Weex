@@ -33,9 +33,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor redColor];
+    self.view.backgroundColor = [UIColor whiteColor];
     CGRect rect = [UIScreen mainScreen].bounds;
-    self.view.frame =  CGRectMake(0, 0, rect.size.width, rect.size.height-64);
+    self.view.frame =  CGRectMake(0, 0, rect.size.width, rect.size.height);
     [self cofigureTableview];
     self.tasks = [NSMutableArray new];
     WXTracingTask *task = [WXTracingManager getTracingData];

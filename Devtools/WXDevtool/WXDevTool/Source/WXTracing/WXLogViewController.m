@@ -25,12 +25,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [WXTracingViewControllerManager sharedInstance].textView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-64-64);
+    [WXTracingViewControllerManager sharedInstance].textView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-44);
     [WXTracingViewControllerManager sharedInstance].textView.scrollEnabled = YES;
     [WXTracingViewControllerManager sharedInstance].textView.delegate = self;
     [self.view addSubview:[WXTracingViewControllerManager sharedInstance].textView];
     self.view.backgroundColor = [UIColor redColor];
-    [[WXTracingViewControllerManager sharedInstance].textView scrollRangeToVisible:NSMakeRange([WXTracingViewControllerManager sharedInstance].textView.text.length - 1, 1)];
+    [WXTracingViewControllerManager sharedInstance].textView.font = [UIFont systemFontOfSize:16.0];
+//    [[WXTracingViewControllerManager sharedInstance].textView scrollRangeToVisible:NSMakeRange([WXTracingViewControllerManager sharedInstance].textView.text.length - 1, 1)];
     // Do any additional setup after loading the view.
 }
 
@@ -39,9 +40,13 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark-
+#pragma UITextViewDelegate
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView{
+    [textView resignFirstResponder];
     return NO;
 }
+
 
 /*
 #pragma mark - Navigation

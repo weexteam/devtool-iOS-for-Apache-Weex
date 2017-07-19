@@ -11,7 +11,7 @@
 #import <WeexSDK/WXUtility.h>
 #import <WeexSDK/WXAppConfiguration.h>
 
-@interface WXEnviromentViewController ()
+@interface WXEnviromentViewController ()<UITextViewDelegate>
 
 @end
 
@@ -28,10 +28,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     UITextView *textView = [UITextView new];
+    textView.delegate = self;
     textView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-64-64);
     [self.view addSubview:textView];
     NSString *str = [NSString stringWithFormat:@"%@\r\njsfmVersin:%@",[WXUtility JSONString:[WXUtility getEnvironment]],[WXAppConfiguration JSFrameworkVersion]];
     textView.text = str;
+    textView.font = [UIFont systemFontOfSize:16.0];
     // Do any additional setup after loading the view.
 }
 
@@ -41,6 +43,7 @@
 }
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView{
+    [textView resignFirstResponder];
     return NO;
 }
 
