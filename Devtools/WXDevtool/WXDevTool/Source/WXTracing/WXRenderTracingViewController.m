@@ -18,6 +18,7 @@
 @property (strong,nonatomic) NSMutableArray *tasks;
 @property (nonatomic) NSTimeInterval begin;
 @property (nonatomic) NSTimeInterval end;
+@property (nonatomic,copy) NSString *sectionTitle;
 
 @end
 
@@ -97,6 +98,37 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 {
     NSLog(@"title of cell %@", [_content objectAtIndex:indexPath.row]);
+}
+
+#pragma mark -
+#pragma section
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 58;
+}
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    WXTracingTask *task = [WXTracingManager getTracingData];
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 18)];
+    /* Create custom view to display section header... */
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, tableView.frame.size.width, 18)];
+    [label setFont:[UIFont boldSystemFontOfSize:14]];
+    NSString *string = [NSString stringWithFormat:@"instanceId:%@",task.iid];
+    /* Section header is in 0th index... */
+    [label setText:string];
+    [view addSubview:label];
+    
+    UILabel *subLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 22, tableView.frame.size.width, 30)];
+    [subLabel setFont:[UIFont systemFontOfSize:12]];
+    subLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    subLabel.numberOfLines = 0;
+    NSString *subString = [NSString stringWithFormat:@"bundleUrl:%@",task.bundleUrl];
+    /* Section header is in 0th index... */
+    [subLabel setText:subString];
+    [view addSubview:subLabel];
+    
+    [view setBackgroundColor:[UIColor lightGrayColor]];
+    return view;
 }
 
 @end
