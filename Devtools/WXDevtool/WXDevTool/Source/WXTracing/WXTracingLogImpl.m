@@ -24,7 +24,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         UITextView *textView = [WXTracingViewControllerManager sharedInstance].textView;
         NSMutableAttributedString *attrStr = [textView.attributedText mutableCopy];
-        NSString *str = [NSString stringWithFormat:@"%@\n",message];
+        NSString *str = [NSString stringWithFormat:@"%@\r\n",message];
         if(str.length>0){
             NSMutableAttributedString *logStr = [[NSMutableAttributedString alloc]initWithString:str];
             UIColor *color = [UIColor blackColor];
