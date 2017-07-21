@@ -23,6 +23,20 @@
 
 - (void)debugDomainRegisterCallAddElement:(WXJSCallAddElement)callAddElement;
 
+- (void)debugDomainRegisterCallCreateBody:(WXJSCallCreateBody)callCreateBody ;
+
+- (void)debugDomainRegisterCallRemoveElement:(WXJSCallRemoveElement)callRemoveElement ;
+
+- (void)debugDomainRegisterCallMoveElement:(WXJSCallMoveElement)callMoveElement;
+
+- (void)debugDomainRegisterCallUpdateAttrs:(WXJSCallUpdateAttrs)callUpdateAttrs;
+
+- (void)debugDomainRegisterCallUpdateStyle:(WXJSCallUpdateStyle)callUpdateStyle;
+
+- (void)debugDomainRegisterCallAddEvent:(WXJSCallAddEvent)callAddEvent;
+
+- (void)debugDomainRegisterCallRemoveEvent:(WXJSCallRemoveEvent)callRemoveEvent;
+
 - (void)debugDomainRegisterCallNativeModule:(WXJSCallNativeModule)callNativeModuleBlock;
 
 - (void)debugDomainRegisterCallNativeComponent:(WXJSCallNativeComponent)callNativeComponentBlock;

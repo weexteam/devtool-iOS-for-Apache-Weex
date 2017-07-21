@@ -58,6 +58,34 @@
         [self.delegate domain:self callAddElement:params callBack:^(id error) {
             responseCallback(nil, error);
         }];
+    }else if ([methodName isEqualToString:@"callCreateBody"] && [self.delegate respondsToSelector:@selector(domain:callAddElement:callBack:)]) {
+        [self.delegate domain:self callCreateBody:params callBack:^(id error) {
+            responseCallback(nil, error);
+        }];
+    }else if ([methodName isEqualToString:@"callRemoveElement"] && [self.delegate respondsToSelector:@selector(domain:callAddElement:callBack:)]) {
+        [self.delegate domain:self callRemoveElement:params callBack:^(id error) {
+            responseCallback(nil, error);
+        }];
+    }else if ([methodName isEqualToString:@"callMoveElement"] && [self.delegate respondsToSelector:@selector(domain:callAddElement:callBack:)]) {
+        [self.delegate domain:self callMoveElement:params callBack:^(id error) {
+            responseCallback(nil, error);
+        }];
+    }else if ([methodName isEqualToString:@"callUpdateAttrs"] && [self.delegate respondsToSelector:@selector(domain:callAddElement:callBack:)]) {
+        [self.delegate domain:self callUpdateAttrs:params callBack:^(id error) {
+            responseCallback(nil, error);
+        }];
+    }else if ([methodName isEqualToString:@"callUpdateStyle"] && [self.delegate respondsToSelector:@selector(domain:callAddElement:callBack:)]) {
+        [self.delegate domain:self callUpdateStyle:params callBack:^(id error) {
+            responseCallback(nil, error);
+        }];
+    }else if ([methodName isEqualToString:@"callAddEvent"] && [self.delegate respondsToSelector:@selector(domain:callAddElement:callBack:)]) {
+        [self.delegate domain:self callAddEvent:params callBack:^(id error) {
+            responseCallback(nil, error);
+        }];
+    }else if ([methodName isEqualToString:@"callRemoveEvent"] && [self.delegate respondsToSelector:@selector(domain:callAddElement:callBack:)]) {
+        [self.delegate domain:self callRemoveEvent:params callBack:^(id error) {
+            responseCallback(nil, error);
+        }];
     }
 }
 

@@ -513,6 +513,48 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
     [debugDomainCrl debugDomainRegisterCallAddElement:callAddElement];
 }
 
+- (void)registerCallCreateBody:(WXJSCallCreateBody)callCreateBody
+{
+    WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
+    [debugDomainCrl debugDomainRegisterCallCreateBody:callCreateBody];
+}
+
+- (void)registerCallRemoveElement:(WXJSCallRemoveElement)callRemoveElement
+{
+    WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
+    [debugDomainCrl debugDomainRegisterCallRemoveElement:callRemoveElement];
+}
+
+- (void)registerCallMoveElement:(WXJSCallMoveElement)callMoveElement
+{
+    WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
+    [debugDomainCrl debugDomainRegisterCallMoveElement:callMoveElement];
+}
+
+- (void)registerCallUpdateAttrs:(WXJSCallUpdateAttrs)callUpdateAttrs
+{
+    WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
+    [debugDomainCrl debugDomainRegisterCallUpdateAttrs:callUpdateAttrs];
+}
+
+- (void)registerCallUpdateStyle:(WXJSCallUpdateStyle)callUpdateStyle
+{
+    WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
+    [debugDomainCrl debugDomainRegisterCallUpdateStyle:callUpdateStyle];
+}
+
+- (void)registerCallAddEvent:(WXJSCallAddEvent)callAddEvent
+{
+    WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
+    [debugDomainCrl debugDomainRegisterCallAddEvent:callAddEvent];
+}
+
+- (void)registerCallRemoveEvent:(WXJSCallRemoveEvent)callRemoveEvent
+{
+    WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
+    [debugDomainCrl debugDomainRegisterCallRemoveEvent:callRemoveEvent];
+}
+
 - (void)registerCallNativeModule:(WXJSCallNativeModule)callNativeModuleBlock
 {
     WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];

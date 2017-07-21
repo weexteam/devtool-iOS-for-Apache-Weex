@@ -18,6 +18,13 @@
     NSThread    *_bridgeThread;
     WXJSCallNative  _nativeCallBlock;
     WXJSCallAddElement _callAddElementBlock;
+    WXJSCallCreateBody _callCreateBodyBlock;
+    WXJSCallRemoveElement _callRemoveElementBlock;
+    WXJSCallMoveElement _callMoveElementBlock;
+    WXJSCallUpdateAttrs _callUpdateAttrsBlock;
+    WXJSCallUpdateStyle _callUpdateStyleBlock;
+    WXJSCallAddEvent _callAddEventBlock;
+    WXJSCallRemoveEvent _callRemoveEventBlock;
     WXJSCallNativeModule _nativeModuleBlock;
     WXJSCallNativeComponent _nativeComponentBlock;
 }
@@ -86,6 +93,34 @@
 
 - (void)debugDomainRegisterCallAddElement:(WXJSCallAddElement)callAddElement {
     _callAddElementBlock = callAddElement;
+}
+
+- (void)debugDomainRegisterCallCreateBody:(WXJSCallCreateBody)callCreateBody {
+    _callCreateBodyBlock = callCreateBody;
+}
+
+- (void)debugDomainRegisterCallRemoveElement:(WXJSCallRemoveElement)callRemoveElement {
+    _callRemoveElementBlock = callRemoveElement;
+}
+
+- (void)debugDomainRegisterCallMoveElement:(WXJSCallMoveElement)callMoveElement {
+    _callMoveElementBlock = callMoveElement;
+}
+
+- (void)debugDomainRegisterCallUpdateAttrs:(WXJSCallUpdateAttrs)callUpdateAttrs {
+    _callUpdateAttrsBlock = callUpdateAttrs;
+}
+
+- (void)debugDomainRegisterCallUpdateStyle:(WXJSCallUpdateStyle)callUpdateStyle {
+    _callUpdateStyleBlock = callUpdateStyle;
+}
+
+- (void)debugDomainRegisterCallAddEvent:(WXJSCallAddEvent)callAddEvent {
+    _callAddEventBlock = callAddEvent;
+}
+
+- (void)debugDomainRegisterCallRemoveEvent:(WXJSCallRemoveEvent)callRemoveEvent {
+    _callRemoveEventBlock = callRemoveEvent;
 }
 
 - (void)debugDomainRegisterCallNativeModule:(WXJSCallNativeModule)callNativeModuleBlock {
@@ -222,6 +257,33 @@
         _callAddElementBlock(instanceId, parentRef, componentData, insertIndex);
         callback(nil);
     }];
+}
+
+- (void)domain:(WXDynamicDebuggerDomain *)domain callCreateBody:(NSDictionary *)jsModule callBack:(void (^)(id error))callback {
+}
+
+- (void)domain:(WXDynamicDebuggerDomain *)domain callRemoveElement:(NSDictionary *)jsModule callBack:(void (^)(id error))callback {
+    
+}
+
+- (void)domain:(WXDynamicDebuggerDomain *)domain callMoveElement:(NSDictionary *)jsModule callBack:(void (^)(id error))callback {
+    
+}
+
+- (void)domain:(WXDynamicDebuggerDomain *)domain callUpdateAttrs:(NSDictionary *)jsModule callBack:(void (^)(id error))callback {
+    
+}
+
+- (void)domain:(WXDynamicDebuggerDomain *)domain callUpdateStyle:(NSDictionary *)jsModule callBack:(void (^)(id error))callback {
+    
+}
+
+- (void)domain:(WXDynamicDebuggerDomain *)domain callAddEvent:(NSDictionary *)jsModule callBack:(void (^)(id error))callback {
+    
+}
+
+- (void)domain:(WXDynamicDebuggerDomain *)domain callRemoveEvent:(NSDictionary *)jsModule callBack:(void (^)(id error))callback {
+    
 }
 
 - (void)domain:(WXDynamicDebuggerDomain *)domain syncCall:(NSDictionary *)data callBack:(void (^)(NSDictionary *result, id error))callback; {
