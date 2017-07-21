@@ -118,6 +118,7 @@
 {
     
     if(![WXTracingViewControllerManager sharedInstance].isLoadTracing){
+        [WXLog registerExternalLog:[WXTracingLogImpl new]];
         WXTracingViewControllerManager *manager = [WXTracingViewControllerManager sharedInstance];
         manager.wind.frame = [UIScreen mainScreen].bounds;
         UIView *view = [manager.wind viewWithTag:WXWeexButtonTag];
