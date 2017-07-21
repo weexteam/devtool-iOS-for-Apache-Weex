@@ -27,7 +27,11 @@
         NSString *str = [NSString stringWithFormat:@"%@\n",message];
         if(str.length>0){
             NSMutableAttributedString *logStr = [[NSMutableAttributedString alloc]initWithString:str];
-            [logStr addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(0, str.length-1)];
+            UIColor *color = [UIColor blackColor];
+            if([str rangeOfString:@"[warn]"].location != NSNotFound){
+                color= [UIColor colorWithRed:229/255.0 green:178/255.0 blue:32/255.0 alpha:1.0];
+            }
+            [logStr addAttribute:NSForegroundColorAttributeName value:color range:NSMakeRange(0, str.length-1)];
             [attrStr appendAttributedString:logStr];
             
             textView.attributedText = attrStr;
