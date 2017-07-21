@@ -76,7 +76,7 @@
             button.tag = WXWeexButtonTag;
             [button setEnlargeEdgeWithTop:20 right:20.0 bottom:20.0 left:20.0];
             WXTracingViewControllerManager *instance = [WXTracingViewControllerManager sharedInstance];
-            instance.wind = [[WXWindow alloc]initWithFrame:CGRectMake(100, 0, 80, 40)];
+            instance.wind = [[WXWindow alloc]initWithFrame:CGRectMake(80, 0, 80, 40)];
             instance.wind.eventDelegate = instance;
             [instance.wind addSubview:button];
             instance.wind.windowLevel = UIWindowLevelStatusBar+100;
@@ -121,7 +121,7 @@
         WXTracingViewControllerManager *manager = [WXTracingViewControllerManager sharedInstance];
         manager.wind.frame = [UIScreen mainScreen].bounds;
         UIView *view = [manager.wind viewWithTag:WXWeexButtonTag];
-        view.frame = CGRectMake(100, 0, 80, 20);
+        view.frame = CGRectMake(80, 0, 80, 20);
         manager.tracingVC = [[WXTracingHomePageViewController alloc]init];
         manager.nav = [[UINavigationController alloc] initWithRootViewController:manager.tracingVC];;
         manager.tracingVC.view.backgroundColor = [UIColor whiteColor];
@@ -137,7 +137,7 @@
         [manager.tracingVC removeFromParentViewController];
         [manager.tracingVC.view removeFromSuperview];
         [manager.nav.view removeFromSuperview];
-        manager.wind.frame = CGRectMake(100, 0, 80, 40);
+        manager.wind.frame = CGRectMake(80, 0, 80, 40);
         UIView *view = [manager.wind viewWithTag:WXWeexButtonTag];
         view.frame = CGRectMake(0, 0, 80, 20);
         [WXTracingViewControllerManager sharedInstance].isLoadTracing = NO;
