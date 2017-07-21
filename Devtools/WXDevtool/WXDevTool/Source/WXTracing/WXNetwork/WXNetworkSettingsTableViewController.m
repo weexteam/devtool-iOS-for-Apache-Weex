@@ -7,11 +7,14 @@
 //
 
 #import "WXNetworkSettingsTableViewController.h"
-#import "WXNetworkObserver.h"
+#import "WXDebugger.h"
 #import "WXNetworkRecorder.h"
 #import "WXTracingUtility.h"
 #import <WeexSDK/WXLog.h>
 #import "WXLogSettingViewController.h"
+#import "WXTracingViewControllerManager.h"
+#import "WXDebugger.h"
+#import "WXAboutViewController.h"
 
 @interface WXNetworkSettingsTableViewController () <UIActionSheetDelegate,WXLogSettingViewControllerDelegate>
 
@@ -45,10 +48,12 @@
 
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSInteger loglevel = [[defaults objectForKey:@"wxloglevel"] integerValue];
+    UITableViewCell *clearCell = [self clearLogCellWithTitle:@"清除日志"];
+    [mutableCells addObject:clearCell];
     UITableViewCell *logDebuggingCell = [self logCellWithTitle:@"日志级别" logLevel:loglevel];
     [mutableCells addObject:logDebuggingCell];
     
-    UITableViewCell *networkDebuggingCell = [self switchCellWithTitle:@"网络调试" toggleAction:@selector(networkDebuggingToggled:) isOn:[WXNetworkObserver isEnabled]];
+    UITableViewCell *networkDebuggingCell = [self switchCellWithTitle:@"网络调试" toggleAction:@selector(networkDebuggingToggled:) isOn:[WXDebugger isEnabled]];
     [mutableCells addObject:networkDebuggingCell];
     
     UITableViewCell *cacheMediaResponsesCell = [self switchCellWithTitle:@"多媒体缓存" toggleAction:@selector(cacheMediaResponsesToggled:) isOn:NO];
@@ -63,6 +68,9 @@
     UITableViewCell *clearRecordedRequestsCell = [self buttonCellWithTitle:@"❌  清除请求记录" touchUpAction:@selector(clearRequestsTapped:) isDestructive:YES];
     [mutableCells addObject:clearRecordedRequestsCell];
     
+    UITableViewCell *weexCell = [self aboutWithTitle:@"关于weex"];
+    [mutableCells addObject:weexCell];
+    
     self.cells = mutableCells;
 }
 
@@ -76,7 +84,7 @@
 
 - (void)networkDebuggingToggled:(UISwitch *)sender
 {
-    [WXNetworkObserver setEnabled:sender.isOn];
+    [WXDebugger setEnabled:sender.isOn];
 }
 
 - (void)logLevelDebuggingToggled
@@ -168,9 +176,17 @@
     self.cacheLimitCell.textLabel.text = [self titleForCacheLimitCellWithValue:sender.value];
 }
 
+- (void)clearLogTapped
+{
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"清除日志记录" otherButtonTitles:nil];
+    actionSheet.tag = 1001;
+    [actionSheet showInView:self.view];
+}
+
 - (void)clearRequestsTapped:(UIButton *)sender
 {
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"清除请求记录" otherButtonTitles:nil];
+    actionSheet.tag = 1002;
     [actionSheet showInView:self.view];
 }
 
@@ -195,12 +211,36 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (buttonIndex != actionSheet.cancelButtonIndex) {
-        [[WXNetworkRecorder defaultRecorder] clearRecordedActivity];
+    if(actionSheet.tag == 1001){
+        [WXTracingViewControllerManager sharedInstance].textView.text = @"";
+    }
+    if(actionSheet.tag == 1002){
+        if (buttonIndex != actionSheet.cancelButtonIndex) {
+            [[WXNetworkRecorder defaultRecorder] clearRecordedActivity];
+        }
     }
 }
 
 #pragma mark - Helpers
+- (UITableViewCell *)clearLogCellWithTitle:(NSString *)title
+{
+    UITableViewCell *cell = [[UITableViewCell alloc] init];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.textLabel.text = title;
+    cell.textLabel.font = [[self class] cellTitleFont];
+    
+    return cell;
+}
+
+- (UITableViewCell *)aboutWithTitle:(NSString *)title
+{
+    UITableViewCell *cell = [[UITableViewCell alloc] init];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.textLabel.text = title;
+    cell.textLabel.font = [[self class] cellTitleFont];
+    
+    return cell;
+}
 
 - (UITableViewCell *)logCellWithTitle:(NSString *)title logLevel:(WXLogLevel)logLevel
 {
@@ -269,8 +309,19 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if(indexPath.row == 0){
+//        [WXTracingViewControllerManager sharedInstance].textView.text = @"";
+        [self clearLogTapped];
+    }
+    
+    if(indexPath.row == 1){
         WXLogSettingViewController *logSettingVC = [[WXLogSettingViewController alloc] init];
         logSettingVC.delegate = self;
+        [self.navigationController setNavigationBarHidden:NO];
+        [self.navigationController pushViewController:logSettingVC animated:YES];
+    }
+    
+    if(indexPath.row == 6){
+        WXAboutViewController *logSettingVC = [[WXAboutViewController alloc] init];
         [self.navigationController setNavigationBarHidden:NO];
         [self.navigationController pushViewController:logSettingVC animated:YES];
     }

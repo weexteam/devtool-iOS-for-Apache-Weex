@@ -10,6 +10,7 @@
 #import <UIKit/UIKit.h>
 #import "WXTracingManager.h"
 #import "WXRenderTracingTableViewCell.h"
+#import <WeexSDK/WXUtility.h>
 
 @interface WXRenderTracingViewController ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -127,7 +128,7 @@
     [subLabel setText:subString];
     [view addSubview:subLabel];
     
-    [view setBackgroundColor:[UIColor lightGrayColor]];
+    [view setBackgroundColor:[UIColor colorWithRed:235/255.0 green:235/255.0 blue:235/255.0 alpha:1.0]];
     return view;
 }
 

@@ -12,7 +12,7 @@
 
 #define segmentImageTextPadding 7
 
-@interface HMScrollView : UIScrollView
+@interface WXScrollView : UIScrollView
 @end
 
 @interface WXSegmentedControl ()
@@ -22,11 +22,11 @@
 @property (nonatomic, strong) CALayer *selectionIndicatorArrowLayer;
 @property (nonatomic, readwrite) CGFloat segmentWidth;
 @property (nonatomic, readwrite) NSArray *segmentWidthsArray;
-@property (nonatomic, strong) HMScrollView *scrollView;
+@property (nonatomic, strong) WXScrollView *scrollView;
 
 @end
 
-@implementation HMScrollView
+@implementation WXScrollView
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     if (!self.dragging) {
@@ -126,7 +126,7 @@
 }
 
 - (void)commonInit {
-    self.scrollView = [[HMScrollView alloc] init];
+    self.scrollView = [[WXScrollView alloc] init];
     self.scrollView.scrollsToTop = NO;
     self.scrollView.showsVerticalScrollIndicator = NO;
     self.scrollView.showsHorizontalScrollIndicator = NO;

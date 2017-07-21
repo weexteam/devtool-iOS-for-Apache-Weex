@@ -42,6 +42,9 @@ static NSString *const WXBonjourServiceType = @"_ponyd._tcp";
 static BOOL WXIsVDom = NO;
 
 
+NSString *const kWXNetworkObserverEnabledStateChangedNotification = @"kWXNetworkObserverEnabledStateChangedNotification";
+static NSString *const kWXNetworkObserverEnabledDefaultsKey = @"com.taobao.WXNetworkObserver.enableOnLaunch";
+
 void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
 {
     [[WXConsoleDomainController defaultInstance] logWithArguments:arguments severity:severity];
@@ -383,6 +386,12 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
 
 - (void)forwardAllNetworkTraffic;
 {
+    static BOOL swizzled = NO;
+    if (swizzled) {
+        return;
+    }
+    
+    swizzled = YES;
     [WXNetworkDomainController registerPrettyStringPrinter:[[WXJSONPrettyStringPrinter alloc] init]];
     [WXNetworkDomainController injectIntoAllNSURLConnectionDelegateClasses];
     [WXNetworkDomainController swizzleNSURLSessionClasses];
@@ -730,5 +739,30 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
     NSLog(@"Server websocket did fail with error: %@", error);
 }
 */
+
+#pragma mark - local enable
++ (void)setEnabled:(BOOL)enabled
+{
+    BOOL previouslyEnabled = [self isEnabled];
+    
+    [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:kWXNetworkObserverEnabledDefaultsKey];
+    
+    if (enabled) {
+        // Inject if needed. This injection is protected with a dispatch_once, so we're ok calling it multiple times.
+        // By doing the injection lazily, we keep the impact of the tool lower when this feature isn't enabled.
+        WXDebugger *debugger = [WXDebugger defaultInstance];
+        [debugger enableNetworkTrafficDebugging];
+        [debugger forwardAllNetworkTraffic];
+    }
+    
+    if (previouslyEnabled != enabled) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:kWXNetworkObserverEnabledStateChangedNotification object:self];
+    }
+}
+
++ (BOOL)isEnabled
+{
+    return [[[NSUserDefaults standardUserDefaults] objectForKey:kWXNetworkObserverEnabledDefaultsKey] boolValue];
+}
 
 @end

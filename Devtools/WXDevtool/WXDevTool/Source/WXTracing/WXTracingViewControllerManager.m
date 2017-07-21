@@ -14,6 +14,7 @@
 #import <WeexSDK/WXSDKEngine.h>
 #import "WXTracingHomePageViewController.h"
 #import "WXTracingManager.h"
+#import "WXDebugger.h"
 #define WXWeexButtonTag 1001
 
 @interface WXTracingViewControllerManager ()<WXWindowEventDelegate>
@@ -89,7 +90,14 @@
                 [defaults setObject:@(WXLogLevelLog) forKey:@"wxloglevel"];
                 [defaults synchronize];
             }
-
+            
+            WXDebugger *debugger = [WXDebugger defaultInstance];
+            [WXDebugger setEnabled:NO];//setting NO default
+            if([WXDebugger isEnabled]){
+                [debugger enableNetworkTrafficDebugging];
+                [debugger forwardAllNetworkTraffic];
+            }
+            
         });
     });
     

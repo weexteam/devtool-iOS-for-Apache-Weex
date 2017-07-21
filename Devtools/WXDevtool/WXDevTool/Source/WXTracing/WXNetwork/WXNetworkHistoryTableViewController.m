@@ -11,9 +11,9 @@
 #import "WXNetworkTransactionTableViewCell.h"
 #import "WXNetworkRecorder.h"
 #import "WXNetworkTransactionDetailTableViewController.h"
-#import "WXNetworkObserver.h"
 #import "WXNetworkSettingsTableViewController.h"
-
+#import "WXDebugger.h"
+#import "WXNetworkDomainController.h"
 @interface WXNetworkHistoryTableViewController () <UISearchResultsUpdating, UISearchControllerDelegate>
 
 /// Backing model
@@ -152,7 +152,7 @@
 - (NSString *)headerText
 {
     NSString *headerText = nil;
-    if ([WXNetworkObserver isEnabled]) {
+    if ([WXDebugger isEnabled]) {
         long long bytesReceived = 0;
         NSInteger totalRequests = 0;
         if (self.searchController.isActive) {

@@ -46,6 +46,7 @@
 
 
 extern void _WXLogObjectsImpl(NSString *severity, NSArray *arguments);
+extern NSString *const kWXNetworkObserverEnabledStateChangedNotification;
 
 
 #pragma mark - Public Interface
@@ -109,5 +110,8 @@ extern void _WXLogObjectsImpl(NSString *severity, NSArray *arguments);
 #pragma mark - listenning on server
 //- (void)serverStartWithHost:(NSString *)host port:(NSUInteger)port;
 
+#pragma mark -local enable
++ (void)setEnabled:(BOOL)enabled;
++ (BOOL)isEnabled;
 
 @end
