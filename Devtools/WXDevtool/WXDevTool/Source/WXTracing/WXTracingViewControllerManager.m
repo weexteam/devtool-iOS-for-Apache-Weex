@@ -72,7 +72,7 @@
             [button setTitle:@"weex monitor" forState:UIControlStateNormal];
             button.titleLabel.font = [UIFont boldSystemFontOfSize:12.0];
             [button addTarget:weakSelf action:@selector(showTracing) forControlEvents:UIControlEventTouchUpInside];
-            button.backgroundColor = [UIColor colorWithRed:0/255.0 green:200/255.0 blue:255/255.0 alpha:1.0];
+            button.backgroundColor = [UIColor colorWithRed:1/255.0 green:140/255.0 blue:238/255.0 alpha:1.0];
             button.tag = WXWeexButtonTag;
             [button setEnlargeEdgeWithTop:20 right:20.0 bottom:20.0 left:20.0];
             WXTracingViewControllerManager *instance = [WXTracingViewControllerManager sharedInstance];

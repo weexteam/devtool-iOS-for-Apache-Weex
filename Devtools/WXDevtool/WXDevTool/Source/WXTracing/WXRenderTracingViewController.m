@@ -115,9 +115,15 @@
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, tableView.frame.size.width, 18)];
     [label setFont:[UIFont boldSystemFontOfSize:14]];
     NSString *string = [NSString stringWithFormat:@"instanceId:%@",task.iid];
+    if(!task.iid){
+        string = @"暂时没有weex页面渲染";
+    }
     /* Section header is in 0th index... */
     [label setText:string];
     [view addSubview:label];
+    if(!task.iid){
+        return view;
+    }
     
     UILabel *subLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 22, tableView.frame.size.width, 30)];
     [subLabel setFont:[UIFont systemFontOfSize:12]];
