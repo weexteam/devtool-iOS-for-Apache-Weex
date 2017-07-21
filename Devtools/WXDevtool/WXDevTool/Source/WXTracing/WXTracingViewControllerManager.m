@@ -68,14 +68,15 @@
     dispatch_after(delayInNanoSeconds, concurrentQueue, ^(void){
         dispatch_async(dispatch_get_main_queue(), ^{
             UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-            button.frame = CGRectMake(0, 0, 50, 20);
-            [button setTitle:@"weex" forState:UIControlStateNormal];
+            button.frame = CGRectMake(0, 0, 80, 20);
+            [button setTitle:@"weex monitor" forState:UIControlStateNormal];
+            button.titleLabel.font = [UIFont boldSystemFontOfSize:12.0];
             [button addTarget:weakSelf action:@selector(showTracing) forControlEvents:UIControlEventTouchUpInside];
-            button.backgroundColor = [UIColor redColor];
+            button.backgroundColor = [UIColor colorWithRed:0/255.0 green:200/255.0 blue:255/255.0 alpha:1.0];
             button.tag = WXWeexButtonTag;
             [button setEnlargeEdgeWithTop:20 right:20.0 bottom:20.0 left:20.0];
             WXTracingViewControllerManager *instance = [WXTracingViewControllerManager sharedInstance];
-            instance.wind = [[WXWindow alloc]initWithFrame:CGRectMake(100, 0, 50, 40)];
+            instance.wind = [[WXWindow alloc]initWithFrame:CGRectMake(100, 0, 80, 40)];
             instance.wind.eventDelegate = instance;
             [instance.wind addSubview:button];
             instance.wind.windowLevel = UIWindowLevelStatusBar+100;
@@ -120,7 +121,7 @@
         WXTracingViewControllerManager *manager = [WXTracingViewControllerManager sharedInstance];
         manager.wind.frame = [UIScreen mainScreen].bounds;
         UIView *view = [manager.wind viewWithTag:WXWeexButtonTag];
-        view.frame = CGRectMake(100, 0, 50, 20);
+        view.frame = CGRectMake(100, 0, 80, 20);
         manager.tracingVC = [[WXTracingHomePageViewController alloc]init];
         manager.nav = [[UINavigationController alloc] initWithRootViewController:manager.tracingVC];;
         manager.tracingVC.view.backgroundColor = [UIColor whiteColor];
@@ -136,9 +137,9 @@
         [manager.tracingVC removeFromParentViewController];
         [manager.tracingVC.view removeFromSuperview];
         [manager.nav.view removeFromSuperview];
-        manager.wind.frame = CGRectMake(100, 0, 50, 40);
+        manager.wind.frame = CGRectMake(100, 0, 80, 40);
         UIView *view = [manager.wind viewWithTag:WXWeexButtonTag];
-        view.frame = CGRectMake(0, 0, 50, 20);
+        view.frame = CGRectMake(0, 0, 80, 20);
         [WXTracingViewControllerManager sharedInstance].isLoadTracing = NO;
     }
     
