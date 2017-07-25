@@ -8,7 +8,7 @@
 
 #import "UIViewController+WXDemoNaviBar.h"
 #import "WXScannerVC.h"
-#import "WXDefine.h"
+#import <WeexSDK/WXDefine.h>
 #import <objc/runtime.h>
 
 @implementation UIViewController (WXDemoNaviBar)

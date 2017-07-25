@@ -13,7 +13,6 @@
 #import "WXTracingLogImpl.h"
 #import <WeexSDK/WXSDKEngine.h>
 #import "WXTracingHomePageViewController.h"
-#import "WXTracingManager.h"
 #import "WXDebugger.h"
 #define WXWeexButtonTag 1001
 

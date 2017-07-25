@@ -7,13 +7,11 @@
 //
 
 #import "WXTracingExceptionImpl.h"
-#import <WeexPluginLoader/WeexPluginLoader.h>
 #import "WXTracingViewControllerManager.h"
 #import <WeexSDK/WXUtility.h>
 #import <WeexSDK/WXSDKManager.h>
-#import "WXTracingManager.h"
+#import "WXDebugger.h"
 
-WX_PlUGIN_EXPORT_HANDLER(WXTracingExceptionImpl,WXJSExceptionProtocol)
 
 @implementation WXTracingExceptionImpl
 

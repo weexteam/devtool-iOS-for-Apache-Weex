@@ -8,7 +8,6 @@
 
 #import "WXApiTracingViewController.h"
 #import <UIKit/UIKit.h>
-#import "WXTracingManager.h"
 #import "WXRenderTracingTableViewCell.h"
 #import "WXTracingApiTableViewCell.h"
 #import "WXTracingMethodViewController.h"

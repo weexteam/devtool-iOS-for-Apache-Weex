@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "WXTracingManager.h"
+#import <WeexSDK/WXTracingManager.h>
 
 @interface WXRenderTracingTableViewCell : UITableViewCell
 

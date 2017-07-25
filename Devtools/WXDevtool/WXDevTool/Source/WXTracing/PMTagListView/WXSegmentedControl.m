@@ -227,14 +227,16 @@
                 stringHeight = [titleString sizeWithAttributes:@{NSFontAttributeName: self.font}].height;
             }
             else {
-                stringWidth = roundf([titleString sizeWithFont:self.font].width);
-                stringHeight = roundf([titleString sizeWithFont:self.font].height);
+                CGSize size = [titleString sizeWithAttributes:
+                 @{NSFontAttributeName: [UIFont systemFontOfSize:self.font.pointSize]}];
+                stringWidth = roundf(ceilf(size.width));
+                stringHeight = roundf(ceilf(size.width));
             }
             
             // Text inside the CATextLayer will appear blurry unless the rect values are rounded
             CGFloat y = roundf(CGRectGetHeight(self.frame) - self.selectionIndicatorHeight)/2 - stringHeight/2 + ((self.selectionIndicatorLocation == WXSegmentedControlSelectionIndicatorLocationUp) ? self.selectionIndicatorHeight : 0);
             
-            CGRect rect;
+            CGRect rect =  CGRectZero;
             if (self.segmentWidthStyle == WXSegmentedControlSegmentWidthStyleFixed) {
                 rect = CGRectMake((self.segmentWidth * idx) + (self.segmentWidth - stringWidth)/2, y, stringWidth, stringHeight);
             } else if (self.segmentWidthStyle == WXSegmentedControlSegmentWidthStyleDynamic) {
@@ -300,8 +302,11 @@
             UIImage *icon = iconImage;
             CGFloat imageWidth = icon.size.width;
             CGFloat imageHeight = icon.size.height;
+            
+            CGSize size = [self.sectionTitles[idx] sizeWithAttributes:
+                           @{NSFontAttributeName: [UIFont systemFontOfSize:self.font.pointSize]}];
 			
-			CGFloat stringHeight = roundf([self.sectionTitles[idx] sizeWithFont:self.font].height);
+			CGFloat stringHeight = roundf(ceil(size.height));
             
 			CGFloat yOffset = roundf(((CGRectGetHeight(self.frame) - self.selectionIndicatorHeight) / 2) - (stringHeight / 2));
             
@@ -426,14 +431,19 @@
     CGFloat sectionWidth = 0.0f;
     
     if (self.type == WXSegmentedControlTypeText) {
-        CGFloat stringWidth = [[self.sectionTitles objectAtIndex:self.selectedSegmentIndex] sizeWithFont:self.font].width;
+        CGSize size = [[self.sectionTitles objectAtIndex:self.selectedSegmentIndex] sizeWithAttributes:
+                       @{NSFontAttributeName: [UIFont systemFontOfSize:self.font.pointSize]}];
+        CGFloat stringWidth = ceil(size.width);
         sectionWidth = stringWidth;
     } else if (self.type == WXSegmentedControlTypeImages) {
         UIImage *sectionImage = [self.sectionImages objectAtIndex:self.selectedSegmentIndex];
         CGFloat imageWidth = sectionImage.size.width;
         sectionWidth = imageWidth;
     } else if (self.type == WXSegmentedControlTypeTextImages) {
-		CGFloat stringWidth = [[self.sectionTitles objectAtIndex:self.selectedSegmentIndex] sizeWithFont:self.font].width;
+        CGSize size = [[self.sectionTitles objectAtIndex:self.selectedSegmentIndex] sizeWithAttributes:
+                       @{NSFontAttributeName: [UIFont systemFontOfSize:self.font.pointSize]}];
+        
+		CGFloat stringWidth = ceil(size.width);
 		UIImage *sectionImage = [self.sectionImages objectAtIndex:self.selectedSegmentIndex];
 		CGFloat imageWidth = sectionImage.size.width;
         if (self.segmentWidthStyle == WXSegmentedControlSegmentWidthStyleFixed) {
@@ -533,14 +543,14 @@
         }
     } else if (self.type == WXSegmentedControlTypeTextImages && WXSegmentedControlSegmentWidthStyleFixed){
         //lets just use the title.. we will assume it is wider then images...
-        for (NSString *titleString in self.sectionTitles) {
-#if  __IPHONE_OS_VERSION_MIN_REQUIRED >= 70000
-            CGFloat stringWidth = [titleString sizeWithAttributes:@{NSFontAttributeName: self.font}].width + self.segmentEdgeInset.left + self.segmentEdgeInset.right;
-#else
-            CGFloat stringWidth = [titleString sizeWithFont:self.font].width + self.segmentEdgeInset.left + self.segmentEdgeInset.right;
-#endif
-            self.segmentWidth = MAX(stringWidth, self.segmentWidth);
-        }
+//        for (NSString *titleString in self.sectionTitles) {
+//#if  __IPHONE_OS_VERSION_MIN_REQUIRED >= 70000
+//            CGFloat stringWidth = [titleString sizeWithAttributes:@{NSFontAttributeName: self.font}].width + self.segmentEdgeInset.left + self.segmentEdgeInset.right;
+//#else
+//            CGFloat stringWidth = [titleString sizeWithFont:self.font].width + self.segmentEdgeInset.left + self.segmentEdgeInset.right;
+//#endif
+//            self.segmentWidth = MAX(stringWidth, self.segmentWidth);
+//        }
     } else if (self.type == WXSegmentedControlTypeTextImages && WXSegmentedControlSegmentWidthStyleDynamic) {
         NSMutableArray *mutableSegmentWidths = [NSMutableArray array];
         
@@ -612,7 +622,7 @@
             }
         }
         
-        NSUInteger sectionsCount;
+        NSUInteger sectionsCount = 0;
         
         if (self.type == WXSegmentedControlTypeImages) {
             sectionsCount = [self.sectionImages count];
@@ -641,7 +651,7 @@
 }
 
 - (void)scrollToSelectedSegmentIndex {
-    CGRect rectForSelectedIndex;
+    CGRect rectForSelectedIndex = CGRectZero;
     CGFloat selectedSegmentOffset = 0;
     if (self.segmentWidthStyle == WXSegmentedControlSegmentWidthStyleFixed) {
         rectForSelectedIndex = CGRectMake(self.segmentWidth * self.selectedSegmentIndex,
