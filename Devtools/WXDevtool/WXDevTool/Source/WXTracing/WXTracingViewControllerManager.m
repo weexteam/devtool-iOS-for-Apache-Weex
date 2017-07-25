@@ -124,7 +124,7 @@
         WXTracingViewControllerManager *manager = [WXTracingViewControllerManager sharedInstance];
         manager.wind.frame = [UIScreen mainScreen].bounds;
         UIView *view = [manager.wind viewWithTag:WXWeexButtonTag];
-        view.frame = CGRectMake(110, 0, 65, 20);
+        view.frame = CGRectMake(110, 0, 60, 20);
         manager.tracingVC = [[WXTracingHomePageViewController alloc]init];
         manager.nav = [[UINavigationController alloc] initWithRootViewController:manager.tracingVC];;
         manager.tracingVC.view.backgroundColor = [UIColor whiteColor];
