@@ -11,6 +11,7 @@
 #import "WXTracingManager.h"
 #import "WXRenderTracingTableViewCell.h"
 #import "WXTracingApiTableViewCell.h"
+#import "WXTracingMethodViewController.h"
 
 @interface WXApiTracingViewController ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -57,13 +58,18 @@
     }
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.navigationController setNavigationBarHidden:YES];
+}
+
 -(void)cofigureTableview
 {
     self.table = [[UITableView alloc] initWithFrame:CGRectMake(self.view.bounds.origin.x, 0, self.view.bounds.size.width, self.view.bounds.size.height) style:UITableViewStylePlain];
     self.table.delegate = self;
     self.table.dataSource = self;
     [self.view addSubview:self.table];
-    
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -79,7 +85,7 @@
     static NSString *cellIdentifier = @"cellIdentifier";
     
     WXTracingApiTableViewCell *cell = [self.table dequeueReusableCellWithIdentifier:cellIdentifier];
-    
+
     if(cell == nil) {
         cell = [[WXTracingApiTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }
@@ -95,7 +101,15 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 {
-    NSLog(@"title of cell %@", [_content objectAtIndex:indexPath.row]);
+//    NSLog(@"title of cell %@", [_content objectAtIndex:indexPath.row]);
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    NSDictionary *dict = self.apis[indexPath.row];
+    if([dict objectForKey:@"methods"]){
+        WXTracingMethodViewController *methodViewController = [[WXTracingMethodViewController alloc] init];
+        methodViewController.methods = [dict objectForKey:@"methods"];
+        [self.navigationController setNavigationBarHidden:NO];
+        [self.navigationController pushViewController:methodViewController animated:YES];
+    }
 }
 
 @end

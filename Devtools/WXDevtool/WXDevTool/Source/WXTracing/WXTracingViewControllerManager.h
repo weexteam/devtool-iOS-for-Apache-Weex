@@ -10,6 +10,7 @@
 
 @interface WXTracingViewControllerManager : UIViewController
 @property(nonatomic,strong)UITextView *textView;
+@property(nonatomic,strong)NSMutableArray *messages;
 
 + (instancetype) sharedInstance;
 + (void)loadTracingView;

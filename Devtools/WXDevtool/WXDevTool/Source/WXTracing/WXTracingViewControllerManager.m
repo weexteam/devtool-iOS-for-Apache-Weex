@@ -71,6 +71,7 @@
             button.frame = CGRectMake(0, 0, 80, 20);
             [button setTitle:@"weex monitor" forState:UIControlStateNormal];
             button.titleLabel.font = [UIFont boldSystemFontOfSize:12.0];
+            button.titleLabel.numberOfLines = 0;
             [button addTarget:weakSelf action:@selector(showTracing) forControlEvents:UIControlEventTouchUpInside];
             button.backgroundColor = [UIColor colorWithRed:1/255.0 green:140/255.0 blue:238/255.0 alpha:1.0];
             button.tag = WXWeexButtonTag;
@@ -85,6 +86,7 @@
             instance.wind.hidden = NO;
             [[UIApplication sharedApplication].keyWindow addSubview:instance.wind];
             [WXTracingViewControllerManager sharedInstance].textView = [UITextView new];
+            [WXTracingViewControllerManager sharedInstance].messages = [NSMutableArray new];
             [WXTracingViewControllerManager sharedInstance].textView.font = [UIFont systemFontOfSize:16];
             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
             if(![defaults objectForKey:@"wxloglevel"]) {

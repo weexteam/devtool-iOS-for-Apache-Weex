@@ -21,15 +21,16 @@ WX_PlUGIN_EXPORT_HANDLER(WXTracingExceptionImpl,WXJSExceptionProtocol)
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         WXTracingTask *task = [WXTracingManager getTracingData];
-        UITextView *textView = [WXTracingViewControllerManager sharedInstance].textView;
-        NSMutableAttributedString *attrStr = [textView.attributedText mutableCopy];
-        NSString *strTmp = [NSString stringWithFormat:@"<weex>[exception]bundleJSType:%@\r\n%@\r\n",task.bundleJSType,exception.description];
+//        UITextView *textView = [WXTracingViewControllerManager sharedInstance].textView;
+//        NSMutableAttributedString *attrStr = [textView.attributedText mutableCopy];
+        NSString *strTmp = [NSString stringWithFormat:@"<Weex>[exception]bundleJSType:%@\r\n%@\r\n",task.bundleJSType,exception.description];
         if(strTmp.length>0){
-            NSMutableAttributedString *exceptionStr = [[NSMutableAttributedString alloc]initWithString:strTmp];
-            [exceptionStr addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(0, strTmp.length)];
-            [attrStr appendAttributedString:exceptionStr];
-            textView.attributedText = attrStr;
-            
+//            NSMutableAttributedString *exceptionStr = [[NSMutableAttributedString alloc]initWithString:strTmp];
+//            [exceptionStr addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(0, strTmp.length)];
+//            [attrStr appendAttributedString:exceptionStr];
+//            textView.attributedText = attrStr;
+            NSMutableArray *messages = [WXTracingViewControllerManager sharedInstance].messages;
+            [messages addObject:strTmp];
             
         }
     });

@@ -15,6 +15,7 @@
 #import "WXNetworkHistoryTableViewController.h"
 #import "WXTracingSettingViewController.h"
 #import "WXNetworkSettingsTableViewController.h"
+#import "WXTracingLogViewController.h"
 
 @interface WXTracingHomePageViewController ()<WXTagListViewDelegate,ViewPagerDataSource, ViewPagerDelegate>
 {
@@ -64,7 +65,7 @@
             subVC = [[WXNetworkHistoryTableViewController alloc] init];
             
         }else if(index == 2){
-            subVC = [[WXLogViewController alloc] initWithFrame:CGRectMake(0, 0, rect.size.width, rect.size.height)];
+            subVC = [[WXTracingLogViewController alloc] init];
             
         }else if(index == 3){
             subVC = [[WXApiTracingViewController alloc] initWithFrame:CGRectMake(0, 0, rect.size.width, rect.size.height)];

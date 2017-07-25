@@ -212,7 +212,9 @@
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if(actionSheet.tag == 1001){
-        [WXTracingViewControllerManager sharedInstance].textView.text = @"";
+        [WXTracingViewControllerManager sharedInstance].messages = [NSMutableArray new];
+        [[NSNotificationCenter defaultCenter] postNotificationName:TracingUpdateLogDataNoti object:nil];
+
     }
     if(actionSheet.tag == 1002){
         if (buttonIndex != actionSheet.cancelButtonIndex) {
@@ -309,7 +311,6 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if(indexPath.row == 0){
-//        [WXTracingViewControllerManager sharedInstance].textView.text = @"";
         [self clearLogTapped];
     }
     

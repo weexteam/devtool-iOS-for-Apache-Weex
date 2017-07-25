@@ -11,6 +11,14 @@
 #import <objc/runtime.h>
 
 #define FLEXFloor(x) (floor([[UIScreen mainScreen] scale] * (x)) / [[UIScreen mainScreen] scale])
+#define TracingUpdateLogDataNoti @"TracingUpdateLogData"
+
+#define CREATE_RGBA_COLOR(r, g, b, a)                                                              \
+[UIColor colorWithRed:r / 255.0 green:g / 255.0 blue:b / 255.0 alpha:a]
+#define COLOR_TRACING_ERROR CREATE_RGBA_COLOR(149, 6, 27, 1)
+#define COLOR_TRACING_WARN CREATE_RGBA_COLOR(13, 200, 169, 1)
+#define COLOR_TRACING_EXCEPTION CREATE_RGBA_COLOR(248, 8, 13, 1)
+#define COLOR_TRACING_SEARCBG CREATE_RGBA_COLOR(126, 209, 252, 1)
 
 @interface WXTracingUtility : NSObject
 

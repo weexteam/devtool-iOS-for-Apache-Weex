@@ -13,6 +13,7 @@
 
 @property (nonatomic, strong) UILabel *nameLabel;
 @property (nonatomic, strong) UILabel *classLabel;
+@property (nonatomic, strong) UILabel *methodCountLabel;
 
 - (void)config:(NSDictionary *)dict;
 
