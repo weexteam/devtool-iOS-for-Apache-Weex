@@ -7,6 +7,7 @@
 //
 
 #import "WXViewPagerController.h"
+#import "WXNetworkRecorder.h"
 
 #pragma mark - Constants and macros
 #define kTabViewTag 38
@@ -434,6 +435,9 @@
     } else {
         
         dispatch_async(dispatch_get_main_queue(), ^{
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:kWXNetworkRecorderSearchbarDisableNotification object:self userInfo:nil];
+            
             [self.pageViewController setViewControllers:@[viewController]
                                               direction:(activeContentIndex < self.activeContentIndex) ? UIPageViewControllerNavigationDirectionReverse : UIPageViewControllerNavigationDirectionForward
                                                animated:YES

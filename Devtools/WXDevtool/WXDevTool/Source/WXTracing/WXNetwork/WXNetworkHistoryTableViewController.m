@@ -39,12 +39,20 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleTransactionUpdatedNotification:) name:kWXNetworkRecorderTransactionUpdatedNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleTransactionsClearedNotification:) name:kWXNetworkRecorderTransactionsClearedNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleNetworkObserverEnabledStateChangedNotification:) name:kWXNetworkObserverEnabledStateChangedNotification object:nil];
+        
+         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(searchBarDisable) name:kWXNetworkRecorderSearchbarDisableNotification object:nil];
         self.title = @"📡  网络";
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"设置" style:UIBarButtonItemStylePlain target:self action:@selector(settingsButtonTapped:)];
     }
     return self;
 }
 
+    
+-(void)searchBarDisable
+{
+    self.searchController.active = NO;
+}
+    
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];

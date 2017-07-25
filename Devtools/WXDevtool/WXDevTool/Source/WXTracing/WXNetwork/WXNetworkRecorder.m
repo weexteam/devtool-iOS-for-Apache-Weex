@@ -15,6 +15,7 @@ NSString *const kWXNetworkRecorderNewTransactionNotification = @"kWXNetworkRecor
 NSString *const kWXNetworkRecorderTransactionUpdatedNotification = @"kWXNetworkRecorderTransactionUpdatedNotification";
 NSString *const kWXNetworkRecorderUserInfoTransactionKey = @"transaction";
 NSString *const kWXNetworkRecorderTransactionsClearedNotification = @"kWXNetworkRecorderTransactionsClearedNotification";
+NSString *const kWXNetworkRecorderSearchbarDisableNotification = @"kWXNetworkRecorderSearchbarDisableNotification";
 
 NSString *const kWXNetworkRecorderResponseCacheLimitDefaultsKey = @"com.flex.responseCacheLimit";
 
@@ -257,5 +258,6 @@ NSString *const kWXNetworkRecorderResponseCacheLimitDefaultsKey = @"com.flex.res
         [[NSNotificationCenter defaultCenter] postNotificationName:kWXNetworkRecorderTransactionUpdatedNotification object:self userInfo:userInfo];
     });
 }
+
 
 @end

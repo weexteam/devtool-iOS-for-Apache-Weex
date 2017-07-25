@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+extern NSString *const kWXNetworkRecorderSearchbarDisableNotification;
+
+
 @interface WXNetworkHistoryTableViewController : UITableViewController
 
 @end

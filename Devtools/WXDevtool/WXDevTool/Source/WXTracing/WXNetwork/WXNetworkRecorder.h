@@ -13,6 +13,7 @@ extern NSString *const kWXNetworkRecorderNewTransactionNotification;
 extern NSString *const kWXNetworkRecorderTransactionUpdatedNotification;
 extern NSString *const kWXNetworkRecorderUserInfoTransactionKey;
 extern NSString *const kWXNetworkRecorderTransactionsClearedNotification;
+extern NSString *const kWXNetworkRecorderSearchbarDisableNotification;
 
 @class WXNetworkTransaction;
 
