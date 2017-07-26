@@ -21,7 +21,6 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		010A81D6D25DABD1B2BFDBB6 /* libPods-TBWXDevTool.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AF1D56C896CDED8D5B50327 /* libPods-TBWXDevTool.a */; };
 		0A0102E31D35E25300F0D592 /* WXProfilerDomainController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A01025C1D35E25300F0D592 /* WXProfilerDomainController.h */; };
 		0A0102E41D35E25300F0D592 /* WXProfilerDomainController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A01025D1D35E25300F0D592 /* WXProfilerDomainController.m */; };
 		0A0102E51D35E25300F0D592 /* WXTimelineDomainController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A01025E1D35E25300F0D592 /* WXTimelineDomainController.h */; };
@@ -241,6 +240,7 @@
 		C42546241F27461000B93B0D /* WXTracingViewControllerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545E21F27461000B93B0D /* WXTracingViewControllerManager.m */; };
 		C42546251F27461000B93B0D /* WXWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545E31F27461000B93B0D /* WXWindow.h */; };
 		C42546261F27461000B93B0D /* WXWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545E41F27461000B93B0D /* WXWindow.m */; };
+		C49207731F28927D002EF9D7 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C49207721F28927D002EF9D7 /* ImageIO.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -414,7 +414,6 @@
 		0AFA10151D2CEC58006E30BB /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
 		0AFE81D41D8102B800C99208 /* WXPageDomainUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXPageDomainUtility.h; sourceTree = "<group>"; };
 		0AFE81D51D8102B800C99208 /* WXPageDomainUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXPageDomainUtility.m; sourceTree = "<group>"; };
-		2AF1D56C896CDED8D5B50327 /* libPods-TBWXDevTool.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TBWXDevTool.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		489AA4AF96AEBD4B7A7D8A91 /* Pods-TBWXDevTool.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBWXDevTool.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TBWXDevTool/Pods-TBWXDevTool.debug.xcconfig"; sourceTree = "<group>"; };
 		9CF2E2BFC9331B7CB90EA000 /* Pods-TBWXDevTool.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBWXDevTool.release.xcconfig"; path = "Pods/Target Support Files/Pods-TBWXDevTool/Pods-TBWXDevTool.release.xcconfig"; sourceTree = "<group>"; };
 		C42545A21F27461000B93B0D /* WXSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXSegmentedControl.h; sourceTree = "<group>"; };
@@ -483,6 +482,7 @@
 		C42545E21F27461000B93B0D /* WXTracingViewControllerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXTracingViewControllerManager.m; sourceTree = "<group>"; };
 		C42545E31F27461000B93B0D /* WXWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXWindow.h; sourceTree = "<group>"; };
 		C42545E41F27461000B93B0D /* WXWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXWindow.m; sourceTree = "<group>"; };
+		C49207721F28927D002EF9D7 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -497,13 +497,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C49207731F28927D002EF9D7 /* ImageIO.framework in Frameworks */,
 				0AFA10141D2CEC49006E30BB /* CoreData.framework in Frameworks */,
 				0AFA10121D2CEC42006E30BB /* CoreGraphics.framework in Frameworks */,
 				0AFA10101D2CEC3B006E30BB /* UIKit.framework in Frameworks */,
 				0AFA100E1D2CEC34006E30BB /* Foundation.framework in Frameworks */,
 				0AFA100C1D2CEC2A006E30BB /* CFNetwork.framework in Frameworks */,
 				0AFA0FE61D2CEB39006E30BB /* Security.framework in Frameworks */,
-				010A81D6D25DABD1B2BFDBB6 /* libPods-TBWXDevTool.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -740,6 +740,7 @@
 		0AFA10171D2CEC61006E30BB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C49207721F28927D002EF9D7 /* ImageIO.framework */,
 				0AFA10151D2CEC58006E30BB /* libicucore.tbd */,
 				0AFA10131D2CEC49006E30BB /* CoreData.framework */,
 				0AFA10111D2CEC42006E30BB /* CoreGraphics.framework */,
@@ -747,7 +748,6 @@
 				0AFA100D1D2CEC34006E30BB /* Foundation.framework */,
 				0AFA100B1D2CEC2A006E30BB /* CFNetwork.framework */,
 				0AFA0FE51D2CEB39006E30BB /* Security.framework */,
-				2AF1D56C896CDED8D5B50327 /* libPods-TBWXDevTool.a */,
 			);
 			name = Frameworks;
 			path = WXDevTool;
@@ -994,6 +994,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0AFA0ED31D2CE79E006E30BB /* Build configuration list for PBXNativeTarget "TBWXDevTool" */;
 			buildPhases = (
+				23C0757E0AC784938DD9BC7E /* [CP] Check Pods Manifest.lock */,
 				0AFA0EC61D2CE79E006E30BB /* Sources */,
 				0AFA0EC71D2CE79E006E30BB /* Frameworks */,
 				0AFA0EC81D2CE79E006E30BB /* Headers */,
@@ -1098,6 +1099,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nFMK_NAME=${PROJECT_NAME}\n\nINSTALL_DIR=${BUILD_DIR}/Release-iphoneos/${FMK_NAME}.framework\n\nMAIN=\"main\"\n\nMAIN_JS=${INSTALL_DIR}/${MAIN}.js\n\nif [ -e \"$MAIN_JS\" ]; then\n    rm \"$MAIN_JS\"\nfi\n\nRESOURCE=\"Resources\"\nRESOURCE_DIR=${INSTALL_DIR}/$RESOURCE\nif [ -d \"$RESOURCE_DIR\" ]; then\n    rm -rf \"$RESOURCE_DIR\"\nfi\n\nfor pngFile in ${INSTALL_DIR}/*; do\n    if [[ $pngFile =~ (.*)png ]]; then\n        rm \"$pngFile\"\n        break;\n    fi\ndone\n";
+		};
+		23C0757E0AC784938DD9BC7E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
