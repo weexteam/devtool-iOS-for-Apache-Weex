@@ -994,13 +994,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0AFA0ED31D2CE79E006E30BB /* Build configuration list for PBXNativeTarget "TBWXDevTool" */;
 			buildPhases = (
-				AAADB0E35AB263E7400453F2 /* [CP] Check Pods Manifest.lock */,
 				0AFA0EC61D2CE79E006E30BB /* Sources */,
 				0AFA0EC71D2CE79E006E30BB /* Frameworks */,
 				0AFA0EC81D2CE79E006E30BB /* Headers */,
 				0AFA0EC91D2CE79E006E30BB /* Resources */,
 				0AFECA031D76C75E0035719C /* ShellScript */,
-				629BF6EB67C26547EEFBC415 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1100,36 +1098,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nFMK_NAME=${PROJECT_NAME}\n\nINSTALL_DIR=${BUILD_DIR}/Release-iphoneos/${FMK_NAME}.framework\n\nMAIN=\"main\"\n\nMAIN_JS=${INSTALL_DIR}/${MAIN}.js\n\nif [ -e \"$MAIN_JS\" ]; then\n    rm \"$MAIN_JS\"\nfi\n\nRESOURCE=\"Resources\"\nRESOURCE_DIR=${INSTALL_DIR}/$RESOURCE\nif [ -d \"$RESOURCE_DIR\" ]; then\n    rm -rf \"$RESOURCE_DIR\"\nfi\n\nfor pngFile in ${INSTALL_DIR}/*; do\n    if [[ $pngFile =~ (.*)png ]]; then\n        rm \"$pngFile\"\n        break;\n    fi\ndone\n";
-		};
-		629BF6EB67C26547EEFBC415 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TBWXDevTool/Pods-TBWXDevTool-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		AAADB0E35AB263E7400453F2 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
