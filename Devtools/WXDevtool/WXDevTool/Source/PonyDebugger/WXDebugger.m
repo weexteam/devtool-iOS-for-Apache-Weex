@@ -563,6 +563,12 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
     WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
     [debugDomainCrl debugDomainRegisterCallRemoveEvent:callRemoveEvent];
 }
+    
+- (void)registerCallCreateFinish:(WXJSCallCreateFinish)callCreateFinish
+{
+    WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
+    [debugDomainCrl debugDomainRegisterCallCreateFinish:callCreateFinish];
+}
 
 - (void)registerCallNativeModule:(WXJSCallNativeModule)callNativeModuleBlock
 {

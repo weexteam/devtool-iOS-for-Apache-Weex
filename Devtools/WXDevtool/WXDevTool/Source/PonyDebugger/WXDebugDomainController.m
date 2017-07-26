@@ -25,6 +25,7 @@
     WXJSCallUpdateStyle _callUpdateStyleBlock;
     WXJSCallAddEvent _callAddEventBlock;
     WXJSCallRemoveEvent _callRemoveEventBlock;
+    WXJSCallCreateFinish _callCreateFinishBlock;
     WXJSCallNativeModule _nativeModuleBlock;
     WXJSCallNativeComponent _nativeComponentBlock;
 }
@@ -121,6 +122,10 @@
 
 - (void)debugDomainRegisterCallRemoveEvent:(WXJSCallRemoveEvent)callRemoveEvent {
     _callRemoveEventBlock = callRemoveEvent;
+}
+    
+- (void)debugDomainRegisterCallCreateFinish:(WXJSCallCreateFinish)callCreateFinish {
+    _callCreateFinishBlock = callCreateFinish;
 }
 
 - (void)debugDomainRegisterCallNativeModule:(WXJSCallNativeModule)callNativeModuleBlock {

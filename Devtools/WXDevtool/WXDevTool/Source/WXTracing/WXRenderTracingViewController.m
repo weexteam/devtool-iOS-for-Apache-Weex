@@ -45,7 +45,7 @@
     NSMutableDictionary *taskData = [[WXTracingManager getTracingData] mutableCopy];
     NSArray *instanceIds = [[WXSDKManager bridgeMgr] getInstanceIdStack];
     if(instanceIds && [instanceIds count] >0){
-        for (NSInteger i = [instanceIds count]-1; i>=0; i--) {
+        for (NSInteger i = 0; i< [instanceIds count]; i++) {
             NSString *instanceId =instanceIds[i];
             WXTracingTask *task = [taskData objectForKey:instanceId];
             WXShowTracingTask *showTask = [WXShowTracingTask new];

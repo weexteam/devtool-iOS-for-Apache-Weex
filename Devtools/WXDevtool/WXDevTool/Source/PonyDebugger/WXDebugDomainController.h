@@ -36,6 +36,8 @@
 - (void)debugDomainRegisterCallAddEvent:(WXJSCallAddEvent)callAddEvent;
 
 - (void)debugDomainRegisterCallRemoveEvent:(WXJSCallRemoveEvent)callRemoveEvent;
+    
+- (void)debugDomainRegisterCallCreateFinish:(WXJSCallCreateFinish)callCreateFinish;
 
 - (void)debugDomainRegisterCallNativeModule:(WXJSCallNativeModule)callNativeModuleBlock;
 
