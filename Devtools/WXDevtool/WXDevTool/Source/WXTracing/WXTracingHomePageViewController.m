@@ -23,7 +23,7 @@
 @property (nonatomic, strong) NSArray *titleArr;
 @property (strong) WXTagListView *tagListView;
 @property (nonatomic, strong) NSMutableArray *tableViewArr;
-@property (nonatomic) long long fundIndex;
+@property (nonatomic) NSInteger fundIndex;
 @property (nonatomic) NSInteger slideIndex;
 @property (nonatomic, strong) WXViewPagerController *productVC;
 
