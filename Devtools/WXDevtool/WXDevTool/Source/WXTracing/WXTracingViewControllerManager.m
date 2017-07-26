@@ -14,6 +14,8 @@
 #import <WeexSDK/WXSDKEngine.h>
 #import "WXTracingHomePageViewController.h"
 #import "WXDebugger.h"
+#import "WXTracingExceptionImpl.h"
+
 #define WXWeexButtonTag 1001
 
 @interface WXTracingViewControllerManager ()<WXWindowEventDelegate>
@@ -57,6 +59,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [WXTracingViewControllerManager addWeexView];
             [WXLog registerExternalLog:[WXTracingLogImpl new]];
+            [WXSDKEngine registerHandler:[WXTracingExceptionImpl new] withProtocol:@protocol(WXJSExceptionProtocol)];
         });
     }
 }

@@ -18,7 +18,9 @@
 - (void)onJSException:(WXJSExceptionInfo*) exception
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        WXTracingTask *task = [WXTracingManager getTracingData];
+        NSString *instanceId =  [[[WXSDKManager bridgeMgr] getInstanceIdStack] firstObject];
+        NSMutableDictionary *taskData = [WXTracingManager getTracingData];
+        WXTracingTask *task = [taskData objectForKey:instanceId];
 //        UITextView *textView = [WXTracingViewControllerManager sharedInstance].textView;
 //        NSMutableAttributedString *attrStr = [textView.attributedText mutableCopy];
         NSString *strTmp = [NSString stringWithFormat:@"<Weex>[exception]bundleJSType:%@\r\n%@\r\n",task.bundleJSType,exception.description];
