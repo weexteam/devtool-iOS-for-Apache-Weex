@@ -52,7 +52,7 @@
     NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc]initWithString:labelText];
     
     //设置字体和设置字体的范围
-    [attrStr addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:20.0f] range:NSMakeRange(0, labelText.length)];
+    [attrStr addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:16.0f] range:NSMakeRange(0, labelText.length)];
     //添加文字颜色
     //    [attrStr addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(17, 7)];
     if([labelText rangeOfString:@"<Weex>[exception]"].location != NSNotFound){

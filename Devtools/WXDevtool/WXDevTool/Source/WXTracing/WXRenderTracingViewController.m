@@ -10,7 +10,8 @@
 #import <UIKit/UIKit.h>
 #import "WXDebugger.h"
 #import "WXRenderTracingTableViewCell.h"
-#import <WeexSDK/WXUtility.h>
+@implementation WXShowTracingTask
+@end
 
 @interface WXRenderTracingViewController ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -32,7 +33,8 @@
     }
     return self;
 }
-
+    
+   
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
@@ -40,24 +42,48 @@
     self.view.frame =  CGRectMake(0, 0, rect.size.width, rect.size.height);
     [self cofigureTableview];
     self.tasks = [NSMutableArray new];
-    WXTracingTask *task = [WXTracingManager getTracingData];
-    for (WXTracing *tracing in task.tracings) {
-        if(![WXTracingEnd isEqualToString:tracing.ph]){
-            [self.tasks addObject:tracing];
-            if(self.begin <0.0001){
-                self.begin = tracing.ts;
+    NSMutableDictionary *taskData = [[WXTracingManager getTracingData] mutableCopy];
+    NSArray *instanceIds = [[WXSDKManager bridgeMgr] getInstanceIdStack];
+    if(instanceIds && [instanceIds count] >0){
+        for (NSInteger i = [instanceIds count]-1; i>=0; i--) {
+            NSString *instanceId =instanceIds[i];
+            WXTracingTask *task = [taskData objectForKey:instanceId];
+            WXShowTracingTask *showTask = [WXShowTracingTask new];
+            showTask.counter = task.counter;
+            showTask.iid = task.iid;
+            showTask.tag = task.tag;
+            showTask.bundleUrl = task.bundleUrl;
+            showTask.bundleJSType = task.bundleJSType;
+            NSMutableArray *tracings = [NSMutableArray new];
+            for (WXTracing *tracing in task.tracings) {
+                if(![WXTracingEnd isEqualToString:tracing.ph]){
+                    [tracings addObject:tracing];
+                    if(showTask.begin <0.0001){
+                        showTask.begin = tracing.ts;
+                    }
+                    
+                    if(tracing.ts < showTask.begin){
+                        showTask.begin = tracing.ts;
+                    }
+                    if((tracing.ts +tracing.duration) > showTask.end){
+                        showTask.end = tracing.ts +tracing.duration ;
+                    }
+                }
             }
-            
-            if(tracing.ts < self.begin){
-                self.begin = tracing.ts;
-            }
-            if((tracing.ts +tracing.duration) > self.end){
-                self.end = tracing.ts +tracing.duration ;
-            }
-            
-//            NSLog(@"%@ %@  %@  %@  %f %f %@  %@",tracing.iid,tracing.fName,tracing.name,tracing.className,tracing.ts,tracing.duration,tracing.ref,tracing.parentRef);
+            showTask.tracings = [NSMutableArray new];
+            showTask.tracings = tracings;
+            [self.tasks addObject:showTask];
         }
     }
+    if(!self.tasks || [self.tasks count] == 0)
+    {
+        WXShowTracingTask *showTask = [WXShowTracingTask new];
+        showTask.tracings = [NSMutableArray new];
+        self.tasks = [NSMutableArray new];
+        [self.tasks addObject:showTask];
+    }
+    
+    
 }
 
 -(void)cofigureTableview
@@ -70,11 +96,12 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return [self.tasks count];
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.tasks count];
+    WXShowTracingTask *task = self.tasks[section];
+    return [task.tracings count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -86,8 +113,8 @@
     if(cell == nil) {
         cell = [[WXRenderTracingTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }
-    NSInteger row = [indexPath row];
-    [cell config:self.tasks[row] begin:self.begin end:self.end];
+    WXShowTracingTask *task = self.tasks[indexPath.section];
+    [cell config:[task.tracings objectAtIndex:indexPath.row] begin:task.begin end:task.end];
     return cell;
 }
 
@@ -109,7 +136,7 @@
 }
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    WXTracingTask *task = [WXTracingManager getTracingData];
+    WXTracingTask *task = [self.tasks objectAtIndex:section];
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 18)];
     /* Create custom view to display section header... */
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, tableView.frame.size.width, 18)];

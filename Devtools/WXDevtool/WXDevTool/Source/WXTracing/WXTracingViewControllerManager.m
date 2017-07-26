@@ -40,21 +40,24 @@
     return instance;
 }
 
-+ (void)load
-{
-    [self loadTracingView];
-}
+//+ (void)load
+//{
+//    [self loadTracingView];
+//}
 
 +(void)loadTracingView
 {
+    
     [WXTracingManager switchTracing:YES];
     if(![WXTracingManager isTracing]) {
         return;
     }
     if(![WXTracingViewControllerManager sharedInstance].isLoad){
-        [WXTracingViewControllerManager addWeexView];
         [WXTracingViewControllerManager sharedInstance].isLoad = YES;
-        [WXLog registerExternalLog:[WXTracingLogImpl new]];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [WXTracingViewControllerManager addWeexView];
+            [WXLog registerExternalLog:[WXTracingLogImpl new]];
+        });
     }
 }
 

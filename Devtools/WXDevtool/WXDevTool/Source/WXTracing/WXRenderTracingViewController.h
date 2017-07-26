@@ -7,6 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <WeexSDK/WXTracingManager.h>
+
+@interface WXShowTracingTask : WXTracingTask
+@property (nonatomic) NSTimeInterval begin;
+@property (nonatomic) NSTimeInterval end;
+@end
 
 @interface WXRenderTracingViewController : UIViewController
 
