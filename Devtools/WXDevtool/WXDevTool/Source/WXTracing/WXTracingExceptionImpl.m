@@ -14,7 +14,6 @@
 #import "WXTracingUtility.h"
 #import "WXTracingViewControllerManager.h"
 
-static const double WXTacingDefaultDuration = 3.0;
 static const CGFloat WXTacingDefaultFontSize = 16.0;
 static const CGFloat WXTacingDefaultWidth = 230.0;
 static const CGFloat WXTacingDefaultHeight = 30.0;
