@@ -14,4 +14,5 @@
 
 + (instancetype) sharedInstance;
 + (void)loadTracingView;
++ (BOOL)isLoadTracing;
 @end

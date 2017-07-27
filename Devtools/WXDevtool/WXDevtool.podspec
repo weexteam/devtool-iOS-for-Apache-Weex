@@ -21,7 +21,14 @@ Pod::Spec.new do |s|
                    }
   s.platform     = :ios
   s.ios.deployment_target = '7.0'
-  s.source =  { :http => 'https://gw.alicdn.com/bao/uploaded/LB1qSL0SpXXXXa5XVXXXXXXXXXX.zip?spm=a1z3i.a4.0.0.75ba3c68AVa1dk&file=LB1qSL0SpXXXXa5XVXXXXXXXXXX.zip' }
+  
+  # cocoapods
+  #s.source =  { :http => 'https://gw.alicdn.com/bao/uploaded/LB1qSL0SpXXXXa5XVXXXXXXXXXX.zip?spm=a1z3i.a4.0.0.75ba3c68AVa1dk&file=LB1qSL0SpXXXXa5XVXXXXXXXXXX.zip' }
+
+  # mtl
+  s.source =  { :path => '.' }
+  s.source_files = 'WXDevTool/Source/**/*.{h,m,mm,c}'
+  s.prefix_header_file = 'WXDevTool/Source/Supporting Files/TBWXDevTool.pch'
 
   s.requires_arc = true
   s.vendored_frameworks = 'TBWXDevTool.framework'

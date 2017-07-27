@@ -64,6 +64,11 @@
     }
 }
 
++(BOOL)isLoadTracing
+{
+    return [WXTracingViewControllerManager sharedInstance].isLoadTracing;
+}
+
 +(void)addWeexView
 {
     double delayInSeconds = 2.0;
