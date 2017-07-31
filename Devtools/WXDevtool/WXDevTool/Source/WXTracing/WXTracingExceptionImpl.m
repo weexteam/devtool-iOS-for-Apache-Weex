@@ -43,7 +43,6 @@ static const CGFloat WXTacingDefaultPadding = 30.0;
 @end
 
 @implementation WXTracingToastManager
-
 + (WXTracingToastManager *)sharedManager{
     static WXTracingToastManager * shareInstance;
     static dispatch_once_t onceToken;

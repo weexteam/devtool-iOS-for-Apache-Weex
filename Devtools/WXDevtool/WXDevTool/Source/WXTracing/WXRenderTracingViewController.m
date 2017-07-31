@@ -41,6 +41,13 @@
     CGRect rect = [UIScreen mainScreen].bounds;
     self.view.frame =  CGRectMake(0, 0, rect.size.width, rect.size.height);
     [self cofigureTableview];
+    
+    
+    
+}
+
+-(void)refreshData
+{
     self.tasks = [NSMutableArray new];
     NSMutableDictionary *taskData = [[WXTracingManager getTracingData] mutableCopy];
     NSArray *instanceIds = [[WXSDKManager bridgeMgr] getInstanceIdStack];
@@ -82,8 +89,7 @@
         self.tasks = [NSMutableArray new];
         [self.tasks addObject:showTask];
     }
-    
-    
+    [self.table reloadData];
 }
 
 -(void)cofigureTableview

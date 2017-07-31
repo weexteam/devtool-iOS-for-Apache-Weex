@@ -83,6 +83,12 @@
     [self updateTransactions];
 }
 
+-(void)refreshData
+{
+    [self updateTransactions];
+    [self.tableView reloadData];
+}
+
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];

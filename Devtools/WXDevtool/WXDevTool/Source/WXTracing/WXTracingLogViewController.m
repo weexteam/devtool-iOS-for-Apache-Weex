@@ -19,6 +19,7 @@
 @property (strong,nonatomic) UITableView *table;
 @property (nonatomic ,strong)NSMutableArray *searchArr;
 @property (nonatomic ,strong)UISearchController *searchVC;
+@property (nonatomic ,strong)NSMutableArray *logArr;
 
 @end
 
@@ -50,12 +51,54 @@
 -(void)cofigureTableview
 {
     self.table = [[UITableView alloc] initWithFrame:CGRectMake(self.view.bounds.origin.x, 0, self.view.bounds.size.width, self.view.bounds.size.height-64) style:UITableViewStylePlain];
+    self.logArr= [NSMutableArray new];
+    self.logArr = [[WXTracingViewControllerManager sharedInstance].messages mutableCopy];
     self.table.delegate = self;
     self.table.dataSource = self;
     [self.view addSubview:self.table];
     [self.table  setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];
 //    [self.table setContentOffset:CGPointMake(0, self.table.contentSize.height -self.table.bounds.size.height) animated:YES];
     
+}
+
+-(void)refreshData
+{
+    if (!self.searchVC.active)
+    {
+        if([self.logArr count] < [[WXTracingViewControllerManager sharedInstance].messages count]){
+            NSInteger i = [self.logArr count];
+            NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
+            for (; i< [[WXTracingViewControllerManager sharedInstance].messages count] ; i++) {
+                [self.logArr addObject:[WXTracingViewControllerManager sharedInstance].messages[i]];
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
+                [indexPaths addObject: indexPath];
+            }
+            [self.table beginUpdates];
+            [self.table insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
+            [self.table endUpdates];
+            [self.table scrollToRowAtIndexPath:
+             [NSIndexPath indexPathForRow:[self.logArr count]-1 inSection:0]
+                                      atScrollPosition: UITableViewScrollPositionBottom
+                                              animated:YES];
+        }
+        
+    }
+}
+
+
+-(void)addMessage
+{
+    if (!self.searchVC.active)
+    {
+        NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
+        NSInteger row = [[WXTracingViewControllerManager sharedInstance].messages count]-1;
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+        [indexPaths addObject: indexPath];
+        //必须向tableView的数据源数组中相应的添加一条数据
+        [self.table beginUpdates];
+        [self.table insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
+        [self.table endUpdates];
+    }
 }
 
 -(void)updateLogData
@@ -72,7 +115,7 @@
         return self.searchArr.count;//搜索结果
     }else
     {
-        return [[WXTracingViewControllerManager sharedInstance].messages count];//原始数据
+        return [self.logArr count];//原始数据
     }
 }
 
@@ -88,7 +131,7 @@
     NSInteger row = [indexPath row];
     
     if (!self.searchVC.active) {
-        [cell config: [WXTracingViewControllerManager sharedInstance].messages[row] searchStr:@""];
+        [cell config: self.logArr[row] searchStr:@""];
     }else
     {
         [cell config:self.searchArr[row] searchStr:[self.searchVC.searchBar text]];
@@ -120,7 +163,7 @@
         [self.searchArr removeAllObjects];
     }
     //过滤数据
-    self.searchArr= [NSMutableArray arrayWithArray:[[WXTracingViewControllerManager sharedInstance].messages filteredArrayUsingPredicate:preicate]];
+    self.searchArr= [NSMutableArray arrayWithArray:[self.logArr filteredArrayUsingPredicate:preicate]];
     //刷新表格
     [self.table reloadData];
 }

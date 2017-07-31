@@ -12,5 +12,5 @@ extern NSString *const kWXNetworkRecorderSearchbarDisableNotification;
 
 
 @interface WXNetworkHistoryTableViewController : UITableViewController
-
+-(void)refreshData;
 @end

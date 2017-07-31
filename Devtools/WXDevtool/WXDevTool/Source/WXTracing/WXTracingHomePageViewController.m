@@ -27,6 +27,13 @@
 @property (nonatomic) NSInteger slideIndex;
 @property (nonatomic, strong) WXViewPagerController *productVC;
 
+@property (nonatomic,strong)WXNetworkHistoryTableViewController *netVC;
+@property (nonatomic,strong)WXTracingLogViewController *logVC;
+@property (nonatomic,strong)WXApiTracingViewController *apiVC;
+@property (nonatomic,strong)WXEnviromentViewController *envVC;
+@property (nonatomic,strong)WXNetworkSettingsTableViewController *netSettingVC;
+@property (nonatomic,strong)WXRenderTracingViewController *renderVC;
+
 @end
 
 @implementation WXTracingHomePageViewController
@@ -55,34 +62,56 @@
 //    [self performSelector:@selector(updateToIndex) withObject:nil afterDelay:1.0];
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    if(self.renderVC){
+        [self.renderVC refreshData];
+    }
+    if(self.netVC){
+        [self.netVC refreshData];
+    }
+    
+    
+    
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    if(self.logVC){
+        [self.logVC refreshData];
+    }
+}
+
 - (void)loadProductListView
 {
     self.tableViewArr = [NSMutableArray array];
-    for (int index = 0; index < [self.titleArr count]; index++) {
-        CGRect rect = [UIScreen mainScreen].bounds;
-        UIViewController *subVC;
-        if(index == 1){
-            subVC = [[WXNetworkHistoryTableViewController alloc] init];
-            
-        }else if(index == 2){
-            subVC = [[WXTracingLogViewController alloc] init];
-            
-        }else if(index == 3){
-            subVC = [[WXApiTracingViewController alloc] initWithFrame:CGRectMake(0, 0, rect.size.width, rect.size.height)];
-            
-        }else if(index == 4){
-            subVC = [[WXEnviromentViewController alloc] initWithFrame:CGRectMake(0, 0, rect.size.width, rect.size.height)];
-            
-        }else if(index == 5){
-            subVC = [[WXNetworkSettingsTableViewController alloc] init];
-            
-        }else {
-            subVC = [[WXRenderTracingViewController alloc] initWithFrame:CGRectMake(0, 0, rect.size.width, rect.size.height)];
-        }
-        /// 如果在addChildViewController前面设置subVC.view.frame，会提前走viewDidLoad，可能会影响传值，所以放在最后面
-        subVC.view.frame = CGRectMake(self.view.bounds.size.width * index, 0, self.view.bounds.size.width, self.view.bounds.size.height);
-        
-        [self.tableViewArr addObject:subVC];
+    
+    if(!self.renderVC){
+        self.renderVC = [[WXRenderTracingViewController alloc] init];
+        [self.tableViewArr addObject:self.renderVC];
+    }
+    
+    if(!self.netVC){
+        self.netVC = [[WXNetworkHistoryTableViewController alloc] init];
+        [self.tableViewArr addObject:self.netVC];
+    }
+    if(!self.logVC){
+        self.logVC = [[WXTracingLogViewController alloc] init];
+        [self.tableViewArr addObject:self.logVC];
+    }
+    if(!self.apiVC){
+        self.apiVC = [[WXApiTracingViewController alloc] init];
+        [self.tableViewArr addObject:self.apiVC];
+    }
+    if(!self.envVC){
+        self.envVC = [[WXEnviromentViewController alloc] init];
+        [self.tableViewArr addObject:self.envVC];
+    }
+    if(!self.netSettingVC){
+        self.netSettingVC = [[WXNetworkSettingsTableViewController alloc] init];
+        [self.tableViewArr addObject:self.netSettingVC];
     }
 }
 

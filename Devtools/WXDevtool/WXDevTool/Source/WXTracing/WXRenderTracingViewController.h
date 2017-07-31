@@ -17,4 +17,5 @@
 @interface WXRenderTracingViewController : UIViewController
 
 - (instancetype)initWithFrame:(CGRect )frame;
+-(void)refreshData;
 @end

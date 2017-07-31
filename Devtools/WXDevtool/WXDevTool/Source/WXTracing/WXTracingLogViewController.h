@@ -10,4 +10,6 @@
 
 @interface WXTracingLogViewController : UIViewController
 
+-(void)refreshData;
+
 @end
