@@ -9,6 +9,7 @@
 #import "WXTracingLogImpl.h"
 #import "WXTracingViewControllerManager.h"
 #import "WXTracingUtility.h"
+#import <WeexSDK/WXUtility.h>
 
 @implementation WXTracingLogImpl
 - (WXLogLevel)logLevel
@@ -23,7 +24,7 @@
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         NSMutableArray *messages = [WXTracingViewControllerManager sharedInstance].messages;
-        NSString *strMsg = [NSString stringWithFormat:@"%zd: %@  %@",[[WXTracingViewControllerManager sharedInstance].messages count],[WXTracingUtility tracingTime] ,message];
+        NSString *strMsg = [NSString stringWithFormat:@"%zd: %@ %@ %@",[[WXTracingViewControllerManager sharedInstance].messages count],[WXTracingUtility tracingTime] ,[[WXUtility getEnvironment] objectForKey:@"appName"],message];
         [messages addObject:strMsg];
     });
 }

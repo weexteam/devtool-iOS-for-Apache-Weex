@@ -63,8 +63,8 @@ static const CGFloat WXTacingDefaultPadding = 30.0;
         NSString *instanceId =  [[[WXSDKManager bridgeMgr] getInstanceIdStack] firstObject];
         NSMutableDictionary *taskData = [WXTracingManager getTracingData];
         WXTracingTask *task = [taskData objectForKey:instanceId];
-        NSString *strTmp = [NSString stringWithFormat:@"<Weex>[exception]bundleJSType:%@\r\n%@\r\n",task.bundleJSType,exception.description];
-        NSString *strMsg = [NSString stringWithFormat:@"%zd: %@  %@",[[WXTracingViewControllerManager sharedInstance].messages count],[WXTracingUtility tracingTime] ,strTmp];
+        NSString *strTmp = [NSString stringWithFormat:@"<Weex>[exception]bundleJSType:%@\r\n%@ appVersion:%@ osVersion:%@ platform:%@ deviceModel:%@\r\n",task.bundleJSType,exception.description,[[WXUtility getEnvironment] objectForKey:@"appVersion"],[[WXUtility getEnvironment] objectForKey:@"osVersion"],[[WXUtility getEnvironment] objectForKey:@"platform"],[[WXUtility getEnvironment] objectForKey:@"deviceModel"]];
+        NSString *strMsg = [NSString stringWithFormat:@"%zd: %@ %@ %@",[[WXTracingViewControllerManager sharedInstance].messages count],[WXTracingUtility tracingTime] ,[[WXUtility getEnvironment] objectForKey:@"appName"],strTmp];
         if(strTmp.length>0){
             NSMutableArray *messages = [WXTracingViewControllerManager sharedInstance].messages;
             [messages addObject:strMsg];
@@ -81,7 +81,7 @@ static const CGFloat WXTacingDefaultPadding = 30.0;
         return;
     }
     
-    NSString *msg = [NSString stringWithFormat:@"%@\r\n if you want to know more, please open weex MNT",message];
+    NSString *msg = [NSString stringWithFormat:@"%@\r\nIf you want to know more, please open weex MNT",message];
     UIAlertController * alert = [UIAlertController
                                  alertControllerWithTitle:@"JS Exception"
                                  message:msg
