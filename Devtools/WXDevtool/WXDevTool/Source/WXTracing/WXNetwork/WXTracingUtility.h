@@ -49,6 +49,7 @@
 + (NSData *)inflatedDataFromCompressedData:(NSData *)compressedData;
 
 + (NSArray *)allWindows;
++(NSString *)tracingTime;
 
 // Swizzling utilities
 

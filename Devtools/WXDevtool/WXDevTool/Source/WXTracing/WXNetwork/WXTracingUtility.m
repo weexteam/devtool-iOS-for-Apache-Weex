@@ -360,6 +360,18 @@
     return windows;
 }
 
+
++(NSString *)tracingTime
+{
+    NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
+    [outputFormatter setLocale:[NSLocale currentLocale]];
+    [outputFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
+    NSString *str = [outputFormatter stringFromDate:[NSDate date]];
+    return str;
+}
+
+
+
 + (SEL)swizzledSelectorForSelector:(SEL)selector
 {
     return NSSelectorFromString([NSString stringWithFormat:@"_flex_swizzle_%x_%@", arc4random(), NSStringFromSelector(selector)]);
@@ -424,5 +436,7 @@
         class_addMethod(cls, selector, implementation, methodDescription.types);
     }
 }
+
+
 
 @end

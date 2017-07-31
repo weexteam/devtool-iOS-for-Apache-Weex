@@ -23,7 +23,8 @@
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         NSMutableArray *messages = [WXTracingViewControllerManager sharedInstance].messages;
-        [messages addObject:message];
+        NSString *strMsg = [NSString stringWithFormat:@"%zd: %@  %@",[[WXTracingViewControllerManager sharedInstance].messages count],[WXTracingUtility tracingTime] ,message];
+        [messages addObject:strMsg];
     });
 }
 

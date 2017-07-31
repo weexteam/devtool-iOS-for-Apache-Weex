@@ -57,6 +57,8 @@
     self.table.dataSource = self;
     [self.view addSubview:self.table];
     [self.table  setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];
+    self.table.tableHeaderView = self.searchVC.searchBar;
+
 //    [self.table setContentOffset:CGPointMake(0, self.table.contentSize.height -self.table.bounds.size.height) animated:YES];
     
 }
@@ -68,7 +70,7 @@
         if([self.logArr count] < [[WXTracingViewControllerManager sharedInstance].messages count]){
             NSInteger i = [self.logArr count];
             NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
-            for (; i< [[WXTracingViewControllerManager sharedInstance].messages count] ; i++) {
+            for (; i < [[WXTracingViewControllerManager sharedInstance].messages count] ; i++) {
                 [self.logArr addObject:[WXTracingViewControllerManager sharedInstance].messages[i]];
                 NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
                 [indexPaths addObject: indexPath];
@@ -82,22 +84,6 @@
                                               animated:YES];
         }
         
-    }
-}
-
-
--(void)addMessage
-{
-    if (!self.searchVC.active)
-    {
-        NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
-        NSInteger row = [[WXTracingViewControllerManager sharedInstance].messages count]-1;
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
-        [indexPaths addObject: indexPath];
-        //必须向tableView的数据源数组中相应的添加一条数据
-        [self.table beginUpdates];
-        [self.table insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
-        [self.table endUpdates];
     }
 }
 
@@ -180,7 +166,6 @@
         
         _searchVC.searchBar.frame = CGRectMake(self.searchVC.searchBar.frame.origin.x, self.searchVC.searchBar.frame.origin.y, self.searchVC.searchBar.frame.size.width, 44.0);
         
-        self.table.tableHeaderView = self.searchVC.searchBar;
     }
     return _searchVC;
 }

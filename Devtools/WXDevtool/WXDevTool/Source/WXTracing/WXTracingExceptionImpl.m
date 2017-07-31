@@ -64,10 +64,11 @@ static const CGFloat WXTacingDefaultPadding = 30.0;
         NSMutableDictionary *taskData = [WXTracingManager getTracingData];
         WXTracingTask *task = [taskData objectForKey:instanceId];
         NSString *strTmp = [NSString stringWithFormat:@"<Weex>[exception]bundleJSType:%@\r\n%@\r\n",task.bundleJSType,exception.description];
+        NSString *strMsg = [NSString stringWithFormat:@"%zd: %@  %@",[[WXTracingViewControllerManager sharedInstance].messages count],[WXTracingUtility tracingTime] ,strTmp];
         if(strTmp.length>0){
             NSMutableArray *messages = [WXTracingViewControllerManager sharedInstance].messages;
-            [messages addObject:strTmp];
-            [self showAlert:strTmp];
+            [messages addObject:strMsg];
+            [self showAlert:strMsg];
         }
 
     });
