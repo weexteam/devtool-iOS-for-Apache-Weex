@@ -213,7 +213,7 @@
 {
     if(actionSheet.tag == 1001){
         [WXTracingViewControllerManager sharedInstance].messages = [NSMutableArray new];
-        [[NSNotificationCenter defaultCenter] postNotificationName:TracingUpdateLogDataNoti object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:TracingResetLogDataNoti object:nil];
 
     }
     if(actionSheet.tag == 1002){

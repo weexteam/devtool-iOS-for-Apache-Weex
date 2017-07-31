@@ -43,7 +43,7 @@
     self.view.backgroundColor = [UIColor whiteColor];
     CGRect rect = [UIScreen mainScreen].bounds;
     self.view.frame =  CGRectMake(0, 0, rect.size.width, rect.size.height);
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateLogData) name:TracingUpdateLogDataNoti object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resetLogData) name:TracingResetLogDataNoti object:nil];
     self.extendedLayoutIncludesOpaqueBars = YES;
     [self cofigureTableview];
 }
@@ -87,8 +87,9 @@
     }
 }
 
--(void)updateLogData
+-(void)resetLogData
 {
+    self.logArr = [NSMutableArray new];
     [self.table reloadData];
 }
 
