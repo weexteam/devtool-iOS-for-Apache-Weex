@@ -127,9 +127,8 @@ static const CGFloat WXTacingDefaultPadding = 30.0;
                                }];
     
     //Add your buttons to alert controller
-    
-    [alert addAction:copyButton];
     [alert addAction:screenButton];
+    [alert addAction:copyButton];
     [alert addAction:cancelButton];
     UIViewController *rootViewController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
 
