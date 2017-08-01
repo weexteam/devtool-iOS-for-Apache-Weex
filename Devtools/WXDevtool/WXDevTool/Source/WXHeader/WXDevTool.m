@@ -11,7 +11,7 @@
 #import "WXDevToolType.h"
 #import <WeexSDK/WeexSDK.h>
 
-#define WXDevtool_VERSION @"0.15.1"
+#define WXDevtool_VERSION @"0.15.3"
 
 @implementation WXDevTool
 
