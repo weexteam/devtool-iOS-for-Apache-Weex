@@ -2,7 +2,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "WXDevtool"
-  s.version      = "0.15.1"
+  s.version      = "0.15.3"
   s.summary      = "WXDevtool Source."
 
   s.description  = <<-DESC
@@ -23,7 +23,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '7.0'
   
   # cocoapods
-  #s.source =  { :http => 'https://gw.alicdn.com/bao/uploaded/LB1qSL0SpXXXXa5XVXXXXXXXXXX.zip?spm=a1z3i.a4.0.0.75ba3c68AVa1dk&file=LB1qSL0SpXXXXa5XVXXXXXXXXXX.zip' }
+  # s.source =  { :http => 'https://gw.alicdn.com/bao/uploaded/LB1cntPSFXXXXauXpXXXXXXXXXX.zip?spm=a1z3i.a4.0.0.75ba3c681StKKI&file=LB1cntPSFXXXXauXpXXXXXXXXXX.zip' }
 
   # mtl
   s.source =  { :path => '.' }
