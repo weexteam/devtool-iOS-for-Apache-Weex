@@ -2,7 +2,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "WXDevtool"
-  s.version      = "0.8.2"
+  s.version      = "0.15.3"
   s.summary      = "WXDevtool Source."
 
   s.description  = <<-DESC
@@ -17,16 +17,22 @@ Pod::Spec.new do |s|
     LICENSE
   }
   s.authors      = {
-                     "yangshengtao" =>"yangshengtao1314@163.com"
+                     "kfeagle" =>"songhaibohust@gmail.com"
                    }
   s.platform     = :ios
   s.ios.deployment_target = '7.0'
+  
+  # cocoapods
+  # s.source =  { :http => 'https://gw.alicdn.com/bao/uploaded/LB1cntPSFXXXXauXpXXXXXXXXXX.zip?spm=a1z3i.a4.0.0.75ba3c681StKKI&file=LB1cntPSFXXXXauXpXXXXXXXXXX.zip' }
+
+  # mtl
   s.source =  { :path => '.' }
   s.source_files = 'WXDevTool/Source/**/*.{h,m,mm,c}'
+  s.prefix_header_file = 'WXDevTool/Source/Supporting Files/TBWXDevTool.pch'
 
   s.requires_arc = true
-  s.prefix_header_file = 'WXDevTool/Source/Supporting Files/TBWXDevTool.pch'
-#s.vendored_frameworks = 'WXDevTool.framework'
-  s.frameworks = 'Foundation','CoreData'
+  s.vendored_frameworks = 'TBWXDevTool.framework'
+  s.frameworks = 'Foundation','CoreData','ImageIO','CoreData','CFNetwork','UIKit','CoreGraphics','Security'
+  s.libraries = 'z'
   s.dependency 'WeexSDK'
 end

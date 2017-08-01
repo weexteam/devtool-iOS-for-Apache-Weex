@@ -21,6 +21,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		06972834C4CF4ED5A8C807D9 /* libPods-TBWXDevTool.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B60011D3ECF195226E8AC404 /* libPods-TBWXDevTool.a */; };
 		0A0102E31D35E25300F0D592 /* WXProfilerDomainController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A01025C1D35E25300F0D592 /* WXProfilerDomainController.h */; };
 		0A0102E41D35E25300F0D592 /* WXProfilerDomainController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A01025D1D35E25300F0D592 /* WXProfilerDomainController.m */; };
 		0A0102E51D35E25300F0D592 /* WXTimelineDomainController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A01025E1D35E25300F0D592 /* WXTimelineDomainController.h */; };
@@ -174,7 +175,73 @@
 		0AFA10141D2CEC49006E30BB /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AFA10131D2CEC49006E30BB /* CoreData.framework */; };
 		0AFE81D61D8102B800C99208 /* WXPageDomainUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AFE81D41D8102B800C99208 /* WXPageDomainUtility.h */; };
 		0AFE81D71D8102B800C99208 /* WXPageDomainUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AFE81D51D8102B800C99208 /* WXPageDomainUtility.m */; };
-		75C1C0A17938023E1B39089E /* libPods-TBWXDevTool.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A04B5D4DF9E863CD1DE1B075 /* libPods-TBWXDevTool.a */; };
+		C42545E51F27461000B93B0D /* WXSegmentedControl.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545A21F27461000B93B0D /* WXSegmentedControl.h */; };
+		C42545E61F27461000B93B0D /* WXSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545A31F27461000B93B0D /* WXSegmentedControl.m */; };
+		C42545E71F27461000B93B0D /* WXTagListView.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545A41F27461000B93B0D /* WXTagListView.h */; };
+		C42545E81F27461000B93B0D /* WXTagListView.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545A51F27461000B93B0D /* WXTagListView.m */; };
+		C42545E91F27461000B93B0D /* WXViewPagerController.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545A61F27461000B93B0D /* WXViewPagerController.h */; };
+		C42545EA1F27461000B93B0D /* WXViewPagerController.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545A71F27461000B93B0D /* WXViewPagerController.m */; };
+		C42545EB1F27461000B93B0D /* UIButton+WXEnlargeArea.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545A81F27461000B93B0D /* UIButton+WXEnlargeArea.h */; };
+		C42545EC1F27461000B93B0D /* UIButton+WXEnlargeArea.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545A91F27461000B93B0D /* UIButton+WXEnlargeArea.m */; };
+		C42545ED1F27461000B93B0D /* WXAboutViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545AA1F27461000B93B0D /* WXAboutViewController.h */; };
+		C42545EE1F27461000B93B0D /* WXAboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545AB1F27461000B93B0D /* WXAboutViewController.m */; };
+		C42545EF1F27461000B93B0D /* WXApiTracingViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545AC1F27461000B93B0D /* WXApiTracingViewController.h */; };
+		C42545F01F27461000B93B0D /* WXApiTracingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545AD1F27461000B93B0D /* WXApiTracingViewController.m */; };
+		C42545F11F27461000B93B0D /* WXEnviromentViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545AE1F27461000B93B0D /* WXEnviromentViewController.h */; };
+		C42545F21F27461000B93B0D /* WXEnviromentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545AF1F27461000B93B0D /* WXEnviromentViewController.m */; };
+		C42545F31F27461000B93B0D /* WXLogViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545B01F27461000B93B0D /* WXLogViewController.h */; };
+		C42545F41F27461000B93B0D /* WXLogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545B11F27461000B93B0D /* WXLogViewController.m */; };
+		C42545F51F27461000B93B0D /* WXImagePreviewViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545B31F27461000B93B0D /* WXImagePreviewViewController.h */; };
+		C42545F61F27461000B93B0D /* WXImagePreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545B41F27461000B93B0D /* WXImagePreviewViewController.m */; };
+		C42545F71F27461000B93B0D /* WXLogSettingViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545B51F27461000B93B0D /* WXLogSettingViewController.h */; };
+		C42545F81F27461000B93B0D /* WXLogSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545B61F27461000B93B0D /* WXLogSettingViewController.m */; };
+		C42545F91F27461000B93B0D /* WXMultilineTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545B71F27461000B93B0D /* WXMultilineTableViewCell.h */; };
+		C42545FA1F27461000B93B0D /* WXMultilineTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545B81F27461000B93B0D /* WXMultilineTableViewCell.m */; };
+		C42545FB1F27461000B93B0D /* WXNetworkHistoryTableViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545B91F27461000B93B0D /* WXNetworkHistoryTableViewController.h */; };
+		C42545FC1F27461000B93B0D /* WXNetworkHistoryTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545BA1F27461000B93B0D /* WXNetworkHistoryTableViewController.m */; };
+		C42545FD1F27461000B93B0D /* WXNetworkRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545BB1F27461000B93B0D /* WXNetworkRecorder.h */; };
+		C42545FE1F27461000B93B0D /* WXNetworkRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545BC1F27461000B93B0D /* WXNetworkRecorder.m */; };
+		C42545FF1F27461000B93B0D /* WXNetworkSettingsTableViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545BD1F27461000B93B0D /* WXNetworkSettingsTableViewController.h */; };
+		C42546001F27461000B93B0D /* WXNetworkSettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545BE1F27461000B93B0D /* WXNetworkSettingsTableViewController.m */; };
+		C42546011F27461000B93B0D /* WXNetworkTransaction.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545BF1F27461000B93B0D /* WXNetworkTransaction.h */; };
+		C42546021F27461000B93B0D /* WXNetworkTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545C01F27461000B93B0D /* WXNetworkTransaction.m */; };
+		C42546031F27461000B93B0D /* WXNetworkTransactionDetailTableViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545C11F27461000B93B0D /* WXNetworkTransactionDetailTableViewController.h */; };
+		C42546041F27461000B93B0D /* WXNetworkTransactionDetailTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545C21F27461000B93B0D /* WXNetworkTransactionDetailTableViewController.m */; };
+		C42546051F27461000B93B0D /* WXNetworkTransactionTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545C31F27461000B93B0D /* WXNetworkTransactionTableViewCell.h */; };
+		C42546061F27461000B93B0D /* WXNetworkTransactionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545C41F27461000B93B0D /* WXNetworkTransactionTableViewCell.m */; };
+		C42546071F27461000B93B0D /* WXResources.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545C51F27461000B93B0D /* WXResources.h */; };
+		C42546081F27461000B93B0D /* WXResources.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545C61F27461000B93B0D /* WXResources.m */; };
+		C42546091F27461000B93B0D /* WXTracingUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545C71F27461000B93B0D /* WXTracingUtility.h */; };
+		C425460A1F27461000B93B0D /* WXTracingUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545C81F27461000B93B0D /* WXTracingUtility.m */; };
+		C425460B1F27461000B93B0D /* WXWebViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545C91F27461000B93B0D /* WXWebViewController.h */; };
+		C425460C1F27461000B93B0D /* WXWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545CA1F27461000B93B0D /* WXWebViewController.m */; };
+		C425460D1F27461000B93B0D /* WXRenderTracingTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545CB1F27461000B93B0D /* WXRenderTracingTableViewCell.h */; };
+		C425460E1F27461000B93B0D /* WXRenderTracingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545CC1F27461000B93B0D /* WXRenderTracingTableViewCell.m */; };
+		C425460F1F27461000B93B0D /* WXRenderTracingViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545CD1F27461000B93B0D /* WXRenderTracingViewController.h */; };
+		C42546101F27461000B93B0D /* WXRenderTracingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545CE1F27461000B93B0D /* WXRenderTracingViewController.m */; };
+		C42546111F27461000B93B0D /* WXTracingApiTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545CF1F27461000B93B0D /* WXTracingApiTableViewCell.h */; };
+		C42546121F27461000B93B0D /* WXTracingApiTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545D01F27461000B93B0D /* WXTracingApiTableViewCell.m */; };
+		C42546131F27461000B93B0D /* WXTracingExceptionImpl.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545D11F27461000B93B0D /* WXTracingExceptionImpl.h */; };
+		C42546141F27461000B93B0D /* WXTracingExceptionImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545D21F27461000B93B0D /* WXTracingExceptionImpl.m */; };
+		C42546151F27461000B93B0D /* WXTracingHomePageViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545D31F27461000B93B0D /* WXTracingHomePageViewController.h */; };
+		C42546161F27461000B93B0D /* WXTracingHomePageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545D41F27461000B93B0D /* WXTracingHomePageViewController.m */; };
+		C42546171F27461000B93B0D /* WXTracingLogImpl.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545D51F27461000B93B0D /* WXTracingLogImpl.h */; };
+		C42546181F27461000B93B0D /* WXTracingLogImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545D61F27461000B93B0D /* WXTracingLogImpl.m */; };
+		C42546191F27461000B93B0D /* WXTracingLogTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545D71F27461000B93B0D /* WXTracingLogTableViewCell.h */; };
+		C425461A1F27461000B93B0D /* WXTracingLogTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545D81F27461000B93B0D /* WXTracingLogTableViewCell.m */; };
+		C425461B1F27461000B93B0D /* WXTracingLogViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545D91F27461000B93B0D /* WXTracingLogViewController.h */; };
+		C425461C1F27461000B93B0D /* WXTracingLogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545DA1F27461000B93B0D /* WXTracingLogViewController.m */; };
+		C425461D1F27461000B93B0D /* WXTracingMethodTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545DB1F27461000B93B0D /* WXTracingMethodTableViewCell.h */; };
+		C425461E1F27461000B93B0D /* WXTracingMethodTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545DC1F27461000B93B0D /* WXTracingMethodTableViewCell.m */; };
+		C425461F1F27461000B93B0D /* WXTracingMethodViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545DD1F27461000B93B0D /* WXTracingMethodViewController.h */; };
+		C42546201F27461000B93B0D /* WXTracingMethodViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545DE1F27461000B93B0D /* WXTracingMethodViewController.m */; };
+		C42546211F27461000B93B0D /* WXTracingSettingViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545DF1F27461000B93B0D /* WXTracingSettingViewController.h */; };
+		C42546221F27461000B93B0D /* WXTracingSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545E01F27461000B93B0D /* WXTracingSettingViewController.m */; };
+		C42546231F27461000B93B0D /* WXTracingViewControllerManager.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545E11F27461000B93B0D /* WXTracingViewControllerManager.h */; };
+		C42546241F27461000B93B0D /* WXTracingViewControllerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545E21F27461000B93B0D /* WXTracingViewControllerManager.m */; };
+		C42546251F27461000B93B0D /* WXWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545E31F27461000B93B0D /* WXWindow.h */; };
+		C42546261F27461000B93B0D /* WXWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545E41F27461000B93B0D /* WXWindow.m */; };
+		C49207731F28927D002EF9D7 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C49207721F28927D002EF9D7 /* ImageIO.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -348,9 +415,76 @@
 		0AFA10151D2CEC58006E30BB /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
 		0AFE81D41D8102B800C99208 /* WXPageDomainUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXPageDomainUtility.h; sourceTree = "<group>"; };
 		0AFE81D51D8102B800C99208 /* WXPageDomainUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXPageDomainUtility.m; sourceTree = "<group>"; };
-		421E7FD57E17C231508BA514 /* Pods-TBWXDevTool.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBWXDevTool.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TBWXDevTool/Pods-TBWXDevTool.debug.xcconfig"; sourceTree = "<group>"; };
-		A04B5D4DF9E863CD1DE1B075 /* libPods-TBWXDevTool.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TBWXDevTool.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B7CA78A41D406A09A4D0B154 /* Pods-TBWXDevTool.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBWXDevTool.release.xcconfig"; path = "Pods/Target Support Files/Pods-TBWXDevTool/Pods-TBWXDevTool.release.xcconfig"; sourceTree = "<group>"; };
+		489AA4AF96AEBD4B7A7D8A91 /* Pods-TBWXDevTool.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBWXDevTool.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TBWXDevTool/Pods-TBWXDevTool.debug.xcconfig"; sourceTree = "<group>"; };
+		9CF2E2BFC9331B7CB90EA000 /* Pods-TBWXDevTool.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBWXDevTool.release.xcconfig"; path = "Pods/Target Support Files/Pods-TBWXDevTool/Pods-TBWXDevTool.release.xcconfig"; sourceTree = "<group>"; };
+		B60011D3ECF195226E8AC404 /* libPods-TBWXDevTool.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TBWXDevTool.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C42545A21F27461000B93B0D /* WXSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXSegmentedControl.h; sourceTree = "<group>"; };
+		C42545A31F27461000B93B0D /* WXSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXSegmentedControl.m; sourceTree = "<group>"; };
+		C42545A41F27461000B93B0D /* WXTagListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXTagListView.h; sourceTree = "<group>"; };
+		C42545A51F27461000B93B0D /* WXTagListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXTagListView.m; sourceTree = "<group>"; };
+		C42545A61F27461000B93B0D /* WXViewPagerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXViewPagerController.h; sourceTree = "<group>"; };
+		C42545A71F27461000B93B0D /* WXViewPagerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXViewPagerController.m; sourceTree = "<group>"; };
+		C42545A81F27461000B93B0D /* UIButton+WXEnlargeArea.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+WXEnlargeArea.h"; sourceTree = "<group>"; };
+		C42545A91F27461000B93B0D /* UIButton+WXEnlargeArea.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+WXEnlargeArea.m"; sourceTree = "<group>"; };
+		C42545AA1F27461000B93B0D /* WXAboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXAboutViewController.h; sourceTree = "<group>"; };
+		C42545AB1F27461000B93B0D /* WXAboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXAboutViewController.m; sourceTree = "<group>"; };
+		C42545AC1F27461000B93B0D /* WXApiTracingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApiTracingViewController.h; sourceTree = "<group>"; };
+		C42545AD1F27461000B93B0D /* WXApiTracingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXApiTracingViewController.m; sourceTree = "<group>"; };
+		C42545AE1F27461000B93B0D /* WXEnviromentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXEnviromentViewController.h; sourceTree = "<group>"; };
+		C42545AF1F27461000B93B0D /* WXEnviromentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXEnviromentViewController.m; sourceTree = "<group>"; };
+		C42545B01F27461000B93B0D /* WXLogViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXLogViewController.h; sourceTree = "<group>"; };
+		C42545B11F27461000B93B0D /* WXLogViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXLogViewController.m; sourceTree = "<group>"; };
+		C42545B31F27461000B93B0D /* WXImagePreviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXImagePreviewViewController.h; sourceTree = "<group>"; };
+		C42545B41F27461000B93B0D /* WXImagePreviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXImagePreviewViewController.m; sourceTree = "<group>"; };
+		C42545B51F27461000B93B0D /* WXLogSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXLogSettingViewController.h; sourceTree = "<group>"; };
+		C42545B61F27461000B93B0D /* WXLogSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXLogSettingViewController.m; sourceTree = "<group>"; };
+		C42545B71F27461000B93B0D /* WXMultilineTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXMultilineTableViewCell.h; sourceTree = "<group>"; };
+		C42545B81F27461000B93B0D /* WXMultilineTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXMultilineTableViewCell.m; sourceTree = "<group>"; };
+		C42545B91F27461000B93B0D /* WXNetworkHistoryTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXNetworkHistoryTableViewController.h; sourceTree = "<group>"; };
+		C42545BA1F27461000B93B0D /* WXNetworkHistoryTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXNetworkHistoryTableViewController.m; sourceTree = "<group>"; };
+		C42545BB1F27461000B93B0D /* WXNetworkRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXNetworkRecorder.h; sourceTree = "<group>"; };
+		C42545BC1F27461000B93B0D /* WXNetworkRecorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXNetworkRecorder.m; sourceTree = "<group>"; };
+		C42545BD1F27461000B93B0D /* WXNetworkSettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXNetworkSettingsTableViewController.h; sourceTree = "<group>"; };
+		C42545BE1F27461000B93B0D /* WXNetworkSettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXNetworkSettingsTableViewController.m; sourceTree = "<group>"; };
+		C42545BF1F27461000B93B0D /* WXNetworkTransaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXNetworkTransaction.h; sourceTree = "<group>"; };
+		C42545C01F27461000B93B0D /* WXNetworkTransaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXNetworkTransaction.m; sourceTree = "<group>"; };
+		C42545C11F27461000B93B0D /* WXNetworkTransactionDetailTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXNetworkTransactionDetailTableViewController.h; sourceTree = "<group>"; };
+		C42545C21F27461000B93B0D /* WXNetworkTransactionDetailTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXNetworkTransactionDetailTableViewController.m; sourceTree = "<group>"; };
+		C42545C31F27461000B93B0D /* WXNetworkTransactionTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXNetworkTransactionTableViewCell.h; sourceTree = "<group>"; };
+		C42545C41F27461000B93B0D /* WXNetworkTransactionTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXNetworkTransactionTableViewCell.m; sourceTree = "<group>"; };
+		C42545C51F27461000B93B0D /* WXResources.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXResources.h; sourceTree = "<group>"; };
+		C42545C61F27461000B93B0D /* WXResources.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXResources.m; sourceTree = "<group>"; };
+		C42545C71F27461000B93B0D /* WXTracingUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXTracingUtility.h; sourceTree = "<group>"; };
+		C42545C81F27461000B93B0D /* WXTracingUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXTracingUtility.m; sourceTree = "<group>"; };
+		C42545C91F27461000B93B0D /* WXWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXWebViewController.h; sourceTree = "<group>"; };
+		C42545CA1F27461000B93B0D /* WXWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXWebViewController.m; sourceTree = "<group>"; };
+		C42545CB1F27461000B93B0D /* WXRenderTracingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXRenderTracingTableViewCell.h; sourceTree = "<group>"; };
+		C42545CC1F27461000B93B0D /* WXRenderTracingTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXRenderTracingTableViewCell.m; sourceTree = "<group>"; };
+		C42545CD1F27461000B93B0D /* WXRenderTracingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXRenderTracingViewController.h; sourceTree = "<group>"; };
+		C42545CE1F27461000B93B0D /* WXRenderTracingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXRenderTracingViewController.m; sourceTree = "<group>"; };
+		C42545CF1F27461000B93B0D /* WXTracingApiTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXTracingApiTableViewCell.h; sourceTree = "<group>"; };
+		C42545D01F27461000B93B0D /* WXTracingApiTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXTracingApiTableViewCell.m; sourceTree = "<group>"; };
+		C42545D11F27461000B93B0D /* WXTracingExceptionImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXTracingExceptionImpl.h; sourceTree = "<group>"; };
+		C42545D21F27461000B93B0D /* WXTracingExceptionImpl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXTracingExceptionImpl.m; sourceTree = "<group>"; };
+		C42545D31F27461000B93B0D /* WXTracingHomePageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXTracingHomePageViewController.h; sourceTree = "<group>"; };
+		C42545D41F27461000B93B0D /* WXTracingHomePageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXTracingHomePageViewController.m; sourceTree = "<group>"; };
+		C42545D51F27461000B93B0D /* WXTracingLogImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXTracingLogImpl.h; sourceTree = "<group>"; };
+		C42545D61F27461000B93B0D /* WXTracingLogImpl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXTracingLogImpl.m; sourceTree = "<group>"; };
+		C42545D71F27461000B93B0D /* WXTracingLogTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXTracingLogTableViewCell.h; sourceTree = "<group>"; };
+		C42545D81F27461000B93B0D /* WXTracingLogTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXTracingLogTableViewCell.m; sourceTree = "<group>"; };
+		C42545D91F27461000B93B0D /* WXTracingLogViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXTracingLogViewController.h; sourceTree = "<group>"; };
+		C42545DA1F27461000B93B0D /* WXTracingLogViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXTracingLogViewController.m; sourceTree = "<group>"; };
+		C42545DB1F27461000B93B0D /* WXTracingMethodTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXTracingMethodTableViewCell.h; sourceTree = "<group>"; };
+		C42545DC1F27461000B93B0D /* WXTracingMethodTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXTracingMethodTableViewCell.m; sourceTree = "<group>"; };
+		C42545DD1F27461000B93B0D /* WXTracingMethodViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXTracingMethodViewController.h; sourceTree = "<group>"; };
+		C42545DE1F27461000B93B0D /* WXTracingMethodViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXTracingMethodViewController.m; sourceTree = "<group>"; };
+		C42545DF1F27461000B93B0D /* WXTracingSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXTracingSettingViewController.h; sourceTree = "<group>"; };
+		C42545E01F27461000B93B0D /* WXTracingSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXTracingSettingViewController.m; sourceTree = "<group>"; };
+		C42545E11F27461000B93B0D /* WXTracingViewControllerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXTracingViewControllerManager.h; sourceTree = "<group>"; };
+		C42545E21F27461000B93B0D /* WXTracingViewControllerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXTracingViewControllerManager.m; sourceTree = "<group>"; };
+		C42545E31F27461000B93B0D /* WXWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXWindow.h; sourceTree = "<group>"; };
+		C42545E41F27461000B93B0D /* WXWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXWindow.m; sourceTree = "<group>"; };
+		C49207721F28927D002EF9D7 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -365,13 +499,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C49207731F28927D002EF9D7 /* ImageIO.framework in Frameworks */,
 				0AFA10141D2CEC49006E30BB /* CoreData.framework in Frameworks */,
 				0AFA10121D2CEC42006E30BB /* CoreGraphics.framework in Frameworks */,
 				0AFA10101D2CEC3B006E30BB /* UIKit.framework in Frameworks */,
 				0AFA100E1D2CEC34006E30BB /* Foundation.framework in Frameworks */,
 				0AFA100C1D2CEC2A006E30BB /* CFNetwork.framework in Frameworks */,
 				0AFA0FE61D2CEB39006E30BB /* Security.framework in Frameworks */,
-				75C1C0A17938023E1B39089E /* libPods-TBWXDevTool.a in Frameworks */,
+				06972834C4CF4ED5A8C807D9 /* libPods-TBWXDevTool.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -570,7 +705,7 @@
 				0ABB39EF1D3F37700091332E /* TBWXDevTool_MTL */,
 				0AFA10171D2CEC61006E30BB /* Frameworks */,
 				0AFA0ECC1D2CE79E006E30BB /* Products */,
-				5BBAAFD202BB8905B015DA7C /* Pods */,
+				7AED1ACEA69643F607B0C3D3 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -597,6 +732,7 @@
 		0AFA0ED61D2CEA94006E30BB /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				C42545A01F27461000B93B0D /* WXTracing */,
 				0A0102151D35E25300F0D592 /* DerivedSources */,
 				0A0102601D35E25300F0D592 /* PonyDebugger */,
 				0A01029A1D35E25300F0D592 /* WXHeader */,
@@ -607,6 +743,7 @@
 		0AFA10171D2CEC61006E30BB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C49207721F28927D002EF9D7 /* ImageIO.framework */,
 				0AFA10151D2CEC58006E30BB /* libicucore.tbd */,
 				0AFA10131D2CEC49006E30BB /* CoreData.framework */,
 				0AFA10111D2CEC42006E30BB /* CoreGraphics.framework */,
@@ -614,19 +751,109 @@
 				0AFA100D1D2CEC34006E30BB /* Foundation.framework */,
 				0AFA100B1D2CEC2A006E30BB /* CFNetwork.framework */,
 				0AFA0FE51D2CEB39006E30BB /* Security.framework */,
-				A04B5D4DF9E863CD1DE1B075 /* libPods-TBWXDevTool.a */,
+				B60011D3ECF195226E8AC404 /* libPods-TBWXDevTool.a */,
 			);
 			name = Frameworks;
 			path = WXDevTool;
 			sourceTree = "<group>";
 		};
-		5BBAAFD202BB8905B015DA7C /* Pods */ = {
+		7AED1ACEA69643F607B0C3D3 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				421E7FD57E17C231508BA514 /* Pods-TBWXDevTool.debug.xcconfig */,
-				B7CA78A41D406A09A4D0B154 /* Pods-TBWXDevTool.release.xcconfig */,
+				489AA4AF96AEBD4B7A7D8A91 /* Pods-TBWXDevTool.debug.xcconfig */,
+				9CF2E2BFC9331B7CB90EA000 /* Pods-TBWXDevTool.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		C42545A01F27461000B93B0D /* WXTracing */ = {
+			isa = PBXGroup;
+			children = (
+				C42545A11F27461000B93B0D /* PMTagListView */,
+				C42545A81F27461000B93B0D /* UIButton+WXEnlargeArea.h */,
+				C42545A91F27461000B93B0D /* UIButton+WXEnlargeArea.m */,
+				C42545AA1F27461000B93B0D /* WXAboutViewController.h */,
+				C42545AB1F27461000B93B0D /* WXAboutViewController.m */,
+				C42545AC1F27461000B93B0D /* WXApiTracingViewController.h */,
+				C42545AD1F27461000B93B0D /* WXApiTracingViewController.m */,
+				C42545AE1F27461000B93B0D /* WXEnviromentViewController.h */,
+				C42545AF1F27461000B93B0D /* WXEnviromentViewController.m */,
+				C42545B01F27461000B93B0D /* WXLogViewController.h */,
+				C42545B11F27461000B93B0D /* WXLogViewController.m */,
+				C42545B21F27461000B93B0D /* WXNetwork */,
+				C42545CB1F27461000B93B0D /* WXRenderTracingTableViewCell.h */,
+				C42545CC1F27461000B93B0D /* WXRenderTracingTableViewCell.m */,
+				C42545CD1F27461000B93B0D /* WXRenderTracingViewController.h */,
+				C42545CE1F27461000B93B0D /* WXRenderTracingViewController.m */,
+				C42545CF1F27461000B93B0D /* WXTracingApiTableViewCell.h */,
+				C42545D01F27461000B93B0D /* WXTracingApiTableViewCell.m */,
+				C42545D11F27461000B93B0D /* WXTracingExceptionImpl.h */,
+				C42545D21F27461000B93B0D /* WXTracingExceptionImpl.m */,
+				C42545D31F27461000B93B0D /* WXTracingHomePageViewController.h */,
+				C42545D41F27461000B93B0D /* WXTracingHomePageViewController.m */,
+				C42545D51F27461000B93B0D /* WXTracingLogImpl.h */,
+				C42545D61F27461000B93B0D /* WXTracingLogImpl.m */,
+				C42545D71F27461000B93B0D /* WXTracingLogTableViewCell.h */,
+				C42545D81F27461000B93B0D /* WXTracingLogTableViewCell.m */,
+				C42545D91F27461000B93B0D /* WXTracingLogViewController.h */,
+				C42545DA1F27461000B93B0D /* WXTracingLogViewController.m */,
+				C42545DB1F27461000B93B0D /* WXTracingMethodTableViewCell.h */,
+				C42545DC1F27461000B93B0D /* WXTracingMethodTableViewCell.m */,
+				C42545DD1F27461000B93B0D /* WXTracingMethodViewController.h */,
+				C42545DE1F27461000B93B0D /* WXTracingMethodViewController.m */,
+				C42545DF1F27461000B93B0D /* WXTracingSettingViewController.h */,
+				C42545E01F27461000B93B0D /* WXTracingSettingViewController.m */,
+				C42545E11F27461000B93B0D /* WXTracingViewControllerManager.h */,
+				C42545E21F27461000B93B0D /* WXTracingViewControllerManager.m */,
+				C42545E31F27461000B93B0D /* WXWindow.h */,
+				C42545E41F27461000B93B0D /* WXWindow.m */,
+			);
+			name = WXTracing;
+			path = Source/WXTracing;
+			sourceTree = "<group>";
+		};
+		C42545A11F27461000B93B0D /* PMTagListView */ = {
+			isa = PBXGroup;
+			children = (
+				C42545A21F27461000B93B0D /* WXSegmentedControl.h */,
+				C42545A31F27461000B93B0D /* WXSegmentedControl.m */,
+				C42545A41F27461000B93B0D /* WXTagListView.h */,
+				C42545A51F27461000B93B0D /* WXTagListView.m */,
+				C42545A61F27461000B93B0D /* WXViewPagerController.h */,
+				C42545A71F27461000B93B0D /* WXViewPagerController.m */,
+			);
+			path = PMTagListView;
+			sourceTree = "<group>";
+		};
+		C42545B21F27461000B93B0D /* WXNetwork */ = {
+			isa = PBXGroup;
+			children = (
+				C42545B31F27461000B93B0D /* WXImagePreviewViewController.h */,
+				C42545B41F27461000B93B0D /* WXImagePreviewViewController.m */,
+				C42545B51F27461000B93B0D /* WXLogSettingViewController.h */,
+				C42545B61F27461000B93B0D /* WXLogSettingViewController.m */,
+				C42545B71F27461000B93B0D /* WXMultilineTableViewCell.h */,
+				C42545B81F27461000B93B0D /* WXMultilineTableViewCell.m */,
+				C42545B91F27461000B93B0D /* WXNetworkHistoryTableViewController.h */,
+				C42545BA1F27461000B93B0D /* WXNetworkHistoryTableViewController.m */,
+				C42545BB1F27461000B93B0D /* WXNetworkRecorder.h */,
+				C42545BC1F27461000B93B0D /* WXNetworkRecorder.m */,
+				C42545BD1F27461000B93B0D /* WXNetworkSettingsTableViewController.h */,
+				C42545BE1F27461000B93B0D /* WXNetworkSettingsTableViewController.m */,
+				C42545BF1F27461000B93B0D /* WXNetworkTransaction.h */,
+				C42545C01F27461000B93B0D /* WXNetworkTransaction.m */,
+				C42545C11F27461000B93B0D /* WXNetworkTransactionDetailTableViewController.h */,
+				C42545C21F27461000B93B0D /* WXNetworkTransactionDetailTableViewController.m */,
+				C42545C31F27461000B93B0D /* WXNetworkTransactionTableViewCell.h */,
+				C42545C41F27461000B93B0D /* WXNetworkTransactionTableViewCell.m */,
+				C42545C51F27461000B93B0D /* WXResources.h */,
+				C42545C61F27461000B93B0D /* WXResources.m */,
+				C42545C71F27461000B93B0D /* WXTracingUtility.h */,
+				C42545C81F27461000B93B0D /* WXTracingUtility.m */,
+				C42545C91F27461000B93B0D /* WXWebViewController.h */,
+				C42545CA1F27461000B93B0D /* WXWebViewController.m */,
+			);
+			path = WXNetwork;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -638,25 +865,36 @@
 			files = (
 				0A0103201D35E25300F0D592 /* WXDevTool.h in Headers */,
 				0A0103221D35E27000F0D592 /* TBWXDevTool.h in Headers */,
+				C42546031F27461000B93B0D /* WXNetworkTransactionDetailTableViewController.h in Headers */,
 				0ADE97AE1D767B6F005781C1 /* WXInspectorDomainController.h in Headers */,
+				C425461F1F27461000B93B0D /* WXTracingMethodViewController.h in Headers */,
+				C42546111F27461000B93B0D /* WXTracingApiTableViewCell.h in Headers */,
 				0ADE98111D767BA5005781C1 /* WXFileSystemTypes.h in Headers */,
 				0ADE977B1D767B62005781C1 /* NSDate+WXDebugger.h in Headers */,
+				C42546091F27461000B93B0D /* WXTracingUtility.h in Headers */,
+				C42545FF1F27461000B93B0D /* WXNetworkSettingsTableViewController.h in Headers */,
+				C42545F31F27461000B93B0D /* WXLogViewController.h in Headers */,
 				0ADE97B71D767B6F005781C1 /* WXPrettyStringPrinter.h in Headers */,
+				C42546211F27461000B93B0D /* WXTracingSettingViewController.h in Headers */,
 				0A0102E51D35E25300F0D592 /* WXTimelineDomainController.h in Headers */,
 				0ADE977F1D767B62005781C1 /* NSError+WX_JSONObject.h in Headers */,
 				0ADE98031D767BA5005781C1 /* WXDebuggerTypes.h in Headers */,
 				0ADE97731D767B62005781C1 /* NSArray+WX_JSONObject.h in Headers */,
+				C42546171F27461000B93B0D /* WXTracingLogImpl.h in Headers */,
 				0A37BCA21E1A521F00C5542E /* WXDebuggerUtility.h in Headers */,
 				0ADE983F1D767BB7005781C1 /* WXTimelineTypes.h in Headers */,
 				0ADE98091D767BA5005781C1 /* WXDOMStorageDomain.h in Headers */,
+				C42546131F27461000B93B0D /* WXTracingExceptionImpl.h in Headers */,
 				0ADE98391D767BB7005781C1 /* WXRuntimeDomain.h in Headers */,
 				0ADE98191D767BA5005781C1 /* WXMemoryDomain.h in Headers */,
+				C42545E71F27461000B93B0D /* WXTagListView.h in Headers */,
 				0ADE97B91D767B6F005781C1 /* WXRuntimeDomainController.h in Headers */,
 				0ADE97831D767B62005781C1 /* NSObject+WXRuntimePropertyDescriptor.h in Headers */,
 				0A01031A1D35E25300F0D592 /* WXCSSDomainController.h in Headers */,
 				0ADE97771D767B62005781C1 /* NSData+WXDebugger.h in Headers */,
 				0A01031C1D35E25300F0D592 /* WXSourceDebuggerDomainController.h in Headers */,
 				0ADE97B01D767B6F005781C1 /* WXNetworkDomainController.h in Headers */,
+				C42545F51F27461000B93B0D /* WXImagePreviewViewController.h in Headers */,
 				0ADE978B1D767B62005781C1 /* WXContainerIndex.h in Headers */,
 				0ADE97891D767B62005781C1 /* WXConsoleDomainController.h in Headers */,
 				0ADE97851D767B62005781C1 /* NSOrderedSet+WXRuntimePropertyDescriptor.h in Headers */,
@@ -664,6 +902,7 @@
 				0A1DCE3A1D4F004C005E87C7 /* TBWXDevTool.pch in Headers */,
 				0ADE97811D767B62005781C1 /* NSManagedObject+WXRuntimePropertyDescriptor.h in Headers */,
 				0A01031E1D35E25300F0D592 /* WXDeviceInfo.h in Headers */,
+				C42546011F27461000B93B0D /* WXNetworkTransaction.h in Headers */,
 				0ADE978F1D767B62005781C1 /* WXDefinitions.h in Headers */,
 				0ADE97D51D767B93005781C1 /* WXCSSTypes.h in Headers */,
 				0ADE97A81D767B6F005781C1 /* WXDOMDomainController.h in Headers */,
@@ -671,16 +910,22 @@
 				0ADE97D71D767B93005781C1 /* WXDatabaseDomain.h in Headers */,
 				0AFE81D61D8102B800C99208 /* WXPageDomainUtility.h in Headers */,
 				0ADE97D11D767B93005781C1 /* WXConsoleTypes.h in Headers */,
+				C42546151F27461000B93B0D /* WXTracingHomePageViewController.h in Headers */,
 				0ADE97D91D767B93005781C1 /* WXDatabaseTypes.h in Headers */,
+				C425460F1F27461000B93B0D /* WXRenderTracingViewController.h in Headers */,
 				0A0298541D4B402400B4BC95 /* WXDevToolType.h in Headers */,
 				0ADE980D1D767BA5005781C1 /* WXDOMTypes.h in Headers */,
 				0ADE98011D767BA5005781C1 /* WXDebuggerDomain.h in Headers */,
 				0ADE97871D767B62005781C1 /* NSSet+WXRuntimePropertyDescriptor.h in Headers */,
+				C42546191F27461000B93B0D /* WXTracingLogTableViewCell.h in Headers */,
 				0ADE97CB1D767B93005781C1 /* WXApplicationCacheDomain.h in Headers */,
 				0ADE981B1D767BA5005781C1 /* WXMemoryTypes.h in Headers */,
 				0ADE980B1D767BA5005781C1 /* WXDOMStorageTypes.h in Headers */,
+				C425461B1F27461000B93B0D /* WXTracingLogViewController.h in Headers */,
 				0ADE98211D767BA5005781C1 /* WXPageDomain.h in Headers */,
 				0ADE98411D767BB7005781C1 /* WXWebGLDomain.h in Headers */,
+				C42545F71F27461000B93B0D /* WXLogSettingViewController.h in Headers */,
+				C42546231F27461000B93B0D /* WXTracingViewControllerManager.h in Headers */,
 				0ABDFC6F1D3C7B6900206418 /* WXDebugDomain.h in Headers */,
 				0ADE977D1D767B62005781C1 /* NSDictionary+WXRuntimePropertyDescriptor.h in Headers */,
 				0ADE97B41D767B6F005781C1 /* WXPageDomainController.h in Headers */,
@@ -688,28 +933,43 @@
 				0ADE983B1D767BB7005781C1 /* WXRuntimeTypes.h in Headers */,
 				0ADE97CD1D767B93005781C1 /* WXApplicationCacheTypes.h in Headers */,
 				0ADE97AC1D767B6F005781C1 /* WXIndexedDBDomainController.h in Headers */,
+				C42545EB1F27461000B93B0D /* UIButton+WXEnlargeArea.h in Headers */,
 				0ADE981D1D767BA5005781C1 /* WXNetworkDomain.h in Headers */,
+				C42546051F27461000B93B0D /* WXNetworkTransactionTableViewCell.h in Headers */,
 				0ADE980F1D767BA5005781C1 /* WXFileSystemDomain.h in Headers */,
 				0ADE97791D767B62005781C1 /* NSDate+WX_JSONObject.h in Headers */,
+				C425461D1F27461000B93B0D /* WXTracingMethodTableViewCell.h in Headers */,
+				C42545F11F27461000B93B0D /* WXEnviromentViewController.h in Headers */,
 				0ADE98051D767BA5005781C1 /* WXDOMDebuggerDomain.h in Headers */,
 				0ADE98251D767BA5005781C1 /* WXProfilerDomain.h in Headers */,
 				0ADE98451D767BB7005781C1 /* WXWorkerDomain.h in Headers */,
 				0ADE97CF1D767B93005781C1 /* WXConsoleDomain.h in Headers */,
+				C42546071F27461000B93B0D /* WXResources.h in Headers */,
+				C42545E51F27461000B93B0D /* WXSegmentedControl.h in Headers */,
 				0ADE978D1D767B62005781C1 /* WXDebugger.h in Headers */,
 				0ADE98131D767BA5005781C1 /* WXIndexedDBDomain.h in Headers */,
 				0ADE98171D767BA5005781C1 /* WXInspectorDomain.h in Headers */,
 				0ABDFC731D3C7C2000206418 /* WXDebugDomainController.h in Headers */,
+				C42545FD1F27461000B93B0D /* WXNetworkRecorder.h in Headers */,
+				C42545EF1F27461000B93B0D /* WXApiTracingViewController.h in Headers */,
+				C42545FB1F27461000B93B0D /* WXNetworkHistoryTableViewController.h in Headers */,
 				0ADE97D31D767B93005781C1 /* WXCSSDomain.h in Headers */,
 				0ADE98151D767BA5005781C1 /* WXIndexedDBTypes.h in Headers */,
+				C425460B1F27461000B93B0D /* WXWebViewController.h in Headers */,
 				0ADE981F1D767BA5005781C1 /* WXNetworkTypes.h in Headers */,
 				0ADE97B21D767B6F005781C1 /* WXObject.h in Headers */,
 				0ADE983D1D767BB7005781C1 /* WXTimelineDomain.h in Headers */,
 				0ADE97751D767B62005781C1 /* NSArray+WXRuntimePropertyDescriptor.h in Headers */,
 				0ADE97B61D767B6F005781C1 /* WXPonyDebugger.h in Headers */,
+				C42546251F27461000B93B0D /* WXWindow.h in Headers */,
 				0ADE98371D767BB7005781C1 /* WXProfilerTypes.h in Headers */,
 				0ADE97A61D767B6F005781C1 /* WXDomainController.h in Headers */,
 				0ADE98231D767BA5005781C1 /* WXPageTypes.h in Headers */,
 				0ADE98431D767BB7005781C1 /* WXWebGLTypes.h in Headers */,
+				C425460D1F27461000B93B0D /* WXRenderTracingTableViewCell.h in Headers */,
+				C42545F91F27461000B93B0D /* WXMultilineTableViewCell.h in Headers */,
+				C42545ED1F27461000B93B0D /* WXAboutViewController.h in Headers */,
+				C42545E91F27461000B93B0D /* WXViewPagerController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -738,13 +998,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0AFA0ED31D2CE79E006E30BB /* Build configuration list for PBXNativeTarget "TBWXDevTool" */;
 			buildPhases = (
-				DB9CBF7DAF3E0071669C2A9A /* Check Pods Manifest.lock */,
-				B3C7A1C34DC388E22447E99C /* [CP] Check Pods Manifest.lock */,
 				0AFA0EC61D2CE79E006E30BB /* Sources */,
 				0AFA0EC71D2CE79E006E30BB /* Frameworks */,
 				0AFA0EC81D2CE79E006E30BB /* Headers */,
 				0AFA0EC91D2CE79E006E30BB /* Resources */,
-				0E7A4E4982426C183183F465 /* [CP] Copy Pods Resources */,
 				0AFECA031D76C75E0035719C /* ShellScript */,
 			);
 			buildRules = (
@@ -846,51 +1103,6 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nFMK_NAME=${PROJECT_NAME}\n\nINSTALL_DIR=${BUILD_DIR}/Release-iphoneos/${FMK_NAME}.framework\n\nMAIN=\"main\"\n\nMAIN_JS=${INSTALL_DIR}/${MAIN}.js\n\nif [ -e \"$MAIN_JS\" ]; then\n    rm \"$MAIN_JS\"\nfi\n\nRESOURCE=\"Resources\"\nRESOURCE_DIR=${INSTALL_DIR}/$RESOURCE\nif [ -d \"$RESOURCE_DIR\" ]; then\n    rm -rf \"$RESOURCE_DIR\"\nfi\n\nfor pngFile in ${INSTALL_DIR}/*; do\n    if [[ $pngFile =~ (.*)png ]]; then\n        rm \"$pngFile\"\n        break;\n    fi\ndone\n";
 		};
-		0E7A4E4982426C183183F465 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TBWXDevTool/Pods-TBWXDevTool-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B3C7A1C34DC388E22447E99C /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		DB9CBF7DAF3E0071669C2A9A /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -906,38 +1118,60 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C42546061F27461000B93B0D /* WXNetworkTransactionTableViewCell.m in Sources */,
 				0A01031B1D35E25300F0D592 /* WXCSSDomainController.m in Sources */,
+				C42546081F27461000B93B0D /* WXResources.m in Sources */,
 				0ADE98101D767BA5005781C1 /* WXFileSystemDomain.m in Sources */,
 				0ADE98041D767BA5005781C1 /* WXDebuggerTypes.m in Sources */,
+				C42545E61F27461000B93B0D /* WXSegmentedControl.m in Sources */,
 				0ABDFC741D3C7C2000206418 /* WXDebugDomainController.m in Sources */,
+				C42546101F27461000B93B0D /* WXRenderTracingViewController.m in Sources */,
+				C42546161F27461000B93B0D /* WXTracingHomePageViewController.m in Sources */,
+				C42546181F27461000B93B0D /* WXTracingLogImpl.m in Sources */,
 				0A01031D1D35E25300F0D592 /* WXSourceDebuggerDomainController.m in Sources */,
 				0ADE97A91D767B6F005781C1 /* WXDOMDomainController.m in Sources */,
+				C42545EE1F27461000B93B0D /* WXAboutViewController.m in Sources */,
+				C425460A1F27461000B93B0D /* WXTracingUtility.m in Sources */,
 				0ADE983E1D767BB7005781C1 /* WXTimelineDomain.m in Sources */,
 				0A0102E41D35E25300F0D592 /* WXProfilerDomainController.m in Sources */,
 				0ADE98201D767BA5005781C1 /* WXNetworkTypes.m in Sources */,
 				0ADE98401D767BB7005781C1 /* WXTimelineTypes.m in Sources */,
+				C425461A1F27461000B93B0D /* WXTracingLogTableViewCell.m in Sources */,
 				0ADE97CC1D767B93005781C1 /* WXApplicationCacheDomain.m in Sources */,
 				0ADE97B51D767B6F005781C1 /* WXPageDomainController.m in Sources */,
 				0ADE977C1D767B62005781C1 /* NSDate+WXDebugger.m in Sources */,
 				0ADE978E1D767B62005781C1 /* WXDebugger.m in Sources */,
+				C42545F21F27461000B93B0D /* WXEnviromentViewController.m in Sources */,
 				0ADE97D81D767B93005781C1 /* WXDatabaseDomain.m in Sources */,
 				0ADE97BA1D767B6F005781C1 /* WXRuntimeDomainController.m in Sources */,
 				0ADE97D21D767B93005781C1 /* WXConsoleTypes.m in Sources */,
 				0A01031F1D35E25300F0D592 /* WXDeviceInfo.m in Sources */,
+				C42546261F27461000B93B0D /* WXWindow.m in Sources */,
+				C42545EA1F27461000B93B0D /* WXViewPagerController.m in Sources */,
+				C42545FC1F27461000B93B0D /* WXNetworkHistoryTableViewController.m in Sources */,
 				0ADE97801D767B62005781C1 /* NSError+WX_JSONObject.m in Sources */,
 				0ADE977E1D767B62005781C1 /* NSDictionary+WXRuntimePropertyDescriptor.m in Sources */,
 				0ADE98021D767BA5005781C1 /* WXDebuggerDomain.m in Sources */,
+				C42546141F27461000B93B0D /* WXTracingExceptionImpl.m in Sources */,
+				C42546221F27461000B93B0D /* WXTracingSettingViewController.m in Sources */,
+				C42546021F27461000B93B0D /* WXNetworkTransaction.m in Sources */,
 				0ADE983C1D767BB7005781C1 /* WXRuntimeTypes.m in Sources */,
+				C425460E1F27461000B93B0D /* WXRenderTracingTableViewCell.m in Sources */,
 				0A0298551D4B402400B4BC95 /* WXDevToolType.m in Sources */,
 				0ADE97901D767B62005781C1 /* WXDefinitions.m in Sources */,
 				0ADE97B11D767B6F005781C1 /* WXNetworkDomainController.m in Sources */,
 				0ADE97861D767B62005781C1 /* NSOrderedSet+WXRuntimePropertyDescriptor.m in Sources */,
+				C42545E81F27461000B93B0D /* WXTagListView.m in Sources */,
 				0ADE98061D767BA5005781C1 /* WXDOMDebuggerDomain.m in Sources */,
 				0ADE981E1D767BA5005781C1 /* WXNetworkDomain.m in Sources */,
 				0ADE97AF1D767B6F005781C1 /* WXInspectorDomainController.m in Sources */,
+				C42545F01F27461000B93B0D /* WXApiTracingViewController.m in Sources */,
 				0ADE97821D767B62005781C1 /* NSManagedObject+WXRuntimePropertyDescriptor.m in Sources */,
+				C42546041F27461000B93B0D /* WXNetworkTransactionDetailTableViewController.m in Sources */,
 				0ADE98421D767BB7005781C1 /* WXWebGLDomain.m in Sources */,
 				0ADE97D61D767B93005781C1 /* WXCSSTypes.m in Sources */,
+				C425460C1F27461000B93B0D /* WXWebViewController.m in Sources */,
+				C42546201F27461000B93B0D /* WXTracingMethodViewController.m in Sources */,
 				0ADE97781D767B62005781C1 /* NSData+WXDebugger.m in Sources */,
 				0ADE97CE1D767B93005781C1 /* WXApplicationCacheTypes.m in Sources */,
 				0ADE97B31D767B6F005781C1 /* WXObject.m in Sources */,
@@ -948,7 +1182,9 @@
 				0ADE98081D767BA5005781C1 /* WXDOMDomain.m in Sources */,
 				0ADE98161D767BA5005781C1 /* WXIndexedDBTypes.m in Sources */,
 				0ADE97841D767B62005781C1 /* NSObject+WXRuntimePropertyDescriptor.m in Sources */,
+				C42546241F27461000B93B0D /* WXTracingViewControllerManager.m in Sources */,
 				0ADE97AB1D767B6F005781C1 /* WXDynamicDebuggerDomain.m in Sources */,
+				C42545F81F27461000B93B0D /* WXLogSettingViewController.m in Sources */,
 				0ADE977A1D767B62005781C1 /* NSDate+WX_JSONObject.m in Sources */,
 				0ADE980E1D767BA5005781C1 /* WXDOMTypes.m in Sources */,
 				0ADE98461D767BB7005781C1 /* WXWorkerDomain.m in Sources */,
@@ -956,25 +1192,34 @@
 				0ADE98241D767BA5005781C1 /* WXPageTypes.m in Sources */,
 				0ADE981C1D767BA5005781C1 /* WXMemoryTypes.m in Sources */,
 				0ADE98121D767BA5005781C1 /* WXFileSystemTypes.m in Sources */,
+				C42546121F27461000B93B0D /* WXTracingApiTableViewCell.m in Sources */,
 				0ADE98181D767BA5005781C1 /* WXInspectorDomain.m in Sources */,
+				C42545FA1F27461000B93B0D /* WXMultilineTableViewCell.m in Sources */,
 				0A0102E61D35E25300F0D592 /* WXTimelineDomainController.m in Sources */,
 				0ADE98141D767BA5005781C1 /* WXIndexedDBDomain.m in Sources */,
 				0ABDFC701D3C7B6900206418 /* WXDebugDomain.m in Sources */,
+				C42545F61F27461000B93B0D /* WXImagePreviewViewController.m in Sources */,
 				0ADE980A1D767BA5005781C1 /* WXDOMStorageDomain.m in Sources */,
+				C42545F41F27461000B93B0D /* WXLogViewController.m in Sources */,
 				0AFE81D71D8102B800C99208 /* WXPageDomainUtility.m in Sources */,
 				0ADE980C1D767BA5005781C1 /* WXDOMStorageTypes.m in Sources */,
 				0ADE98441D767BB7005781C1 /* WXWebGLTypes.m in Sources */,
 				0ADE97761D767B62005781C1 /* NSArray+WXRuntimePropertyDescriptor.m in Sources */,
 				0ADE98261D767BA5005781C1 /* WXProfilerDomain.m in Sources */,
+				C425461C1F27461000B93B0D /* WXTracingLogViewController.m in Sources */,
 				0ADE983A1D767BB7005781C1 /* WXRuntimeDomain.m in Sources */,
 				0ADE97881D767B62005781C1 /* NSSet+WXRuntimePropertyDescriptor.m in Sources */,
+				C42545FE1F27461000B93B0D /* WXNetworkRecorder.m in Sources */,
 				0ADE981A1D767BA5005781C1 /* WXMemoryDomain.m in Sources */,
 				0ADE97D01D767B93005781C1 /* WXConsoleDomain.m in Sources */,
 				0ADE97A71D767B6F005781C1 /* WXDomainController.m in Sources */,
 				0ADE97741D767B62005781C1 /* NSArray+WX_JSONObject.m in Sources */,
+				C42546001F27461000B93B0D /* WXNetworkSettingsTableViewController.m in Sources */,
 				0ADE98381D767BB7005781C1 /* WXProfilerTypes.m in Sources */,
 				0ADE978C1D767B62005781C1 /* WXContainerIndex.m in Sources */,
 				0ADE98221D767BA5005781C1 /* WXPageDomain.m in Sources */,
+				C425461E1F27461000B93B0D /* WXTracingMethodTableViewCell.m in Sources */,
+				C42545EC1F27461000B93B0D /* UIButton+WXEnlargeArea.m in Sources */,
 				0A0103211D35E25300F0D592 /* WXDevTool.m in Sources */,
 				0ADE97DA1D767B93005781C1 /* WXDatabaseTypes.m in Sources */,
 			);
@@ -1093,7 +1338,7 @@
 		};
 		0AFA0ED41D2CE79E006E30BB /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 421E7FD57E17C231508BA514 /* Pods-TBWXDevTool.debug.xcconfig */;
+			baseConfigurationReference = 489AA4AF96AEBD4B7A7D8A91 /* Pods-TBWXDevTool.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -1121,12 +1366,13 @@
 				SKIP_INSTALL = YES;
 				STRIP_STYLE = "non-global";
 				VALID_ARCHS = "arm64 armv7 armv7s x86_64 i386";
+				WARNING_CFLAGS = "-Wno-documentation";
 			};
 			name = Debug;
 		};
 		0AFA0ED51D2CE79E006E30BB /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B7CA78A41D406A09A4D0B154 /* Pods-TBWXDevTool.release.xcconfig */;
+			baseConfigurationReference = 9CF2E2BFC9331B7CB90EA000 /* Pods-TBWXDevTool.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -1153,6 +1399,7 @@
 				SKIP_INSTALL = YES;
 				STRIP_STYLE = "non-global";
 				VALID_ARCHS = "arm64 armv7 armv7s x86_64 i386";
+				WARNING_CFLAGS = "-Wno-documentation";
 			};
 			name = Release;
 		};
