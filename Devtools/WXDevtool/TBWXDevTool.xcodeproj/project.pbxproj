@@ -21,6 +21,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		06972834C4CF4ED5A8C807D9 /* libPods-TBWXDevTool.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B60011D3ECF195226E8AC404 /* libPods-TBWXDevTool.a */; };
 		0A0102E31D35E25300F0D592 /* WXProfilerDomainController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A01025C1D35E25300F0D592 /* WXProfilerDomainController.h */; };
 		0A0102E41D35E25300F0D592 /* WXProfilerDomainController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A01025D1D35E25300F0D592 /* WXProfilerDomainController.m */; };
 		0A0102E51D35E25300F0D592 /* WXTimelineDomainController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A01025E1D35E25300F0D592 /* WXTimelineDomainController.h */; };
@@ -416,6 +417,7 @@
 		0AFE81D51D8102B800C99208 /* WXPageDomainUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXPageDomainUtility.m; sourceTree = "<group>"; };
 		489AA4AF96AEBD4B7A7D8A91 /* Pods-TBWXDevTool.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBWXDevTool.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TBWXDevTool/Pods-TBWXDevTool.debug.xcconfig"; sourceTree = "<group>"; };
 		9CF2E2BFC9331B7CB90EA000 /* Pods-TBWXDevTool.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBWXDevTool.release.xcconfig"; path = "Pods/Target Support Files/Pods-TBWXDevTool/Pods-TBWXDevTool.release.xcconfig"; sourceTree = "<group>"; };
+		B60011D3ECF195226E8AC404 /* libPods-TBWXDevTool.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TBWXDevTool.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C42545A21F27461000B93B0D /* WXSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXSegmentedControl.h; sourceTree = "<group>"; };
 		C42545A31F27461000B93B0D /* WXSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXSegmentedControl.m; sourceTree = "<group>"; };
 		C42545A41F27461000B93B0D /* WXTagListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXTagListView.h; sourceTree = "<group>"; };
@@ -504,6 +506,7 @@
 				0AFA100E1D2CEC34006E30BB /* Foundation.framework in Frameworks */,
 				0AFA100C1D2CEC2A006E30BB /* CFNetwork.framework in Frameworks */,
 				0AFA0FE61D2CEB39006E30BB /* Security.framework in Frameworks */,
+				06972834C4CF4ED5A8C807D9 /* libPods-TBWXDevTool.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -748,6 +751,7 @@
 				0AFA100D1D2CEC34006E30BB /* Foundation.framework */,
 				0AFA100B1D2CEC2A006E30BB /* CFNetwork.framework */,
 				0AFA0FE51D2CEB39006E30BB /* Security.framework */,
+				B60011D3ECF195226E8AC404 /* libPods-TBWXDevTool.a */,
 			);
 			name = Frameworks;
 			path = WXDevTool;
@@ -994,6 +998,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0AFA0ED31D2CE79E006E30BB /* Build configuration list for PBXNativeTarget "TBWXDevTool" */;
 			buildPhases = (
+				F99630E3C29A3ADA20790CE8 /* [CP] Check Pods Manifest.lock */,
 				0AFA0EC61D2CE79E006E30BB /* Sources */,
 				0AFA0EC71D2CE79E006E30BB /* Frameworks */,
 				0AFA0EC81D2CE79E006E30BB /* Headers */,
@@ -1098,6 +1103,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nFMK_NAME=${PROJECT_NAME}\n\nINSTALL_DIR=${BUILD_DIR}/Release-iphoneos/${FMK_NAME}.framework\n\nMAIN=\"main\"\n\nMAIN_JS=${INSTALL_DIR}/${MAIN}.js\n\nif [ -e \"$MAIN_JS\" ]; then\n    rm \"$MAIN_JS\"\nfi\n\nRESOURCE=\"Resources\"\nRESOURCE_DIR=${INSTALL_DIR}/$RESOURCE\nif [ -d \"$RESOURCE_DIR\" ]; then\n    rm -rf \"$RESOURCE_DIR\"\nfi\n\nfor pngFile in ${INSTALL_DIR}/*; do\n    if [[ $pngFile =~ (.*)png ]]; then\n        rm \"$pngFile\"\n        break;\n    fi\ndone\n";
+		};
+		F99630E3C29A3ADA20790CE8 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
