@@ -29,22 +29,25 @@
     if (self) {
         _timeBackgroundLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 0, 80)];
         [self.contentView addSubview:_timeBackgroundLabel];
-        _refLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, 180, 20)];
+        _refLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, 140, 20)];
         _refLabel.font = [UIFont systemFontOfSize:14];
         [self.contentView addSubview:_refLabel];
-        _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(190, 5, 200, 20)];
+        _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(160, 5, 50, 20)];
         [self.contentView addSubview:_nameLabel];
         _nameLabel.font = [UIFont systemFontOfSize:14];
-        _classNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 30, 180, 20)];
+        _tNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(250, 5, 200, 20)];
+        [self.contentView addSubview:_tNameLabel];
+        _tNameLabel.font = [UIFont systemFontOfSize:14];
+        _classNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 30, 140, 20)];
         [self.contentView addSubview:_classNameLabel];
         _classNameLabel.font = [UIFont systemFontOfSize:14];
-        _fNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(190, 30, 200, 20)];
+        _fNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(160, 30, 200, 20)];
         [self.contentView addSubview:_fNameLabel];
         _fNameLabel.font = [UIFont systemFontOfSize:14];
-        _startTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 55, 180, 20)];
+        _startTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 55, 140, 20)];
         [self.contentView addSubview:_startTimeLabel];
         _startTimeLabel.font = [UIFont systemFontOfSize:14];
-        _durationLabel = [[UILabel alloc] initWithFrame:CGRectMake(190, 55, 200, 20)];
+        _durationLabel = [[UILabel alloc] initWithFrame:CGRectMake(160, 55, 200, 20)];
         [self.contentView addSubview:_durationLabel];
         _durationLabel.font = [UIFont systemFontOfSize:14];
     }
@@ -56,6 +59,7 @@
 {
     self.refLabel.text = [NSString stringWithFormat:@"ref:%@",tracing.ref?:@""];
     self.nameLabel.text = [NSString stringWithFormat:@"name:%@",tracing.name?:@""];
+    self.tNameLabel.text = [NSString stringWithFormat:@"thread:%@",tracing.threadName?:@""];
     self.fNameLabel.text = [NSString stringWithFormat:@"function:%@",tracing.fName?:@""];
     if(tracing.className.length>0){
         self.classNameLabel.text = [NSString stringWithFormat:@"class:%@",tracing.className?:@""];

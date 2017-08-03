@@ -14,6 +14,7 @@
 @property (nonatomic, strong) UILabel *timeBackgroundLabel;
 @property (nonatomic, strong) UILabel *refLabel;
 @property (nonatomic, strong) UILabel *nameLabel;
+@property (nonatomic, strong) UILabel *tNameLabel;
 @property (nonatomic, strong) UILabel *fNameLabel;
 @property (nonatomic, strong) UILabel *classNameLabel;
 @property (nonatomic, strong) UILabel *startTimeLabel;
