@@ -61,6 +61,8 @@
         [attrStr addAttribute:NSForegroundColorAttributeName value:COLOR_TRACING_ERROR range:NSMakeRange(0, labelText.length)];
     } else if([str rangeOfString:@"<Weex>[warn]"].location != NSNotFound){
         [attrStr addAttribute:NSForegroundColorAttributeName value:COLOR_TRACING_WARN range:NSMakeRange(0, labelText.length)];
+    } else if([str rangeOfString:@"jsLog:"].location != NSNotFound){
+        [attrStr addAttribute:NSForegroundColorAttributeName value:COLOR_TRACING_JSLOG range:NSMakeRange(0, labelText.length)];
     } else{
         [attrStr addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:NSMakeRange(0, labelText.length)];
     }
