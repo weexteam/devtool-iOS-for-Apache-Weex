@@ -11,6 +11,7 @@
 #import "WXDeviceInfo.h"
 #import "WXDebuggerUtility.h"
 #import <WeexSDK/WeexSDK.h>
+#import "WXExtendCallNativeManager.h"
 
 #define SYNCRETURN @"WxDebug.syncReturn"
 
@@ -330,9 +331,31 @@
             _nativeComponentBlock(instanceIdString, componentNameString, methodNameString, argsArray, optionsDic);
             NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
             [result setObject:params forKey:@"params"];
+        }else if([method isEqualToString:@"extendCallNative"]) {
+            id value =  [WXExtendCallNativeManager sendExtendCallNativeEvent:data[@"value"]];
+            NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+            [params setObject:value forKey:@"ret"];
+            [result setObject:params forKey:@"params"];
+        } else if([method isEqualToString:@"btoa"]) {
+            NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+            NSData *nsdata = [data[@"value"]
+                              dataUsingEncoding:NSUTF8StringEncoding];
+            NSString *base64Encoded = [nsdata base64EncodedStringWithOptions:0];
+            [params setObject:base64Encoded forKey:@"ret"];
+            [result setObject:params forKey:@"params"];
+        } else if([method isEqualToString:@"atob"]) {
+            NSData *nsdataFromBase64String = [[NSData alloc]
+                                              initWithBase64EncodedString:data[@"value"] options:0];
+            NSString *base64Decoded = [[NSString alloc]
+                                       initWithData:nsdataFromBase64String encoding:NSUTF8StringEncoding];
+            NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+            [params setObject:base64Decoded forKey:@"ret"];
+            [result setObject:params forKey:@"params"];
         }
         callback(result, error);
     }];
 }
+
+
 
 @end
