@@ -10,6 +10,7 @@
 #import <UIKit/UIKit.h>
 #import "WXDebugger.h"
 #import "WXRenderTracingTableViewCell.h"
+#import "WXTracingViewControllerManager.h"
 @implementation WXShowTracingTask
 @end
 
@@ -42,8 +43,6 @@
     self.view.frame =  CGRectMake(0, 0, rect.size.width, rect.size.height);
     [self cofigureTableview];
     
-    
-    
 }
 
 -(void)refreshData
@@ -55,6 +54,7 @@
         for (NSInteger i = 0; i< [instanceIds count]; i++) {
             NSString *instanceId =instanceIds[i];
             WXTracingTask *task = [taskData objectForKey:instanceId];
+//            NSString *str = [WXUtility JSONString:[self formatTask:task]];
             WXShowTracingTask *showTask = [WXShowTracingTask new];
             showTask.counter = task.counter;
             showTask.iid = task.iid;

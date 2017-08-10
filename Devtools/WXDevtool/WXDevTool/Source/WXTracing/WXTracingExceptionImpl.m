@@ -54,8 +54,12 @@ static const CGFloat WXTacingDefaultPadding = 30.0;
 }
 
 @end
+@interface WXTracingExceptionImpl()
+
+@end
 
 @implementation WXTracingExceptionImpl
+
 
 - (void)onJSException:(WXJSExceptionInfo*) exception
 {
@@ -78,6 +82,10 @@ static const CGFloat WXTacingDefaultPadding = 30.0;
 - (void)showAlert:(NSString *)message
 {
     if([WXTracingViewControllerManager  isLoadTracing]){
+        return;
+    }
+    
+    if([WXTracingViewControllerManager sharedInstance].isAlert){
         return;
     }
     
@@ -109,6 +117,7 @@ static const CGFloat WXTacingDefaultPadding = 30.0;
                                     UIView *superView =  [[[UIApplication sharedApplication] windows] objectAtIndex:0];
                                     if (superView) {
                                         [self toast:@"已成功复制到到剪切板" duration:1.0];
+                                        [WXTracingViewControllerManager sharedInstance].isAlert = NO;
                                     }
                                 }];
     
@@ -117,13 +126,14 @@ static const CGFloat WXTacingDefaultPadding = 30.0;
                                  style:UIAlertActionStyleDefault
                                  handler:^(UIAlertAction * action) {
                                      [self saveImg];
+                                     [WXTracingViewControllerManager sharedInstance].isAlert = NO;
                                  }];
     
     UIAlertAction* cancelButton = [UIAlertAction
                                actionWithTitle:@"Cancel"
                                style:UIAlertActionStyleCancel
                                handler:^(UIAlertAction * action) {
-                                   
+                                   [WXTracingViewControllerManager sharedInstance].isAlert = NO;
                                }];
     
     //Add your buttons to alert controller
@@ -133,6 +143,7 @@ static const CGFloat WXTacingDefaultPadding = 30.0;
     UIViewController *rootViewController = [[[UIApplication sharedApplication] keyWindow] rootViewController];
 
     [rootViewController presentViewController:alert animated:YES completion:nil];
+    [WXTracingViewControllerManager sharedInstance].isAlert = YES;
 }
 
 -(void)saveImg
