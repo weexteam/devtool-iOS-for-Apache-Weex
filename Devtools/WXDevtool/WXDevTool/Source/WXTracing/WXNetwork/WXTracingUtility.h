@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <objc/runtime.h>
+#import <WeexSDK/WXTracingManager.h>
 
 #define FLEXFloor(x) (floor([[UIScreen mainScreen] scale] * (x)) / [[UIScreen mainScreen] scale])
 #define TracingResetLogDataNoti @"TracingResetLogDataNoti"
@@ -50,7 +51,10 @@
 + (NSData *)inflatedDataFromCompressedData:(NSData *)compressedData;
 
 + (NSArray *)allWindows;
-+(NSString *)tracingTime;
++ (NSString *)tracingTime;
++ (NSArray *)formatTask:(WXTracingTask *)task;
++ (BOOL)isRemoteTracing;
++ (void)setRemoteTracing:(BOOL)isRemoteTracing;
 
 // Swizzling utilities
 

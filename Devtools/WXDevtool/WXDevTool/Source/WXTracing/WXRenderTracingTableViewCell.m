@@ -32,7 +32,7 @@
         _refLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, 140, 20)];
         _refLabel.font = [UIFont systemFontOfSize:14];
         [self.contentView addSubview:_refLabel];
-        _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(160, 5, 200, 20)];
+        _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(160, 5, 180, 20)];
         [self.contentView addSubview:_nameLabel];
         _nameLabel.font = [UIFont systemFontOfSize:14];
 //        _tNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(250, 5, 200, 20)];
@@ -57,9 +57,12 @@
 
 - (void)config:(WXTracing *)tracing begin:(NSTimeInterval)begin end:(NSTimeInterval )end
 {
+//    self.refLabel.text = [NSString stringWithFormat:@"ref:%@ %lld %lld",tracing.ref?:@"",tracing.traceId,tracing.parentId];
     self.refLabel.text = [NSString stringWithFormat:@"ref:%@",tracing.ref?:@""];
     self.nameLabel.text = [NSString stringWithFormat:@"name:%@",tracing.name?:@""];
-//    self.tNameLabel.text = [NSString stringWithFormat:@"thread:%@",tracing.threadName?:@""];
+//    if( [WXTracing instancesRespondToSelector:@selector(threadName)]){
+//        self.tNameLabel.text = [NSString stringWithFormat:@"thread:%@",[tracing performSelector:@selector(threadName) withObject:nil]?:@""];
+//    }
     self.fNameLabel.text = [NSString stringWithFormat:@"function:%@",tracing.fName?:@""];
     if(tracing.className.length>0){
         self.classNameLabel.text = [NSString stringWithFormat:@"class:%@",tracing.className?:@""];

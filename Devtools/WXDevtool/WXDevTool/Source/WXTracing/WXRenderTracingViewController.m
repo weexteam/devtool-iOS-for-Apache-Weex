@@ -10,6 +10,7 @@
 #import <UIKit/UIKit.h>
 #import "WXDebugger.h"
 #import "WXRenderTracingTableViewCell.h"
+#import "WXTracingViewControllerManager.h"
 @implementation WXShowTracingTask
 @end
 
@@ -42,15 +43,6 @@
     self.view.frame =  CGRectMake(0, 0, rect.size.width, rect.size.height);
     [self cofigureTableview];
     
-}
-
--(NSArray *)formatTask:(WXTracingTask *)task
-{
-    NSMutableArray *array = [NSMutableArray new];
-    for (WXTracing *t in task.tracings) {
-        [array addObject:[t dictionary]];
-    }
-    return array;
 }
 
 -(void)refreshData

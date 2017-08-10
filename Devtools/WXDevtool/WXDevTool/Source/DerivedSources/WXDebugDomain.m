@@ -7,6 +7,7 @@
  */
 
 #import "WXDebugDomain.h"
+#import "WXTracingUtility.h"
 
 @implementation WXDebugDomain 
 
@@ -86,6 +87,8 @@
         [self.delegate domain:self callRemoveEvent:params callBack:^(id error) {
             responseCallback(nil, error);
         }];
+    }else if ([methodName isEqualToString:@"enableTracing"]) {
+        [WXTracingUtility setRemoteTracing:[params[@"status"] boolValue]];
     }
 }
 
