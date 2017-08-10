@@ -15,6 +15,7 @@
 #import "WXTracingHomePageViewController.h"
 #import "WXDebugger.h"
 #import "WXTracingExceptionImpl.h"
+#import "WXTracingImpl.h"
 
 #define WXWeexButtonTag 1001
 
@@ -42,10 +43,17 @@
     return instance;
 }
 
-//+ (void)load
-//{
-//    [self loadTracingView];
-//}
++ (void)load
+{
+    [self loadTracingView];
+}
+
++(void)showButton
+{
+    WXTracingViewControllerManager *manager = [WXTracingViewControllerManager sharedInstance];
+    UIView *view = [manager.wind viewWithTag:WXWeexButtonTag];
+    view.hidden = NO;
+}
 
 +(void)loadTracingView
 {
@@ -60,6 +68,7 @@
             [WXTracingViewControllerManager addWeexView];
             [WXLog registerExternalLog:[WXTracingLogImpl new]];
             [WXSDKEngine registerHandler:[WXTracingExceptionImpl new] withProtocol:@protocol(WXJSExceptionProtocol)];
+            [WXSDKEngine registerHandler:[WXTracingImpl new] withProtocol:@protocol(WXTracingProtocol)];
         });
     }
 }
@@ -78,23 +87,26 @@
     dispatch_after(delayInNanoSeconds, concurrentQueue, ^(void){
         dispatch_async(dispatch_get_main_queue(), ^{
             UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-            button.frame = CGRectMake(0, 0, 60, 20);
-            [button setTitle:@"weex MNT" forState:UIControlStateNormal];
+            button.frame = CGRectMake(0, 0, 80, 20);
+            [button setTitle:@"weex monitor" forState:UIControlStateNormal];
             button.titleLabel.font = [UIFont boldSystemFontOfSize:10.0];
             button.titleLabel.numberOfLines = 0;
             [button addTarget:weakSelf action:@selector(showTracing) forControlEvents:UIControlEventTouchUpInside];
             button.backgroundColor = [UIColor colorWithRed:1/255.0 green:140/255.0 blue:238/255.0 alpha:1.0];
             button.tag = WXWeexButtonTag;
-            [button setEnlargeEdgeWithTop:20 right:20.0 bottom:20.0 left:20.0];
+            if([@"TB" isEqualToString:[[WXUtility getEnvironment] objectForKey:@"appName"]]||[@"手机淘宝" isEqualToString:[[WXUtility getEnvironment] objectForKey:@"appName"]]){
+                button.hidden = YES;
+            }
+            [button setEnlargeEdgeWithTop:20 right:20.0 bottom:0.0 left:20.0];
             WXTracingViewControllerManager *instance = [WXTracingViewControllerManager sharedInstance];
-            instance.wind = [[WXWindow alloc]initWithFrame:CGRectMake(110, 0, 60, 40)];
+            instance.wind = [[WXWindow alloc]initWithFrame:CGRectMake(80, 0, 80, 20)];
             instance.wind.eventDelegate = instance;
             [instance.wind addSubview:button];
             instance.wind.windowLevel = UIWindowLevelStatusBar+100;
             instance.wind.backgroundColor = [UIColor colorWithWhite:0 alpha:0];
             instance.wind.userInteractionEnabled = YES;
-            instance.wind.hidden = NO;
-            [[UIApplication sharedApplication].keyWindow addSubview:instance.wind];
+            [instance.wind makeKeyAndVisible];
+            [instance.wind makeKeyWindow];
             [WXTracingViewControllerManager sharedInstance].textView = [UITextView new];
             [WXTracingViewControllerManager sharedInstance].messages = [NSMutableArray new];
             [WXTracingViewControllerManager sharedInstance].textView.font = [UIFont systemFontOfSize:16];
@@ -134,13 +146,14 @@
         WXTracingViewControllerManager *manager = [WXTracingViewControllerManager sharedInstance];
         manager.wind.frame = [UIScreen mainScreen].bounds;
         UIView *view = [manager.wind viewWithTag:WXWeexButtonTag];
-        view.frame = CGRectMake(110, 0, 60, 20);
+        view.frame = CGRectMake(80, 0, 80, 20);
         if(!manager.tracingVC){
             manager.tracingVC = [[WXTracingHomePageViewController alloc]init];
         }
         manager.nav = [[UINavigationController alloc] initWithRootViewController:manager.tracingVC];;
         manager.tracingVC.view.backgroundColor = [UIColor whiteColor];
         manager.wind.rootViewController = manager.nav;
+        [manager.wind makeKeyAndVisible];
         [manager.nav setNavigationBarHidden:YES];
         manager.tracingVC.view.frame = CGRectMake(manager.wind.frame.origin.x, manager.wind.frame.origin.y+20, manager.wind.frame.size.width, manager.wind.frame.size.height-20);
         [manager.wind addSubview:manager.nav.view];
@@ -152,9 +165,9 @@
         [manager.tracingVC removeFromParentViewController];
         [manager.tracingVC.view removeFromSuperview];
         [manager.nav.view removeFromSuperview];
-        manager.wind.frame = CGRectMake(110, 0, 60, 40);
+        manager.wind.frame = CGRectMake(80, 0, 80, 20);
         UIView *view = [manager.wind viewWithTag:WXWeexButtonTag];
-        view.frame = CGRectMake(0, 0, 60, 20);
+        view.frame = CGRectMake(0, 0, 80, 20);
         [WXTracingViewControllerManager sharedInstance].isLoadTracing = NO;
     }
     

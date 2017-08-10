@@ -16,4 +16,5 @@
 + (instancetype) sharedInstance;
 + (void)loadTracingView;
 + (BOOL)isLoadTracing;
++(void)showButton;
 @end
