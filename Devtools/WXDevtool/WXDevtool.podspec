@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
 
   s.homepage     = "https://github.com/weexteam/weex-devtool-iOS"
   s.license = {
-    :type => 'Copyright',
+    :type => "Copyright",
     :text => <<-LICENSE
            Alibaba-INC copyright
     LICENSE
@@ -21,14 +21,13 @@ Pod::Spec.new do |s|
                      "kfeagle" =>"songhaibohust@gmail.com"
                    }
   s.platform     = :ios
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = "8.0"
   
   # cocoapods
   s.source =   { :git => "https://github.com/weexteam/weex-devtool-iOS.git", :tag => "0.16.0" }
-  s.source_files = 'WXDevTool/Source/**/*.{h,m,mm,c}'
+  s.source_files = "WXDevtool", "Devtools/WXDevtool/WXDevTool/Source/**/*.{h,m,mm,c}"
   s.requires_arc = true
-  s.vendored_frameworks = 'TBWXDevTool.framework'
-  s.frameworks = 'Foundation','CoreData','ImageIO','CoreData','CFNetwork','UIKit','CoreGraphics','Security'
-  s.libraries = 'z'
-  s.dependency 'WeexSDK'
+  s.frameworks = "Foundation","CoreData","ImageIO","CoreData","CFNetwork","UIKit","CoreGraphics","Security"
+  s.libraries = "z"
+  s.dependency "WeexSDK"
 end
