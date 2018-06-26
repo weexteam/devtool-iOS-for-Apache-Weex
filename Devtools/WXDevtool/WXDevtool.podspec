@@ -2,7 +2,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "WXDevtool"
-  s.version      = "0.9.5"
+  s.version      = "0.16.0"
   s.summary      = "WXDevtool Source."
 
   s.description  = <<-DESC
@@ -17,16 +17,18 @@ Pod::Spec.new do |s|
     LICENSE
   }
   s.authors      = {
-                     "mario" =>"faterrole@gmail.com"
+                     "mario" =>"faterrole@gmail.com",
+                     "kfeagle" =>"songhaibohust@gmail.com"
                    }
   s.platform     = :ios
-  s.ios.deployment_target = '7.0'
-  s.source =  { :path => '.' }
+  s.ios.deployment_target = '8.0'
+  
+  # cocoapods
+  s.source =   { :git => "https://github.com/weexteam/weex-devtool-iOS.git", :tag => "0.16.0" }
   s.source_files = 'WXDevTool/Source/**/*.{h,m,mm,c}'
-
   s.requires_arc = true
-  s.prefix_header_file = 'WXDevTool/Source/Supporting Files/TBWXDevTool.pch'
-#s.vendored_frameworks = 'WXDevTool.framework'
-  s.frameworks = 'Foundation','CoreData'
+  s.vendored_frameworks = 'TBWXDevTool.framework'
+  s.frameworks = 'Foundation','CoreData','ImageIO','CoreData','CFNetwork','UIKit','CoreGraphics','Security'
+  s.libraries = 'z'
   s.dependency 'WeexSDK'
 end
