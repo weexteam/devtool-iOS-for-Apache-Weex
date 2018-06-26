@@ -12,6 +12,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 #import <WeexSDK/WeexSDK.h>
+#import <WeexSDK/WXTracingManager.h>
 
 #pragma mark - Preprocessor
 
@@ -46,6 +47,7 @@
 
 
 extern void _WXLogObjectsImpl(NSString *severity, NSArray *arguments);
+extern NSString *const kWXNetworkObserverEnabledStateChangedNotification;
 
 
 #pragma mark - Public Interface
@@ -109,5 +111,11 @@ extern void _WXLogObjectsImpl(NSString *severity, NSArray *arguments);
 #pragma mark - listenning on server
 //- (void)serverStartWithHost:(NSString *)host port:(NSUInteger)port;
 
+#pragma mark -local enable
++ (void)setEnabled:(BOOL)enabled;
++ (BOOL)isEnabled;
+
++ (void)setRenderFinishEnabled:(BOOL)renderFinishEnabled;
++ (BOOL)renderFinishEnabled;
 
 @end

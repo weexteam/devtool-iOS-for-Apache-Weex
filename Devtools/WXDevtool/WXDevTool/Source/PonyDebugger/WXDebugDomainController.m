@@ -18,6 +18,14 @@
     NSThread    *_bridgeThread;
     WXJSCallNative  _nativeCallBlock;
     WXJSCallAddElement _callAddElementBlock;
+    WXJSCallCreateBody _callCreateBodyBlock;
+    WXJSCallRemoveElement _callRemoveElementBlock;
+    WXJSCallMoveElement _callMoveElementBlock;
+    WXJSCallUpdateAttrs _callUpdateAttrsBlock;
+    WXJSCallUpdateStyle _callUpdateStyleBlock;
+    WXJSCallAddEvent _callAddEventBlock;
+    WXJSCallRemoveEvent _callRemoveEventBlock;
+    WXJSCallCreateFinish _callCreateFinishBlock;
     WXJSCallNativeModule _nativeModuleBlock;
     WXJSCallNativeComponent _nativeComponentBlock;
 }
@@ -88,6 +96,38 @@
     _callAddElementBlock = callAddElement;
 }
 
+- (void)debugDomainRegisterCallCreateBody:(WXJSCallCreateBody)callCreateBody {
+    _callCreateBodyBlock = callCreateBody;
+}
+
+- (void)debugDomainRegisterCallRemoveElement:(WXJSCallRemoveElement)callRemoveElement {
+    _callRemoveElementBlock = callRemoveElement;
+}
+
+- (void)debugDomainRegisterCallMoveElement:(WXJSCallMoveElement)callMoveElement {
+    _callMoveElementBlock = callMoveElement;
+}
+
+- (void)debugDomainRegisterCallUpdateAttrs:(WXJSCallUpdateAttrs)callUpdateAttrs {
+    _callUpdateAttrsBlock = callUpdateAttrs;
+}
+
+- (void)debugDomainRegisterCallUpdateStyle:(WXJSCallUpdateStyle)callUpdateStyle {
+    _callUpdateStyleBlock = callUpdateStyle;
+}
+
+- (void)debugDomainRegisterCallAddEvent:(WXJSCallAddEvent)callAddEvent {
+    _callAddEventBlock = callAddEvent;
+}
+
+- (void)debugDomainRegisterCallRemoveEvent:(WXJSCallRemoveEvent)callRemoveEvent {
+    _callRemoveEventBlock = callRemoveEvent;
+}
+    
+- (void)debugDomainRegisterCallCreateFinish:(WXJSCallCreateFinish)callCreateFinish {
+    _callCreateFinishBlock = callCreateFinish;
+}
+
 - (void)debugDomainRegisterCallNativeModule:(WXJSCallNativeModule)callNativeModuleBlock {
     _nativeModuleBlock = callNativeModuleBlock;
 }
@@ -142,16 +182,28 @@
 
 #pragma mark - WXCommandDelegate
 - (void)domain:(WXDynamicDebuggerDomain *)domain enableWithCallback:(void (^)(id error))callback {
-    [WXDevToolType setDebug:YES];
-    [WXSDKEngine restart];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [WXDevToolType setDebug:YES];
+        [WXSDKEngine restart];
+    });
+    [self performSelector:@selector(enableWithCallback:) withObject:callback afterDelay:1];
+}
+
+-(void)enableWithCallback:(void (^)(id error))callback{
     [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreshInstance" object:nil];
     callback(nil);
 }
 
 - (void)domain:(WXDynamicDebuggerDomain *)domain disableWithCallback:(void (^)(id error))callback {
-    [WXDevToolType setDebug:NO];
-    [WXSDKEngine restart];
-    [self clearGarbage];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [WXDevToolType setDebug:NO];
+        [WXSDKEngine restart];
+        [self clearGarbage];
+    });
+    [self performSelector:@selector(disableWithCallback:) withObject:callback afterDelay:1];
+}
+
+-(void)disableWithCallback:(void (^)(id error))callback{
     [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreshInstance" object:nil];
     callback(nil);
 }
@@ -205,7 +257,9 @@
         }
         //call native
         WXLogInfo(@"Calling native... instancdId:%@, methods:%@, callbackId:%@", instanceId, [WXUtility JSONString:methods], callbackId);
-        _nativeCallBlock(instanceId, methods, callbackId);
+        if(_nativeCallBlock){
+            _nativeCallBlock(instanceId, methods, callbackId);
+        }
         callback(nil);
     }];
 }
@@ -224,6 +278,33 @@
     }];
 }
 
+- (void)domain:(WXDynamicDebuggerDomain *)domain callCreateBody:(NSDictionary *)jsModule callBack:(void (^)(id error))callback {
+}
+
+- (void)domain:(WXDynamicDebuggerDomain *)domain callRemoveElement:(NSDictionary *)jsModule callBack:(void (^)(id error))callback {
+    
+}
+
+- (void)domain:(WXDynamicDebuggerDomain *)domain callMoveElement:(NSDictionary *)jsModule callBack:(void (^)(id error))callback {
+    
+}
+
+- (void)domain:(WXDynamicDebuggerDomain *)domain callUpdateAttrs:(NSDictionary *)jsModule callBack:(void (^)(id error))callback {
+    
+}
+
+- (void)domain:(WXDynamicDebuggerDomain *)domain callUpdateStyle:(NSDictionary *)jsModule callBack:(void (^)(id error))callback {
+    
+}
+
+- (void)domain:(WXDynamicDebuggerDomain *)domain callAddEvent:(NSDictionary *)jsModule callBack:(void (^)(id error))callback {
+    
+}
+
+- (void)domain:(WXDynamicDebuggerDomain *)domain callRemoveEvent:(NSDictionary *)jsModule callBack:(void (^)(id error))callback {
+    
+}
+
 - (void)domain:(WXDynamicDebuggerDomain *)domain syncCall:(NSDictionary *)data callBack:(void (^)(NSDictionary *result, id error))callback; {
     [self _executeBridgeThead:^{
         NSArray *args = [data objectForKey:@"args"];
@@ -237,20 +318,23 @@
             NSString *moduleNameString = args[1] ? : @"";
             NSString *methodNameString = args[2] ? : @"";
             NSArray *argsArray = args[3] ? : [NSArray array];
-            NSDictionary *optionsDic = args[4] ? : [NSDictionary dictionary];
+            NSDictionary *optionsDic = [args[4] isKindOfClass:[NSDictionary class]]? args[4]: [NSDictionary dictionary];
             
             WXLog(@"callNativeModule...%@,%@,%@,%@", instanceIdString, moduleNameString, methodNameString, argsArray);
-            
-            NSInvocation *invocation = _nativeModuleBlock(instanceIdString, moduleNameString, methodNameString, argsArray, optionsDic);
-            id object = [WXDebuggerUtility switchInvocationReture:invocation];
-            NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-            [params setObject:syncId forKey:@"syncId"];
-            if (object) {
-                [params setObject:object forKey:@"ret"];
-            }else {
-                error = [[NSError alloc] init];
+            if(_nativeModuleBlock){
+                NSInvocation *invocation = _nativeModuleBlock(instanceIdString, moduleNameString, methodNameString, argsArray, optionsDic);
+                id object = [WXDebuggerUtility switchInvocationReture:invocation];
+                NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+                [params setObject:syncId forKey:@"syncId"];
+                if (object) {
+                    [params setObject:object forKey:@"ret"];
+                }else {
+                    error = [[NSError alloc] init];
+                }
+                [result setObject:params forKey:@"params"];
+            }else{
+                error = [NSError errorWithDomain:(NSErrorDomain)@"callNativeModule error" code:500 userInfo:nil];
             }
-            [result setObject:params forKey:@"params"];
         }else if ([method isEqualToString:@"callNativeComponent"]) {
             NSString *instanceIdString = args[0] ? : @"";
             NSString *componentNameString = args[1] ? : @"";
@@ -263,9 +347,39 @@
             _nativeComponentBlock(instanceIdString, componentNameString, methodNameString, argsArray, optionsDic);
             NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
             [result setObject:params forKey:@"params"];
+        }else if([method isEqualToString:@"extendCallNative"]) {
+            id value = [NSDictionary new];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+            Class propertyClass = NSClassFromString(@"WXExtendCallNativeManager");
+            SEL sel =NSSelectorFromString(@"sendExtendCallNativeEvent:");
+            if(propertyClass && [propertyClass respondsToSelector:sel]){
+                value = [propertyClass performSelector:sel withObject:data[@"value"]];
+            }
+#pragma clang diagnostic pop
+            NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+            [params setObject:value forKey:@"ret"];
+            [result setObject:params forKey:@"params"];
+        } else if([method isEqualToString:@"btoa"]) {
+            NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+            NSData *nsdata = [data[@"value"]
+                              dataUsingEncoding:NSUTF8StringEncoding];
+            NSString *base64Encoded = [nsdata base64EncodedStringWithOptions:0];
+            [params setObject:base64Encoded forKey:@"ret"];
+            [result setObject:params forKey:@"params"];
+        } else if([method isEqualToString:@"atob"]) {
+            NSData *nsdataFromBase64String = [[NSData alloc]
+                                              initWithBase64EncodedString:data[@"value"] options:0];
+            NSString *base64Decoded = [[NSString alloc]
+                                       initWithData:nsdataFromBase64String encoding:NSUTF8StringEncoding];
+            NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
+            [params setObject:base64Decoded forKey:@"ret"];
+            [result setObject:params forKey:@"params"];
         }
         callback(result, error);
     }];
 }
+
+
 
 @end

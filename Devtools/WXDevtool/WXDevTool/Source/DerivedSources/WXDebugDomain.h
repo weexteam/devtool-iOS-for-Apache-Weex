@@ -33,6 +33,19 @@
 
 - (void)domain:(WXDynamicDebuggerDomain *)domain callAddElement:(NSDictionary *)jsModule callBack:(void (^)(id error))callback;
 
+- (void)domain:(WXDynamicDebuggerDomain *)domain callCreateBody:(NSDictionary *)jsModule callBack:(void (^)(id error))callback;
+
+- (void)domain:(WXDynamicDebuggerDomain *)domain callRemoveElement:(NSDictionary *)jsModule callBack:(void (^)(id error))callback ;
+
+- (void)domain:(WXDynamicDebuggerDomain *)domain callMoveElement:(NSDictionary *)jsModule callBack:(void (^)(id error))callback ;
+
+- (void)domain:(WXDynamicDebuggerDomain *)domain callUpdateAttrs:(NSDictionary *)jsModule callBack:(void (^)(id error))callback ;
+
+- (void)domain:(WXDynamicDebuggerDomain *)domain callUpdateStyle:(NSDictionary *)jsModule callBack:(void (^)(id error))callback ;
+
+- (void)domain:(WXDynamicDebuggerDomain *)domain callAddEvent:(NSDictionary *)jsModule callBack:(void (^)(id error))callback ;
+
+- (void)domain:(WXDynamicDebuggerDomain *)domain callRemoveEvent:(NSDictionary *)jsModule callBack:(void (^)(id error))callback ;
 - (void)domain:(WXDynamicDebuggerDomain *)domain syncCall:(NSDictionary *)args callBack:(void (^)(NSDictionary *data, id error))callback;
 
 @end

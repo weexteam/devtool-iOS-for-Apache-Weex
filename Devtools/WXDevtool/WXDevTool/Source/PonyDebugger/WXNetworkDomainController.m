@@ -18,7 +18,11 @@
 #import <objc/message.h>
 #import <dispatch/queue.h>
 
-
+#import "WXNetworkRecorder.h"
+#import "WXTracingUtility.h"
+#import "WXDebugger.h"
+static NSString *seed = nil;
+static NSInteger sequenceNumber = 0;
 // For reference from the private class dump
 //@interface __NSCFURLSessionConnection : NSObject
 //
@@ -121,8 +125,8 @@
 
 + (NSString *)nextRequestID;
 {
-    static NSInteger sequenceNumber = 0;
-    static NSString *seed = nil;
+    
+    
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         CFUUIDRef uuid = CFUUIDCreate(CFAllocatorGetDefault());
@@ -132,6 +136,12 @@
     
     return [[NSString alloc] initWithFormat:@"%@-%ld", seed, (long)(++sequenceNumber)];
 }
+
++ (NSString *)currentRequestID;
+{
+    return [[NSString alloc] initWithFormat:@"%@-%ld", seed, (long)(sequenceNumber)];
+}
+
 
 + (Class)domainClass;
 {
@@ -340,7 +350,8 @@ static NSArray *prettyStringPrinters = nil;
         @selector(connection:didReceiveResponse:),
         @selector(URLSession:dataTask:didReceiveResponse:completionHandler:),
         @selector(URLSession:task:didCompleteWithError:),
-        @selector(URLSession:downloadTask:didFinishDownloadingToURL:)
+        @selector(URLSession:downloadTask:didFinishDownloadingToURL:),
+        @selector(URLSession:task:didFinishCollectingMetrics:)
     };
     
     const int numSelectors = sizeof(selectors) / sizeof(SEL);
@@ -363,6 +374,11 @@ static NSArray *prettyStringPrinters = nil;
                 continue;
             }
             
+            //Temporarily filter classes beginning ANManager
+            if([NSStringFromClass(class) rangeOfString:@"ANManager"].location != NSNotFound) {
+                continue;
+            }
+            
             if (![class isSubclassOfClass:[NSObject class]]) {
                 continue;
             }
@@ -381,6 +397,41 @@ static NSArray *prettyStringPrinters = nil;
         
         free(classes);
     }
+    [self injectIntoNSURLSessionTaskResume];
+    [self injectIntoNSURLConnectionAsynchronousClassMethod];
+    [self injectIntoNSURLConnectionSynchronousClassMethod];
+}
+
++ (void)injectIntoNSURLSessionTaskResume
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        // In iOS 7 resume lives in __NSCFLocalSessionTask
+        // In iOS 8 resume lives in NSURLSessionTask
+        // In iOS 9 resume lives in __NSCFURLSessionTask
+        Class class = Nil;
+        if (![[NSProcessInfo processInfo] respondsToSelector:@selector(operatingSystemVersion)]) {
+            class = NSClassFromString([@[@"__", @"NSC", @"FLocalS", @"ession", @"Task"] componentsJoinedByString:@""]);
+        } else if ([[NSProcessInfo processInfo] operatingSystemVersion].majorVersion < 9) {
+            class = [NSURLSessionTask class];
+        } else {
+            class = NSClassFromString([@[@"__", @"NSC", @"FURLS", @"ession", @"Task"] componentsJoinedByString:@""]);
+        }
+        SEL selector = @selector(resume);
+        SEL swizzledSelector = [WXTracingUtility swizzledSelectorForSelector:selector];
+        
+        Method originalResume = class_getInstanceMethod(class, selector);
+        
+        void (^swizzleBlock)(NSURLSessionTask *) = ^(NSURLSessionTask *slf) {
+            [[WXNetworkDomainController defaultInstance] URLSessionTaskWillResume:slf];
+            ((void(*)(id, SEL))objc_msgSend)(slf, swizzledSelector);
+        };
+        
+        IMP implementation = imp_implementationWithBlock(swizzleBlock);
+        class_addMethod(class, swizzledSelector, implementation, method_getTypeEncoding(originalResume));
+        Method newResume = class_getInstanceMethod(class, swizzledSelector);
+        method_exchangeImplementations(originalResume, newResume);
+    });
 }
 
 + (void)injectIntoDelegateClass:(Class)cls;
@@ -391,6 +442,7 @@ static NSArray *prettyStringPrinters = nil;
     [self injectDidReceiveResponseIntoDelegateClass:cls];
     [self injectDidFinishLoadingIntoDelegateClass:cls];
     [self injectDidFailWithErrorIntoDelegateClass:cls];
+    [self injectDidFinishCollectingMetrics:cls];
 }
 
 + (void)injectWillSendRequestIntoDelegateClass:(Class)cls;
@@ -558,6 +610,139 @@ static NSArray *prettyStringPrinters = nil;
     [self replaceImplementationOfSelector:selector withSelector:swizzledSelector forClass:cls withMethodDescription:methodDescription implementationBlock:implementationBlock undefinedBlock:undefinedBlock];
 }
 
++(void)injectDidFinishCollectingMetrics:(Class)cls
+{
+    NSLog(@"injectDidFinishCollectingMetrics");
+    SEL selector = @selector(URLSession:task:didFinishCollectingMetrics:);
+    SEL swizzledSelector = [self swizzledSelectorForSelector:selector];
+    
+    Protocol *protocol = @protocol(NSURLSessionTaskDelegate);
+    
+    if (![cls conformsToProtocol:protocol]) {
+        return;
+    }
+    
+    struct objc_method_description methodDescription = protocol_getMethodDescription(protocol, selector, NO, YES);
+    
+    typedef void (^NSURLConnectionDidFinishCollectingMetricsBlock)(id <NSURLSessionTaskDelegate> slf, NSURLSession *session, NSURLSessionTask* task, NSURLSessionTaskMetrics *metrics);
+    
+    NSURLConnectionDidFinishCollectingMetricsBlock undefinedBlock = ^(id <NSURLSessionTaskDelegate> slf, NSURLSession *session, NSURLSessionTask* task, NSURLSessionTaskMetrics *metrics) {
+        [[WXNetworkDomainController defaultInstance] URLSession:session task:task didFinishCollectingMetrics:metrics];
+    };
+    
+    NSURLConnectionDidFinishCollectingMetricsBlock implementationBlock = ^(id <NSURLSessionTaskDelegate> slf, NSURLSession *session, NSURLSessionTask* task, NSURLSessionTaskMetrics *metrics) {
+        [self sniffWithoutDuplicationForObject:session selector:selector sniffingBlock:^{
+            undefinedBlock(slf, session, task,metrics);
+        } originalImplementationBlock:^{
+            ((void(*)(id, SEL, id, id,id))objc_msgSend)(slf, swizzledSelector, session, task,metrics);
+        }];
+    };
+    
+    [self replaceImplementationOfSelector:selector withSelector:swizzledSelector forClass:cls withMethodDescription:methodDescription implementationBlock:implementationBlock undefinedBlock:undefinedBlock];
+}
+
+
+- (void)URLSessionTaskWillResume:(NSURLSessionTask *)task
+{
+    // Since resume can be called multiple times on the same task, only treat the first resume as
+    // the equivalent to connection:willSendRequest:...
+    [self performBlock:^{
+        NSString *requestID =[self requestStateForTask:task].requestID;
+        _WXRequestState *requestState = [self requestStateForTask:task];
+        if (!requestState.request) {
+            requestState.request = task.currentRequest;
+            
+            [[WXNetworkRecorder defaultRecorder] recordRequestWillBeSentWithRequestID:requestID request:task.currentRequest redirectResponse:nil];
+        }
+    }];
+}
+
++ (void)injectIntoNSURLConnectionAsynchronousClassMethod
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        Class class = objc_getMetaClass(class_getName([NSURLConnection class]));
+        SEL selector = @selector(sendAsynchronousRequest:queue:completionHandler:);
+        SEL swizzledSelector = [WXTracingUtility swizzledSelectorForSelector:selector];
+        
+        typedef void (^NSURLConnectionAsyncCompletion)(NSURLResponse* response, NSData* data, NSError* connectionError);
+        
+        void (^asyncSwizzleBlock)(Class, NSURLRequest *, NSOperationQueue *, NSURLConnectionAsyncCompletion) = ^(Class slf, NSURLRequest *request, NSOperationQueue *queue, NSURLConnectionAsyncCompletion completion) {
+            if ([WXDebugger isEnabled]) {
+                NSString *requestID = [self nextRequestID];
+                [[WXNetworkRecorder defaultRecorder] recordRequestWillBeSentWithRequestID:requestID request:request redirectResponse:nil];
+                NSString *mechanism = [self mechansimFromClassMethod:selector onClass:class];
+                [[WXNetworkRecorder defaultRecorder] recordMechanism:mechanism forRequestID:requestID];
+                NSURLConnectionAsyncCompletion completionWrapper = ^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+                    [[WXNetworkRecorder defaultRecorder] recordResponseReceivedWithRequestID:requestID response:response];
+                    [[WXNetworkRecorder defaultRecorder] recordDataReceivedWithRequestID:requestID dataLength:[data length]];
+                    if (connectionError) {
+                        [[WXNetworkRecorder defaultRecorder] recordLoadingFailedWithRequestID:requestID error:connectionError];
+                    } else {
+                        [[WXNetworkRecorder defaultRecorder] recordLoadingFinishedWithRequestID:requestID responseBody:data];
+                    }
+                    
+                    // Call through to the original completion handler
+                    if (completion) {
+                        completion(response, data, connectionError);
+                    }
+                };
+                ((void(*)(id, SEL, id, id, id))objc_msgSend)(slf, swizzledSelector, request, queue, completionWrapper);
+            } else {
+                ((void(*)(id, SEL, id, id, id))objc_msgSend)(slf, swizzledSelector, request, queue, completion);
+            }
+        };
+        
+        [WXTracingUtility replaceImplementationOfKnownSelector:selector onClass:class withBlock:asyncSwizzleBlock swizzledSelector:swizzledSelector];
+    });
+}
+
++ (void)injectIntoNSURLConnectionSynchronousClassMethod
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        Class class = objc_getMetaClass(class_getName([NSURLConnection class]));
+        SEL selector = @selector(sendSynchronousRequest:returningResponse:error:);
+        SEL swizzledSelector = [WXTracingUtility swizzledSelectorForSelector:selector];
+        
+        NSData *(^syncSwizzleBlock)(Class, NSURLRequest *, NSURLResponse **, NSError **) = ^NSData *(Class slf, NSURLRequest *request, NSURLResponse **response, NSError **error) {
+            NSData *data = nil;
+            if ([WXDebugger isEnabled]) {
+                NSString *requestID = [self nextRequestID];
+                [[WXNetworkRecorder defaultRecorder] recordRequestWillBeSentWithRequestID:requestID request:request redirectResponse:nil];
+                NSString *mechanism = [self mechansimFromClassMethod:selector onClass:class];
+                [[WXNetworkRecorder defaultRecorder] recordMechanism:mechanism forRequestID:requestID];
+                NSError *temporaryError = nil;
+                NSURLResponse *temporaryResponse = nil;
+                data = ((id(*)(id, SEL, id, NSURLResponse **, NSError **))objc_msgSend)(slf, swizzledSelector, request, &temporaryResponse, &temporaryError);
+                [[WXNetworkRecorder defaultRecorder] recordResponseReceivedWithRequestID:requestID response:temporaryResponse];
+                [[WXNetworkRecorder defaultRecorder] recordDataReceivedWithRequestID:requestID dataLength:[data length]];
+                if (temporaryError) {
+                    [[WXNetworkRecorder defaultRecorder] recordLoadingFailedWithRequestID:requestID error:temporaryError];
+                } else {
+                    [[WXNetworkRecorder defaultRecorder] recordLoadingFinishedWithRequestID:requestID responseBody:data];
+                }
+                if (error) {
+                    *error = temporaryError;
+                }
+                if (response) {
+                    *response = temporaryResponse;
+                }
+            } else {
+                data = ((id(*)(id, SEL, id, NSURLResponse **, NSError **))objc_msgSend)(slf, swizzledSelector, request, response, error);
+            }
+            
+            return data;
+        };
+        
+        [WXTracingUtility replaceImplementationOfKnownSelector:selector onClass:class withBlock:syncSwizzleBlock swizzledSelector:swizzledSelector];
+    });
+}
+
++ (NSString *)mechansimFromClassMethod:(SEL)selector onClass:(Class)class
+{
+    return [NSString stringWithFormat:@"+[%@ %@]", NSStringFromClass(class), NSStringFromSelector(selector)];
+}
 #pragma mark - Initialization
 
 - (id)init;
@@ -724,9 +909,27 @@ static NSArray *prettyStringPrinters = nil;
     return state;
 }
 
+- (_WXRequestState *)requestStateForMetricsTask:(NSURLSessionTask *)task;
+{
+    NSValue *key = [NSValue valueWithNonretainedObject:task];
+    _WXRequestState *state = [_connectionStates objectForKey:key];
+    if (!state) {
+        state = [[_WXRequestState alloc] init];
+        state.requestID = [[self class] currentRequestID];
+        [_connectionStates setObject:state forKey:key];
+    }
+    
+    return state;
+}
+
 - (NSString *)requestIDForTask:(NSURLSessionTask *)task;
 {
     return [self requestStateForTask:task].requestID;
+}
+
+- (NSString *)requestIDForMetricsTask:(NSURLSessionTask *)task;
+{
+    return [self requestStateForMetricsTask:task].requestID;
 }
 
 - (void)setResponse:(NSURLResponse *)response forTask:(NSURLSessionTask *)task;
@@ -794,6 +997,10 @@ static NSArray *prettyStringPrinters = nil;
                                           timestamp:[NSDate WX_timestamp]
                                           initiator:nil
                                    redirectResponse:networkRedirectResponse];
+        if ([WXDebugger isEnabled]) {
+            NSString *requestID = [self requestIDForConnection:connection];
+            [[WXNetworkRecorder defaultRecorder] recordRequestWillBeSentWithRequestID:requestID request:request redirectResponse:nil];
+        }
     }];
 }
 
@@ -844,6 +1051,10 @@ static NSArray *prettyStringPrinters = nil;
                                              timestamp:[NSDate WX_timestamp]
                                                   type:response.WX_responseType
                                               response:networkResponse];
+            
+            if([WXDebugger isEnabled]){
+                [[WXNetworkRecorder defaultRecorder] recordResponseReceivedWithRequestID:requestID response:response];
+            }
         }
         
     }];
@@ -865,6 +1076,10 @@ static NSArray *prettyStringPrinters = nil;
                                      timestamp:[NSDate WX_timestamp]
                                     dataLength:length
                              encodedDataLength:length];
+        
+        if([WXDebugger isEnabled]){
+            [[WXNetworkRecorder defaultRecorder] recordDataReceivedWithRequestID:requestID dataLength:[data length]];
+        }
     }];
 }
 
@@ -885,6 +1100,9 @@ static NSArray *prettyStringPrinters = nil;
                                         timestamp:[NSDate WX_timestamp]];
         
         [self connectionFinished:connection];
+        if([WXDebugger isEnabled]){
+            [[WXNetworkRecorder defaultRecorder] recordLoadingFinishedWithRequestID:requestID responseBody:accumulatedData];
+        }
     }];
 }
 
@@ -897,9 +1115,12 @@ static NSArray *prettyStringPrinters = nil;
                                        canceled:[NSNumber numberWithBool:NO]];
         
         [self connectionFinished:connection];
+        if([WXDebugger isEnabled]){
+            NSString *requestID = [self requestIDForConnection:connection];
+            [[WXNetworkRecorder defaultRecorder] recordLoadingFailedWithRequestID:requestID error:error];
+        }
     }];
 }
-
 @end
 
 
@@ -940,6 +1161,9 @@ static NSArray *prettyStringPrinters = nil;
                                           timestamp:@(startDate.timeIntervalSince1970)
                                           initiator:nil
                                    redirectResponse:networkRedirectResponse];
+        if([WXDebugger isEnabled]){
+            [[WXNetworkRecorder defaultRecorder] recordRequestWillBeSentWithRequestID:[self requestIDForTask:task] request:request redirectResponse:response];
+        }
     }];
 }
 
@@ -1003,28 +1227,19 @@ static NSArray *prettyStringPrinters = nil;
 
         NSString *requestID = [self requestIDForTask:dataTask];
         WXNetworkResponse *networkResponse = [WXNetworkResponse networkResponseWithURLResponse:response request:[self requestForTask:dataTask]];
-        /*
-        WXNetworkResourceTiming *timeline = [[WXNetworkResourceTiming alloc] init];
-        timeline.requestTime = [NSNumber numberWithDouble:startDate.timeIntervalSince1970];//[NSDate WX_timestamp];
-        timeline.proxyStart = [NSNumber numberWithInt:0];
-        timeline.proxyEnd = [NSNumber numberWithInt:10001];
-        timeline.dnsStart = [NSNumber numberWithInt:89];
-        timeline.dnsEnd = [NSNumber numberWithInt:90];
-        timeline.connectStart = [NSNumber numberWithInt:23];
-        timeline.connectEnd = [NSNumber numberWithInt:34];
-        timeline.sslStart = [NSNumber numberWithInt:0];
-        timeline.sslEnd = [NSNumber numberWithInt:1];
-        timeline.sendStart = [NSDate WX_timestamp];
-        timeline.sendEnd = [NSDate WX_timestamp];
-        timeline.receiveHeadersEnd = [NSNumber numberWithDouble:startDate.timeIntervalSince1970];//[NSDate WX_timestamp];
-        networkResponse.timing = timeline;
-         */
+
         [self.domain responseReceivedWithRequestId:requestID
                                            frameId:@"3888.3"
                                           loaderId:@"11111"
                                          timestamp:[NSDate WX_timestamp]
                                               type:response.WX_responseType
                                           response:networkResponse];
+        if([WXDebugger isEnabled]){
+            NSString *requestMechanism = [NSString stringWithFormat:@"NSURLSessionDataTask (delegate: %@)", NSStringFromSelector(_cmd)];
+            [[WXNetworkRecorder defaultRecorder] recordMechanism:requestMechanism forRequestID:requestID];
+            
+            [[WXNetworkRecorder defaultRecorder] recordResponseReceivedWithRequestID:requestID response:response];
+        }
     }
 }
 
@@ -1044,6 +1259,9 @@ static NSArray *prettyStringPrinters = nil;
                                      timestamp:[NSDate WX_timestamp]
                                     dataLength:length
                              encodedDataLength:length];
+        if([WXDebugger isEnabled]){
+            [[WXNetworkRecorder defaultRecorder] recordDataReceivedWithRequestID:requestID dataLength:data.length];
+        }
     }];
 }
 
@@ -1066,14 +1284,64 @@ static NSArray *prettyStringPrinters = nil;
                      response:response
                       request:[self requestForTask:task]];
         }
-
-        [self.domain loadingFinishedWithRequestId:requestID
-                                        timestamp:[NSDate WX_timestamp]];
-
+        
+//        [self.domain loadingFinishedWithRequestId:requestID timestamp:[NSDate WX_timestamp]];
         [self taskFinished:task];
+        
+        if([WXDebugger isEnabled]){
+            if (error) {
+                [[WXNetworkRecorder defaultRecorder] recordLoadingFailedWithRequestID:requestID error:error];
+            } else {
+                [[WXNetworkRecorder defaultRecorder] recordLoadingFinishedWithRequestID:requestID responseBody:accumulatedData];
+            }
+        }
     }];
 }
 
+
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didFinishCollectingMetrics:(NSURLSessionTaskMetrics *)metrics
+{
+    NSLog(@"injectDidFinishCollectingMetrics excute");
+    __weak typeof(self) weakSelf = self;
+    [self performBlock:^{
+        if(metrics && metrics.transactionMetrics && [metrics.transactionMetrics count]>0){
+            for (NSURLSessionTaskTransactionMetrics *transactionMetrics in metrics.transactionMetrics) {
+                [weakSelf parseMetrics:task transactionMetrics:transactionMetrics];
+            }
+        }
+//        [self.domain loadingFinishedWithRequestId:[self requestStateForMetricsTask:task].requestID timestamp:[NSDate WX_timestamp]];
+        
+    }];
+}
+
+-(void)parseMetrics:(NSURLSessionTask *)task transactionMetrics:(NSURLSessionTaskTransactionMetrics *)transactionMetrics
+{
+    NSString *requestID = [self requestStateForMetricsTask:task].requestID;
+    NSURLRequest *request = [self requestForTask:task];
+    WXNetworkResponse *networkResponse = [WXNetworkResponse networkResponseWithURLResponse:transactionMetrics.response request:request];
+    
+    WXNetworkResourceTiming *timeline = [[WXNetworkResourceTiming alloc] init];
+    timeline.requestTime = [NSNumber numberWithDouble:transactionMetrics.requestStartDate.timeIntervalSince1970];//[NSDate WX_timestamp];
+    timeline.proxyStart = [NSNumber numberWithInt:0];
+    timeline.proxyEnd = [NSNumber numberWithInt:5];
+    timeline.dnsStart = [NSNumber numberWithInt:10];
+    timeline.dnsEnd = [NSNumber numberWithInt:20];
+    timeline.connectStart =  [NSNumber numberWithDouble:transactionMetrics.connectStartDate.timeIntervalSince1970];
+    timeline.connectEnd =  [NSNumber numberWithDouble:transactionMetrics.connectEndDate.timeIntervalSince1970];
+    timeline.sslStart = [NSNumber numberWithDouble:transactionMetrics.secureConnectionStartDate.timeIntervalSince1970];
+    timeline.sslEnd = [NSNumber numberWithDouble:transactionMetrics.secureConnectionEndDate.timeIntervalSince1970];
+    timeline.sendStart = [NSNumber numberWithDouble:transactionMetrics.requestStartDate.timeIntervalSince1970];
+    timeline.sendEnd =  [NSNumber numberWithDouble:transactionMetrics.requestEndDate.timeIntervalSince1970];
+    timeline.receiveHeadersEnd = [NSNumber numberWithDouble:transactionMetrics.responseEndDate.timeIntervalSince1970];
+    networkResponse.timing = timeline;
+    
+    [self.domain responseReceivedWithRequestId:requestID
+                                       frameId:@"3888.3"
+                                      loaderId:@"11111"
+                                     timestamp:[NSDate WX_timestamp]
+                                          type:transactionMetrics.response.WX_responseType
+                                      response:networkResponse];
+}
 @end
 
 

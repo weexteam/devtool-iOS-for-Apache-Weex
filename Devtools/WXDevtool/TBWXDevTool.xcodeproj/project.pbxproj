@@ -33,7 +33,7 @@
 		0A01031F1D35E25300F0D592 /* WXDeviceInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0102991D35E25300F0D592 /* WXDeviceInfo.m */; };
 		0A0103201D35E25300F0D592 /* WXDevTool.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A01029B1D35E25300F0D592 /* WXDevTool.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A0103211D35E25300F0D592 /* WXDevTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A01029C1D35E25300F0D592 /* WXDevTool.m */; };
-		0A0103221D35E27000F0D592 /* TBWXDevTool.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AFA0ECE1D2CE79E006E30BB /* TBWXDevTool.h */; };
+		0A0103221D35E27000F0D592 /* TBWXDevTool.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AFA0ECE1D2CE79E006E30BB /* TBWXDevTool.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A0298541D4B402400B4BC95 /* WXDevToolType.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0298521D4B402400B4BC95 /* WXDevToolType.h */; };
 		0A0298551D4B402400B4BC95 /* WXDevToolType.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0298531D4B402400B4BC95 /* WXDevToolType.m */; };
 		0A1DCE3A1D4F004C005E87C7 /* TBWXDevTool.pch in Headers */ = {isa = PBXBuildFile; fileRef = 0A1DCE391D4F004C005E87C7 /* TBWXDevTool.pch */; };
@@ -174,7 +174,15 @@
 		0AFA10141D2CEC49006E30BB /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AFA10131D2CEC49006E30BB /* CoreData.framework */; };
 		0AFE81D61D8102B800C99208 /* WXPageDomainUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AFE81D41D8102B800C99208 /* WXPageDomainUtility.h */; };
 		0AFE81D71D8102B800C99208 /* WXPageDomainUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AFE81D51D8102B800C99208 /* WXPageDomainUtility.m */; };
-		75C1C0A17938023E1B39089E /* libPods-TBWXDevTool.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A04B5D4DF9E863CD1DE1B075 /* libPods-TBWXDevTool.a */; };
+		C42545FD1F27461000B93B0D /* WXNetworkRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545BB1F27461000B93B0D /* WXNetworkRecorder.h */; };
+		C42545FE1F27461000B93B0D /* WXNetworkRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545BC1F27461000B93B0D /* WXNetworkRecorder.m */; };
+		C42546011F27461000B93B0D /* WXNetworkTransaction.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545BF1F27461000B93B0D /* WXNetworkTransaction.h */; };
+		C42546021F27461000B93B0D /* WXNetworkTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545C01F27461000B93B0D /* WXNetworkTransaction.m */; };
+		C42546071F27461000B93B0D /* WXResources.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545C51F27461000B93B0D /* WXResources.h */; };
+		C42546081F27461000B93B0D /* WXResources.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545C61F27461000B93B0D /* WXResources.m */; };
+		C42546091F27461000B93B0D /* WXTracingUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545C71F27461000B93B0D /* WXTracingUtility.h */; };
+		C425460A1F27461000B93B0D /* WXTracingUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545C81F27461000B93B0D /* WXTracingUtility.m */; };
+		C49207731F28927D002EF9D7 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C49207721F28927D002EF9D7 /* ImageIO.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -348,9 +356,17 @@
 		0AFA10151D2CEC58006E30BB /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
 		0AFE81D41D8102B800C99208 /* WXPageDomainUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXPageDomainUtility.h; sourceTree = "<group>"; };
 		0AFE81D51D8102B800C99208 /* WXPageDomainUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXPageDomainUtility.m; sourceTree = "<group>"; };
-		421E7FD57E17C231508BA514 /* Pods-TBWXDevTool.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBWXDevTool.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TBWXDevTool/Pods-TBWXDevTool.debug.xcconfig"; sourceTree = "<group>"; };
-		A04B5D4DF9E863CD1DE1B075 /* libPods-TBWXDevTool.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TBWXDevTool.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B7CA78A41D406A09A4D0B154 /* Pods-TBWXDevTool.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBWXDevTool.release.xcconfig"; path = "Pods/Target Support Files/Pods-TBWXDevTool/Pods-TBWXDevTool.release.xcconfig"; sourceTree = "<group>"; };
+		489AA4AF96AEBD4B7A7D8A91 /* Pods-TBWXDevTool.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBWXDevTool.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TBWXDevTool/Pods-TBWXDevTool.debug.xcconfig"; sourceTree = "<group>"; };
+		9CF2E2BFC9331B7CB90EA000 /* Pods-TBWXDevTool.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBWXDevTool.release.xcconfig"; path = "Pods/Target Support Files/Pods-TBWXDevTool/Pods-TBWXDevTool.release.xcconfig"; sourceTree = "<group>"; };
+		C42545BB1F27461000B93B0D /* WXNetworkRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXNetworkRecorder.h; sourceTree = "<group>"; };
+		C42545BC1F27461000B93B0D /* WXNetworkRecorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXNetworkRecorder.m; sourceTree = "<group>"; };
+		C42545BF1F27461000B93B0D /* WXNetworkTransaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXNetworkTransaction.h; sourceTree = "<group>"; };
+		C42545C01F27461000B93B0D /* WXNetworkTransaction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXNetworkTransaction.m; sourceTree = "<group>"; };
+		C42545C51F27461000B93B0D /* WXResources.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXResources.h; sourceTree = "<group>"; };
+		C42545C61F27461000B93B0D /* WXResources.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXResources.m; sourceTree = "<group>"; };
+		C42545C71F27461000B93B0D /* WXTracingUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXTracingUtility.h; sourceTree = "<group>"; };
+		C42545C81F27461000B93B0D /* WXTracingUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXTracingUtility.m; sourceTree = "<group>"; };
+		C49207721F28927D002EF9D7 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -365,13 +381,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C49207731F28927D002EF9D7 /* ImageIO.framework in Frameworks */,
 				0AFA10141D2CEC49006E30BB /* CoreData.framework in Frameworks */,
 				0AFA10121D2CEC42006E30BB /* CoreGraphics.framework in Frameworks */,
 				0AFA10101D2CEC3B006E30BB /* UIKit.framework in Frameworks */,
 				0AFA100E1D2CEC34006E30BB /* Foundation.framework in Frameworks */,
 				0AFA100C1D2CEC2A006E30BB /* CFNetwork.framework in Frameworks */,
 				0AFA0FE61D2CEB39006E30BB /* Security.framework in Frameworks */,
-				75C1C0A17938023E1B39089E /* libPods-TBWXDevTool.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -570,7 +586,7 @@
 				0ABB39EF1D3F37700091332E /* TBWXDevTool_MTL */,
 				0AFA10171D2CEC61006E30BB /* Frameworks */,
 				0AFA0ECC1D2CE79E006E30BB /* Products */,
-				5BBAAFD202BB8905B015DA7C /* Pods */,
+				7AED1ACEA69643F607B0C3D3 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -597,6 +613,7 @@
 		0AFA0ED61D2CEA94006E30BB /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				C42545A01F27461000B93B0D /* WXTracing */,
 				0A0102151D35E25300F0D592 /* DerivedSources */,
 				0A0102601D35E25300F0D592 /* PonyDebugger */,
 				0A01029A1D35E25300F0D592 /* WXHeader */,
@@ -607,6 +624,7 @@
 		0AFA10171D2CEC61006E30BB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C49207721F28927D002EF9D7 /* ImageIO.framework */,
 				0AFA10151D2CEC58006E30BB /* libicucore.tbd */,
 				0AFA10131D2CEC49006E30BB /* CoreData.framework */,
 				0AFA10111D2CEC42006E30BB /* CoreGraphics.framework */,
@@ -614,19 +632,42 @@
 				0AFA100D1D2CEC34006E30BB /* Foundation.framework */,
 				0AFA100B1D2CEC2A006E30BB /* CFNetwork.framework */,
 				0AFA0FE51D2CEB39006E30BB /* Security.framework */,
-				A04B5D4DF9E863CD1DE1B075 /* libPods-TBWXDevTool.a */,
 			);
 			name = Frameworks;
 			path = WXDevTool;
 			sourceTree = "<group>";
 		};
-		5BBAAFD202BB8905B015DA7C /* Pods */ = {
+		7AED1ACEA69643F607B0C3D3 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				421E7FD57E17C231508BA514 /* Pods-TBWXDevTool.debug.xcconfig */,
-				B7CA78A41D406A09A4D0B154 /* Pods-TBWXDevTool.release.xcconfig */,
+				489AA4AF96AEBD4B7A7D8A91 /* Pods-TBWXDevTool.debug.xcconfig */,
+				9CF2E2BFC9331B7CB90EA000 /* Pods-TBWXDevTool.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		C42545A01F27461000B93B0D /* WXTracing */ = {
+			isa = PBXGroup;
+			children = (
+				C42545B21F27461000B93B0D /* WXNetwork */,
+			);
+			name = WXTracing;
+			path = Source/WXTracing;
+			sourceTree = "<group>";
+		};
+		C42545B21F27461000B93B0D /* WXNetwork */ = {
+			isa = PBXGroup;
+			children = (
+				C42545BB1F27461000B93B0D /* WXNetworkRecorder.h */,
+				C42545BC1F27461000B93B0D /* WXNetworkRecorder.m */,
+				C42545BF1F27461000B93B0D /* WXNetworkTransaction.h */,
+				C42545C01F27461000B93B0D /* WXNetworkTransaction.m */,
+				C42545C51F27461000B93B0D /* WXResources.h */,
+				C42545C61F27461000B93B0D /* WXResources.m */,
+				C42545C71F27461000B93B0D /* WXTracingUtility.h */,
+				C42545C81F27461000B93B0D /* WXTracingUtility.m */,
+			);
+			path = WXNetwork;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -637,9 +678,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A0103201D35E25300F0D592 /* WXDevTool.h in Headers */,
+				0A0103221D35E27000F0D592 /* TBWXDevTool.h in Headers */,
 				0ADE97AE1D767B6F005781C1 /* WXInspectorDomainController.h in Headers */,
 				0ADE98111D767BA5005781C1 /* WXFileSystemTypes.h in Headers */,
 				0ADE977B1D767B62005781C1 /* NSDate+WXDebugger.h in Headers */,
+				C42546091F27461000B93B0D /* WXTracingUtility.h in Headers */,
 				0ADE97B71D767B6F005781C1 /* WXPrettyStringPrinter.h in Headers */,
 				0A0102E51D35E25300F0D592 /* WXTimelineDomainController.h in Headers */,
 				0ADE977F1D767B62005781C1 /* NSError+WX_JSONObject.h in Headers */,
@@ -663,6 +706,7 @@
 				0A1DCE3A1D4F004C005E87C7 /* TBWXDevTool.pch in Headers */,
 				0ADE97811D767B62005781C1 /* NSManagedObject+WXRuntimePropertyDescriptor.h in Headers */,
 				0A01031E1D35E25300F0D592 /* WXDeviceInfo.h in Headers */,
+				C42546011F27461000B93B0D /* WXNetworkTransaction.h in Headers */,
 				0ADE978F1D767B62005781C1 /* WXDefinitions.h in Headers */,
 				0ADE97D51D767B93005781C1 /* WXCSSTypes.h in Headers */,
 				0ADE97A81D767B6F005781C1 /* WXDOMDomainController.h in Headers */,
@@ -690,15 +734,16 @@
 				0ADE981D1D767BA5005781C1 /* WXNetworkDomain.h in Headers */,
 				0ADE980F1D767BA5005781C1 /* WXFileSystemDomain.h in Headers */,
 				0ADE97791D767B62005781C1 /* NSDate+WX_JSONObject.h in Headers */,
-				0A0103221D35E27000F0D592 /* TBWXDevTool.h in Headers */,
 				0ADE98051D767BA5005781C1 /* WXDOMDebuggerDomain.h in Headers */,
 				0ADE98251D767BA5005781C1 /* WXProfilerDomain.h in Headers */,
 				0ADE98451D767BB7005781C1 /* WXWorkerDomain.h in Headers */,
 				0ADE97CF1D767B93005781C1 /* WXConsoleDomain.h in Headers */,
+				C42546071F27461000B93B0D /* WXResources.h in Headers */,
 				0ADE978D1D767B62005781C1 /* WXDebugger.h in Headers */,
 				0ADE98131D767BA5005781C1 /* WXIndexedDBDomain.h in Headers */,
 				0ADE98171D767BA5005781C1 /* WXInspectorDomain.h in Headers */,
 				0ABDFC731D3C7C2000206418 /* WXDebugDomainController.h in Headers */,
+				C42545FD1F27461000B93B0D /* WXNetworkRecorder.h in Headers */,
 				0ADE97D31D767B93005781C1 /* WXCSSDomain.h in Headers */,
 				0ADE98151D767BA5005781C1 /* WXIndexedDBTypes.h in Headers */,
 				0ADE981F1D767BA5005781C1 /* WXNetworkTypes.h in Headers */,
@@ -738,13 +783,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0AFA0ED31D2CE79E006E30BB /* Build configuration list for PBXNativeTarget "TBWXDevTool" */;
 			buildPhases = (
-				DB9CBF7DAF3E0071669C2A9A /* Check Pods Manifest.lock */,
-				B3C7A1C34DC388E22447E99C /* [CP] Check Pods Manifest.lock */,
+				15514BE46440F7580A669636 /* [CP] Check Pods Manifest.lock */,
 				0AFA0EC61D2CE79E006E30BB /* Sources */,
 				0AFA0EC71D2CE79E006E30BB /* Frameworks */,
 				0AFA0EC81D2CE79E006E30BB /* Headers */,
-				0AFA0EC91D2CE79E006E30BB /* Resources */,
-				0E7A4E4982426C183183F465 /* [CP] Copy Pods Resources */,
 				0AFECA031D76C75E0035719C /* ShellScript */,
 			);
 			buildRules = (
@@ -770,6 +812,7 @@
 					};
 					0AFA0ECA1D2CE79E006E30BB = {
 						CreatedOnToolsVersion = 7.2.1;
+						ProvisioningStyle = Manual;
 					};
 					0AFA101A1D2D1439006E30BB = {
 						CreatedOnToolsVersion = 7.2.1;
@@ -795,16 +838,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXResourcesBuildPhase section */
-		0AFA0EC91D2CE79E006E30BB /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
 		0ABB39F71D3F377B0091332E /* ShellScript */ = {
@@ -846,22 +879,7 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nFMK_NAME=${PROJECT_NAME}\n\nINSTALL_DIR=${BUILD_DIR}/Release-iphoneos/${FMK_NAME}.framework\n\nMAIN=\"main\"\n\nMAIN_JS=${INSTALL_DIR}/${MAIN}.js\n\nif [ -e \"$MAIN_JS\" ]; then\n    rm \"$MAIN_JS\"\nfi\n\nRESOURCE=\"Resources\"\nRESOURCE_DIR=${INSTALL_DIR}/$RESOURCE\nif [ -d \"$RESOURCE_DIR\" ]; then\n    rm -rf \"$RESOURCE_DIR\"\nfi\n\nfor pngFile in ${INSTALL_DIR}/*; do\n    if [[ $pngFile =~ (.*)png ]]; then\n        rm \"$pngFile\"\n        break;\n    fi\ndone\n";
 		};
-		0E7A4E4982426C183183F465 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TBWXDevTool/Pods-TBWXDevTool-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B3C7A1C34DC388E22447E99C /* [CP] Check Pods Manifest.lock */ = {
+		15514BE46440F7580A669636 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -873,22 +891,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		DB9CBF7DAF3E0071669C2A9A /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -907,11 +910,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A01031B1D35E25300F0D592 /* WXCSSDomainController.m in Sources */,
+				C42546081F27461000B93B0D /* WXResources.m in Sources */,
 				0ADE98101D767BA5005781C1 /* WXFileSystemDomain.m in Sources */,
 				0ADE98041D767BA5005781C1 /* WXDebuggerTypes.m in Sources */,
 				0ABDFC741D3C7C2000206418 /* WXDebugDomainController.m in Sources */,
 				0A01031D1D35E25300F0D592 /* WXSourceDebuggerDomainController.m in Sources */,
 				0ADE97A91D767B6F005781C1 /* WXDOMDomainController.m in Sources */,
+				C425460A1F27461000B93B0D /* WXTracingUtility.m in Sources */,
 				0ADE983E1D767BB7005781C1 /* WXTimelineDomain.m in Sources */,
 				0A0102E41D35E25300F0D592 /* WXProfilerDomainController.m in Sources */,
 				0ADE98201D767BA5005781C1 /* WXNetworkTypes.m in Sources */,
@@ -927,6 +932,7 @@
 				0ADE97801D767B62005781C1 /* NSError+WX_JSONObject.m in Sources */,
 				0ADE977E1D767B62005781C1 /* NSDictionary+WXRuntimePropertyDescriptor.m in Sources */,
 				0ADE98021D767BA5005781C1 /* WXDebuggerDomain.m in Sources */,
+				C42546021F27461000B93B0D /* WXNetworkTransaction.m in Sources */,
 				0ADE983C1D767BB7005781C1 /* WXRuntimeTypes.m in Sources */,
 				0A0298551D4B402400B4BC95 /* WXDevToolType.m in Sources */,
 				0ADE97901D767B62005781C1 /* WXDefinitions.m in Sources */,
@@ -968,6 +974,7 @@
 				0ADE98261D767BA5005781C1 /* WXProfilerDomain.m in Sources */,
 				0ADE983A1D767BB7005781C1 /* WXRuntimeDomain.m in Sources */,
 				0ADE97881D767B62005781C1 /* NSSet+WXRuntimePropertyDescriptor.m in Sources */,
+				C42545FE1F27461000B93B0D /* WXNetworkRecorder.m in Sources */,
 				0ADE981A1D767BA5005781C1 /* WXMemoryDomain.m in Sources */,
 				0ADE97D01D767B93005781C1 /* WXConsoleDomain.m in Sources */,
 				0ADE97A71D767B6F005781C1 /* WXDomainController.m in Sources */,
@@ -1093,13 +1100,15 @@
 		};
 		0AFA0ED41D2CE79E006E30BB /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 421E7FD57E17C231508BA514 /* Pods-TBWXDevTool.debug.xcconfig */;
+			baseConfigurationReference = 489AA4AF96AEBD4B7A7D8A91 /* Pods-TBWXDevTool.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				DEAD_CODE_STRIPPING = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -1118,20 +1127,24 @@
 				OTHER_LIBTOOLFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.taobao.WXDevTool;
 				PRODUCT_NAME = TBWXDevTool;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				STRIP_STYLE = "non-global";
 				VALID_ARCHS = "arm64 armv7 armv7s x86_64 i386";
+				WARNING_CFLAGS = "-Wno-documentation";
 			};
 			name = Debug;
 		};
 		0AFA0ED51D2CE79E006E30BB /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B7CA78A41D406A09A4D0B154 /* Pods-TBWXDevTool.release.xcconfig */;
+			baseConfigurationReference = 9CF2E2BFC9331B7CB90EA000 /* Pods-TBWXDevTool.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				DEAD_CODE_STRIPPING = NO;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -1150,9 +1163,11 @@
 				OTHER_LIBTOOLFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.taobao.WXDevTool;
 				PRODUCT_NAME = TBWXDevTool;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				STRIP_STYLE = "non-global";
 				VALID_ARCHS = "arm64 armv7 armv7s x86_64 i386";
+				WARNING_CFLAGS = "-Wno-documentation";
 			};
 			name = Release;
 		};

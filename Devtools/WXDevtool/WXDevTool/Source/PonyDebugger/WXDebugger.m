@@ -10,7 +10,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SRWebSocket.h"
+#import <SocketRocket/SRWebSocket.h>
 #import "WXDebugger.h"
 #import "WXDynamicDebuggerDomain.h"
 #import "WXNetworkDomain.h"
@@ -42,6 +42,10 @@ static NSString *const WXBonjourServiceType = @"_ponyd._tcp";
 static BOOL WXIsVDom = NO;
 
 
+NSString *const kWXNetworkObserverEnabledStateChangedNotification = @"kWXNetworkObserverEnabledStateChangedNotification";
+static NSString *const kWXNetworkObserverEnabledDefaultsKey = @"com.taobao.WXNetworkObserver.enableOnLaunch";
+static NSString *const kWXPerfomanceRenderFinishEnabledDefaultsKey = @"com.taobao.WXPerfomance.renderFinish";
+
 void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
 {
     [[WXConsoleDomainController defaultInstance] logWithArguments:arguments severity:severity];
@@ -72,6 +76,7 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
     NSThread    *_bridgeThread;
     NSThread    *_inspectThread;
     NSString    *_registerData;
+    NSString * _instanceID;
 }
 
 + (WXDebugger *)defaultInstance;
@@ -100,6 +105,14 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
     _controllers = [[NSMutableDictionary alloc] init];
     
     return self;
+}
+
+- (NSString *)instanceId {
+    return _instanceID;
+}
+
+- (void)setWeexInstanceId:(NSString *)instanceId {
+    _instanceID = instanceId;
 }
 
 - (void) coutLogWithLevel:(NSString *)level arguments:(NSArray *)arguments {
@@ -383,6 +396,12 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
 
 - (void)forwardAllNetworkTraffic;
 {
+    static BOOL swizzled = NO;
+    if (swizzled) {
+        return;
+    }
+    
+    swizzled = YES;
     [WXNetworkDomainController registerPrettyStringPrinter:[[WXJSONPrettyStringPrinter alloc] init]];
     [WXNetworkDomainController injectIntoAllNSURLConnectionDelegateClasses];
     [WXNetworkDomainController swizzleNSURLSessionClasses];
@@ -501,6 +520,13 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
     [self callJSMethod:@"WxDebug.importScript" params:args];
 }
 
+- (JSValue*)executeJavascript:(NSString *)script withSourceURL:(NSURL*)sourceURL
+{
+    NSLog(@"absolute string: %@", sourceURL.absoluteString);
+    NSLog(@"path: %@", sourceURL.path);
+    return [self callJSMethod:@"importScript" args: @[_instanceID, script, @{@"bundleUrl": sourceURL.absoluteString}]];
+}
+
 - (void)registerCallNative:(WXJSCallNative)callNative
 {
     WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
@@ -511,6 +537,54 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
 {
     WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
     [debugDomainCrl debugDomainRegisterCallAddElement:callAddElement];
+}
+
+- (void)registerCallCreateBody:(WXJSCallCreateBody)callCreateBody
+{
+    WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
+    [debugDomainCrl debugDomainRegisterCallCreateBody:callCreateBody];
+}
+
+- (void)registerCallRemoveElement:(WXJSCallRemoveElement)callRemoveElement
+{
+    WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
+    [debugDomainCrl debugDomainRegisterCallRemoveElement:callRemoveElement];
+}
+
+- (void)registerCallMoveElement:(WXJSCallMoveElement)callMoveElement
+{
+    WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
+    [debugDomainCrl debugDomainRegisterCallMoveElement:callMoveElement];
+}
+
+- (void)registerCallUpdateAttrs:(WXJSCallUpdateAttrs)callUpdateAttrs
+{
+    WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
+    [debugDomainCrl debugDomainRegisterCallUpdateAttrs:callUpdateAttrs];
+}
+
+- (void)registerCallUpdateStyle:(WXJSCallUpdateStyle)callUpdateStyle
+{
+    WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
+    [debugDomainCrl debugDomainRegisterCallUpdateStyle:callUpdateStyle];
+}
+
+- (void)registerCallAddEvent:(WXJSCallAddEvent)callAddEvent
+{
+    WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
+    [debugDomainCrl debugDomainRegisterCallAddEvent:callAddEvent];
+}
+
+- (void)registerCallRemoveEvent:(WXJSCallRemoveEvent)callRemoveEvent
+{
+    WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
+    [debugDomainCrl debugDomainRegisterCallRemoveEvent:callRemoveEvent];
+}
+    
+- (void)registerCallCreateFinish:(WXJSCallCreateFinish)callCreateFinish
+{
+    WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
+    [debugDomainCrl debugDomainRegisterCallCreateFinish:callCreateFinish];
 }
 
 - (void)registerCallNativeModule:(WXJSCallNativeModule)callNativeModuleBlock
@@ -560,7 +634,7 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
     [_debugAry addObject:[WXUtility JSONString:dict]];
     [self _executionDebugAry];
 }
-    
+
 #pragma mark - notification
 
 - (void)notificationIsDebug:(NSNotification *)notification {
@@ -688,5 +762,43 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
     NSLog(@"Server websocket did fail with error: %@", error);
 }
 */
+
+#pragma mark - local enable
++ (void)setEnabled:(BOOL)enabled
+{
+    BOOL previouslyEnabled = [self isEnabled];
+    
+    [[NSUserDefaults standardUserDefaults] setBool:enabled forKey:kWXNetworkObserverEnabledDefaultsKey];
+    
+    if (enabled) {
+        // Inject if needed. This injection is protected with a dispatch_once, so we're ok calling it multiple times.
+        // By doing the injection lazily, we keep the impact of the tool lower when this feature isn't enabled.
+        WXDebugger *debugger = [WXDebugger defaultInstance];
+        [debugger enableNetworkTrafficDebugging];
+        [debugger forwardAllNetworkTraffic];
+    }
+    
+    if (previouslyEnabled != enabled) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:kWXNetworkObserverEnabledStateChangedNotification object:self];
+    }
+}
+
++ (BOOL)isEnabled
+{
+    return [[[NSUserDefaults standardUserDefaults] objectForKey:kWXNetworkObserverEnabledDefaultsKey] boolValue];
+}
+
+
++ (void)setRenderFinishEnabled:(BOOL)renderFinishEnabled
+{
+    NSUserDefaults *uDefault = [NSUserDefaults standardUserDefaults];
+    [uDefault setBool:renderFinishEnabled forKey:kWXPerfomanceRenderFinishEnabledDefaultsKey];
+    [uDefault synchronize];
+}
+
++ (BOOL)renderFinishEnabled
+{
+    return [[[NSUserDefaults standardUserDefaults] objectForKey:kWXPerfomanceRenderFinishEnabledDefaultsKey] boolValue];
+}
 
 @end
