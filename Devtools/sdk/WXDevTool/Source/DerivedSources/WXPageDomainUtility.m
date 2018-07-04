@@ -82,7 +82,9 @@
         }
         else
         {
-            nextResponder = [[[rootView subviews] objectAtIndex:0] nextResponder];
+            if([[rootView subviews] count] > 0) {
+              nextResponder = [[[rootView subviews] objectAtIndex:0] nextResponder];
+            }
         }
     }
     else
