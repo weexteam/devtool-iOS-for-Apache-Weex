@@ -2,8 +2,10 @@
 source 'git@github.com/CocoaPods/Specs.git'
 
 platform :ios, '8.0'
+
 inhibit_all_warnings!
-target 'TBWXDevTool' do
+
+target 'WXDevTool' do
 	pod 'WeexSDK'
-  pod 'SocketRocket', '0.4.2-framework'
+  pod 'SocketRocket'
 end

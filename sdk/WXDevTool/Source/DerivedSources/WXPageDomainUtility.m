@@ -148,12 +148,12 @@ static NSThread *WXScreencastThread;
     }
 }
 
-void WXPerformBlockOnScreencastThread(void (^block)())
+void WXPerformBlockOnScreencastThread(void (^block)(void))
 {
     [WXPageDomainUtility _performBlockOnScreencastThread:block];
 }
 
-+ (void)_performBlockOnScreencastThread:(void (^)())block
++ (void)_performBlockOnScreencastThread:(void (^)(void))block
 {
     if ([NSThread currentThread] == [self screencastThread]) {
         block();
