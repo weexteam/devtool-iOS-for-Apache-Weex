@@ -1,14 +1,26 @@
-/**
- * Created by Weex.
- * Copyright (c) 2016, Alibaba, Inc. All rights reserved.
- *
- * This source code is licensed under the Apache Licence 2.0.
- * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 #import "UIViewController+WXDemoNaviBar.h"
 #import "WXScannerVC.h"
-#import <WeexSDK/WeexSDK.h>
+#import "WXScannerHistoryVC.h"
+#import "WXDefine.h"
 #import <objc/runtime.h>
 
 @implementation UIViewController (WXDemoNaviBar)
@@ -25,26 +37,32 @@
         // iOS 7.0 or later
         self.navigationController.navigationBar.barTintColor = WEEX_COLOR;
         self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+        [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
         self.navigationController.navigationBar.translucent = NO;
-    }else {
-        // iOS 6.1 or earlier
-        self.navigationController.navigationBar.tintColor = WEEX_COLOR;
     }
-    
-    [self.navigationController.navigationBar setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
-                                                                      [UIColor whiteColor], NSForegroundColorAttributeName, nil]];
-    self.navigationItem.title = @"Weex Playground";
-    
-    if (self.navigationItem.leftBarButtonItem) return;
-    
-    UIBarButtonItem *leftItem;
-    if(![[self.navigationController.viewControllers objectAtIndex:0] isEqual:self]) {
-        leftItem = [self backButtonItem];
-    } else {
-        leftItem = [self leftBarButtonItem];
+    if (!self.navigationItem.leftBarButtonItem) {
+        UIBarButtonItem *leftItem;
+        if(![[self.navigationController.viewControllers objectAtIndex:0] isEqual:self]) {
+            leftItem = [self backButtonItem];
+        } else {
+            leftItem = [self leftBarButtonItem];
+        }
+        self.navigationItem.leftBarButtonItems = @[leftItem];
     }
-    
-    self.navigationItem.leftBarButtonItems = @[leftItem];
+    if ([self isKindOfClass:[WXScannerVC class]]) {
+        UIBarButtonItem *historyItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"scan_history"]
+                                                          style:UIBarButtonItemStylePlain
+                                                         target:self
+                                                         action:@selector(historyButtonClicked:)];
+        self.navigationItem.rightBarButtonItems = @[historyItem];
+    }
+    if([self isKindOfClass:[WXScannerHistoryVC class]]) {
+        UIBarButtonItem *historyItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"delete"]
+                                                                        style:UIBarButtonItemStylePlain
+                                                                       target:self
+                                                                       action:@selector(clearScannerHistory:)];
+        self.navigationItem.rightBarButtonItems = @[historyItem];
+    }
 }
 
 - (void)edgePanGesture:(UIScreenEdgePanGestureRecognizer*)edgePanGestureRecognizer
@@ -71,7 +89,7 @@
     if (!leftItem) {
         leftItem = [[UIBarButtonItem alloc]
                     initWithImage:[UIImage imageNamed:@"scan"]
-                     style:UIBarButtonItemStyleBordered
+                     style:UIBarButtonItemStylePlain
                     target:self
                     action:@selector(scanQR:)];
         leftItem.accessibilityHint = @"click to scan qr code";
@@ -86,7 +104,7 @@
     UIBarButtonItem *backButtonItem = objc_getAssociatedObject(self, _cmd);
     if (!backButtonItem) {
         backButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"back"]
-                                                          style:UIBarButtonItemStyleBordered
+                                                          style:UIBarButtonItemStylePlain
                                                          target:self
                                                          action:@selector(backButtonClicked:)];
         objc_setAssociatedObject(self, _cmd, backButtonItem, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
@@ -97,15 +115,24 @@
 #pragma mark -
 #pragma mark - UIBarButtonItem actions
 
-- (void)scanQR:(id)sender
-{
+- (void)scanQR:(id)sender {
+    
     WXScannerVC * scanViewController = [[WXScannerVC alloc] init];
     [self.navigationController pushViewController:scanViewController animated:YES];
 }
 
-- (void)backButtonClicked:(id)sender
-{
+- (void)backButtonClicked:(id)sender {
+    
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)historyButtonClicked:(id)sender {
+    
+    [self.navigationController pushViewController:[WXScannerHistoryVC new] animated:YES];
+}
+
+- (void)clearScannerHistory:(id)sender {
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:WX_SCANNER_HISTORY];
 }
 
 @end

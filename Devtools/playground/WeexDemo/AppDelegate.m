@@ -1,24 +1,43 @@
-/**
- * Created by Weex.
- * Copyright (c) 2016, Alibaba, Inc. All rights reserved.
- *
- * This source code is licensed under the Apache Licence 2.0.
- * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 #import "AppDelegate.h"
 #import "WXDemoViewController.h"
 #import "UIViewController+WXDemoNaviBar.h"
-#import <WeexSDK/WeexSDK.h>
+#import "WXStreamModule.h"
 #import "WXEventModule.h"
-#import <WeexSDK/WeexSDK.h>
+#import "WXNavigationDefaultImpl.h"
 #import "WXImgLoaderDefaultImpl.h"
 #import "DemoDefine.h"
 #import "WXScannerVC.h"
+#import "WXScannerHistoryVC.h"
 #import "WXSyncTestModule.h"
+#import "WXExtModule.h"
+#import "UIView+UIThreadCheck.h"
 #import <WeexSDK/WeexSDK.h>
 #import <AVFoundation/AVFoundation.h>
 #import <ATSDK/ATManager.h>
+#import "WXConfigCenterProtocol.h"
+#import "WXConfigCenterDefaultImpl.h"
+#import "WXNavigationHandlerImpl.h"
+//#import "WXAnalyzerCenter.h"
+
 
 @interface AppDelegate ()
 @end
@@ -40,6 +59,11 @@
     
     [self startSplashScreen];
     
+#if DEBUG
+    // check if there are any UI changes on main thread.
+    [UIView wx_checkUIThread];
+#endif
+    
     return YES;
 }
 
@@ -48,6 +72,10 @@
     if ([shortcutItem.type isEqualToString:QRSCAN]) {
         WXScannerVC * scanViewController = [[WXScannerVC alloc] init];
         [(WXRootViewController*)self.window.rootViewController pushViewController:scanViewController animated:YES];
+    }
+    if ([shortcutItem.type isEqualToString:QRSCAN_HISTORY]) {
+        WXScannerHistoryVC *scannerHistoryVC = [WXScannerHistoryVC new];
+        [(WXRootViewController*)self.window.rootViewController pushViewController:scannerHistoryVC animated:YES];
     }
 }
 
@@ -66,6 +94,18 @@
 #endif
 }
 
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
+{
+    NSString *newUrlStr = url.absoluteString;
+    if([url.scheme isEqualToString:@"wxpage"]) {
+        newUrlStr = [newUrlStr stringByReplacingOccurrencesOfString:@"wxpage://" withString:@"http://"];
+    }
+    UIViewController * viewController = [self demoController];
+    ((WXDemoViewController*)viewController).url = [NSURL URLWithString:newUrlStr];
+    [(WXRootViewController*)self.window.rootViewController pushViewController:viewController animated:YES];
+    return YES;
+}
+
 #pragma mark weex
 - (void)initWeexSDK
 {
@@ -77,10 +117,15 @@
     
     [WXSDKEngine registerHandler:[WXImgLoaderDefaultImpl new] withProtocol:@protocol(WXImgLoaderProtocol)];
     [WXSDKEngine registerHandler:[WXEventModule new] withProtocol:@protocol(WXEventModuleProtocol)];
+    [WXSDKEngine registerHandler:[WXConfigCenterDefaultImpl new] withProtocol:@protocol(WXConfigCenterProtocol)];
+    [WXSDKEngine registerHandler:[WXNavigationHandlerImpl new] withProtocol:@protocol(WXNavigationProtocol)];
     
     [WXSDKEngine registerComponent:@"select" withClass:NSClassFromString(@"WXSelectComponent")];
     [WXSDKEngine registerModule:@"event" withClass:[WXEventModule class]];
     [WXSDKEngine registerModule:@"syncTest" withClass:[WXSyncTestModule class]];
+    [WXSDKEngine registerModule:@"titleBar" withClass:NSClassFromString(@"WXTitleBarModule")];
+    [WXSDKEngine registerExtendCallNative:@"test" withClass:NSClassFromString(@"WXExtendCallNativeTest")];
+    [WXSDKEngine registerModule:@"ext" withClass:[WXExtModule class]];
     
 #if !(TARGET_IPHONE_SIMULATOR)
     [self checkUpdate];
@@ -103,18 +148,7 @@
 - (UIViewController *)demoController
 {
     UIViewController *demo = [[WXDemoViewController alloc] init];
-    
-#if DEBUG
-    //If you are debugging in device , please change the host to current IP of your computer.
     ((WXDemoViewController *)demo).url = [NSURL URLWithString:BUNDLE_URL];
-#else
-    ((WXDemoViewController *)demo).url = [NSURL URLWithString:BUNDLE_URL];
-#endif
-    
-#ifdef UITEST
-    ((WXDemoViewController *)demo).url = [NSURL URLWithString:UITEST_HOME_URL];
-#endif
-    
     return demo;
 }
 
@@ -177,12 +211,13 @@
 #pragma mark
 
 - (void)atAddPlugin {
-    
+#if DEBUG
     [[ATManager shareInstance] addPluginWithId:@"weex" andName:@"weex" andIconName:@"../weex" andEntry:@"" andArgs:@[@""]];
     [[ATManager shareInstance] addSubPluginWithParentId:@"weex" andSubId:@"logger" andName:@"logger" andIconName:@"log" andEntry:@"WXATLoggerPlugin" andArgs:@[@""]];
 //    [[ATManager shareInstance] addSubPluginWithParentId:@"weex" andSubId:@"viewHierarchy" andName:@"hierarchy" andIconName:@"log" andEntry:@"WXATViewHierarchyPlugin" andArgs:@[@""]];
     [[ATManager shareInstance] addSubPluginWithParentId:@"weex" andSubId:@"test2" andName:@"test" andIconName:@"at_arr_refresh" andEntry:@"" andArgs:@[]];
     [[ATManager shareInstance] addSubPluginWithParentId:@"weex" andSubId:@"test3" andName:@"test" andIconName:@"at_arr_refresh" andEntry:@"" andArgs:@[]];
+#endif
 }
 
 - (void)checkUpdate {

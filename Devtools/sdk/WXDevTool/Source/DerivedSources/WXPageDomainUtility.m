@@ -80,11 +80,9 @@
             UIView *v = [arr objectAtIndex:0];
             nextResponder = [v nextResponder];
         }
-        else
+        else if([[rootView subviews] count] > 0)
         {
-            if([[rootView subviews] count] > 0) {
-              nextResponder = [[[rootView subviews] objectAtIndex:0] nextResponder];
-            }
+            nextResponder = [[[rootView subviews] objectAtIndex:0] nextResponder];
         }
     }
     else

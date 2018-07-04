@@ -1,9 +1,20 @@
-/**
- * Created by Weex.
- * Copyright (c) 2016, Alibaba, Inc. All rights reserved.
- *
- * This source code is licensed under the Apache Licence 2.0.
- * For the full copyright and license information,please view the LICENSE file in the root directory of this source tree.
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 #import "WXDemoViewController.h"
@@ -14,7 +25,9 @@
 #import <WeexSDK/WXSDKManager.h>
 #import "UIViewController+WXDemoNaviBar.h"
 #import "DemoDefine.h"
-
+#import "WXPrerenderManager.h"
+#import "WXMonitor.h"
+#import "WXTracingManager.h"
 
 @interface WXDemoViewController () <UIScrollViewDelegate, UIWebViewDelegate>
 @property (nonatomic, strong) WXSDKInstance *instance;
@@ -44,14 +57,14 @@
 {
     [super viewDidLoad];
     
-    [self setupNaviBar];
-    [self setupRightBarItem];
     self.view.backgroundColor = [UIColor whiteColor];
+    [self.view setClipsToBounds:YES];
     
-    _weexHeight = self.view.frame.size.height - 64;
+    _showNavigationBar = NO;
+    [self.navigationController setNavigationBarHidden:_showNavigationBar];
+    _weexHeight = self.view.frame.size.height - CGRectGetMaxY(self.navigationController.navigationBar.frame);
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationRefreshInstance:) name:@"RefreshInstance" object:nil];
-    
     [self render];
 }
 
@@ -70,13 +83,24 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.navigationController.navigationBarHidden = NO;
+    [self setupNaviBar];
+    [self setupRightBarItem];
+    [self.navigationController setNavigationBarHidden:_showNavigationBar];
 }
 
 //TODO get height
 - (void)viewDidLayoutSubviews
 {
-    _weexHeight = self.view.frame.size.height;
+    _weexHeight = [UIScreen mainScreen].bounds.size.height - CGRectGetMaxY(self.navigationController.navigationBar.frame);
+    UIEdgeInsets safeArea = UIEdgeInsetsZero;
+#ifdef __IPHONE_11_0
+    if (@available(iOS 11.0, *)) {
+        safeArea = self.view.safeAreaInsets;
+    } else {
+        // Fallback on earlier versions
+    }
+#endif
+    _instance.frame = CGRectMake(safeArea.left, safeArea.top, self.view.frame.size.width-safeArea.left-safeArea.right, _weexHeight-safeArea.top-safeArea.bottom);
 }
 
 - (void)didReceiveMemoryWarning {
@@ -86,17 +110,39 @@
 
 - (void)dealloc
 {
+    
     [_instance destroyInstance];
+#ifdef DEBUG
+    [_instance forceGarbageCollection];
+#endif
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)render
 {
     CGFloat width = self.view.frame.size.width;
+//    if ([_url.absoluteString isEqualToString:HOME_URL]) {
+//        [self.navigationController setNavigationBarHidden:YES];
+//    }
     [_instance destroyInstance];
     _instance = [[WXSDKInstance alloc] init];
+    if([WXPrerenderManager isTaskExist:[self.url absoluteString]]){
+        _instance = [WXPrerenderManager instanceFromUrl:self.url.absoluteString];
+    }
+    
     _instance.viewController = self;
-    _instance.frame = CGRectMake(self.view.frame.size.width-width, 0, width, _weexHeight);
+    UIEdgeInsets safeArea = UIEdgeInsetsZero;
+    
+#ifdef __IPHONE_11_0
+    if (@available(iOS 11.0, *)) {
+        safeArea = self.view.safeAreaInsets;
+    } else {
+        // Fallback on earlier versions
+    }
+#endif
+    
+    _instance.frame = CGRectMake(self.view.frame.size.width-width, 0, width, _weexHeight-safeArea.bottom);
     
     __weak typeof(self) weakSelf = self;
     _instance.onCreate = ^(UIView *view) {
@@ -106,7 +152,6 @@
         UIAccessibilityPostNotification(UIAccessibilityScreenChangedNotification, weakSelf.weexView);
     };
     _instance.onFailed = ^(NSError *error) {
-        #ifdef UITEST
         if ([[error domain] isEqualToString:@"1"]) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 NSMutableString *errMsg=[NSMutableString new];
@@ -118,7 +163,6 @@
                 [alertView show];
             });
         }
-        #endif
     };
     
     _instance.renderFinish = ^(UIView *view) {
@@ -133,9 +177,25 @@
         WXLogError(@"error: render url is nil");
         return;
     }
+    if([WXPrerenderManager isTaskExist:[self.url absoluteString]]){
+        WX_MONITOR_INSTANCE_PERF_START(WXPTJSDownload, _instance);
+        WX_MONITOR_INSTANCE_PERF_END(WXPTJSDownload, _instance);
+        WX_MONITOR_INSTANCE_PERF_START(WXPTFirstScreenRender, _instance);
+        WX_MONITOR_INSTANCE_PERF_START(WXPTAllRender, _instance);
+        [WXPrerenderManager renderFromCache:[self.url absoluteString]];
+        return;
+    }
+    _instance.viewController = self;
     NSURL *URL = [self testURL: [self.url absoluteString]];
     NSString *randomURL = [NSString stringWithFormat:@"%@%@random=%d",URL.absoluteString,URL.query?@"&":@"?",arc4random()];
     [_instance renderWithURL:[NSURL URLWithString:randomURL] options:@{@"bundleUrl":URL.absoluteString} data:nil];
+    [self.navigationController.navigationBar setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
+                                                                      [UIColor whiteColor], NSForegroundColorAttributeName, nil]];
+    if([_instance.pageName hasPrefix:@"http://dotwe.org"] || [_instance.pageName hasPrefix:@"https://dotwe.org"]) {
+        self.navigationItem.title = @"Weex Online Example";
+    } else {
+        self.navigationItem.title = _instance.pageName;
+    }
 }
 
 - (void)updateInstanceState:(WXState)state
@@ -162,7 +222,7 @@
 
 - (void)setupRightBarItem
 {
-    if ([self.url.scheme isEqualToString:@"http"]) {
+    if ([self.url.scheme hasPrefix:@"http"]) {
         [self loadRefreshCtl];
     }
 }

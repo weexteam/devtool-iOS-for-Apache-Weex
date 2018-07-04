@@ -25,7 +25,8 @@ Pod::Spec.new do |s|
   
   # cocoapods
   s.source =   { :git => "https://github.com/weexteam/weex-devtool-iOS.git", :tag => "0.16.0" }
-  s.source_files = "WXDevtool", "Devtools/WXDevtool/WXDevTool/Source/**/*.{h,m,mm,c}"
+  s.source_files = "WXDevTool/Source/**/*.{h,m,mm,c}"
+
   s.requires_arc = true
   s.frameworks = "Foundation","CoreData","ImageIO","CoreData","CFNetwork","UIKit","CoreGraphics","Security"
   s.libraries = "z"
