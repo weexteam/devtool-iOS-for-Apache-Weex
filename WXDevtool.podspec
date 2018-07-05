@@ -36,5 +36,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.frameworks = "Foundation","CoreData","ImageIO","CoreData","CFNetwork","UIKit","CoreGraphics","Security"
   s.libraries = "z"
+
   s.dependency "WeexSDK"
+  s.dependency "SocketRocket"
 end

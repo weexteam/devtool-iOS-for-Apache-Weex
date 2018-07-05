@@ -1,11 +1,18 @@
 # Uncomment this line to define a global platform for your project
-source 'git@github.com/CocoaPods/Specs.git'
+source 'https://github.com/CocoaPods/Specs.git'
 
 platform :ios, '8.0'
 
 inhibit_all_warnings!
+use_frameworks!
+
+def pods 
+
+  pod 'WeexSDK','0.18.0'
+  pod 'SocketRocket', '0.4.2'
+
+end
 
 target 'WXDevTool' do
-	pod 'WeexSDK'
-  pod 'SocketRocket'
+	pods
 end

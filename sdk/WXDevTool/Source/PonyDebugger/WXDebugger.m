@@ -10,6 +10,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <SocketRocket/SRWebSocket.h>
 #import "WXDebugger.h"
 #import "WXDynamicDebuggerDomain.h"
 #import "WXNetworkDomain.h"
@@ -30,7 +31,6 @@
 #import "WXDebugDomainController.h"
 #import "WXDevToolType.h"
 
-#import <SocketRocket/SRWebSocket.h>
 #import <WeexSDK/WeexSDK.h>
 #import "WXDebuggerUtility.h"
 
