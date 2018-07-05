@@ -1,76 +1,34 @@
 [![GitHub release](https://img.shields.io/github/release/weexteam/weex-devtool-iOS.svg)](https://github.com/weexteam/weex-devtool-iOS/releases)  [![GitHub issues](https://img.shields.io/github/issues/weexteam/weex-devtool-iOS.svg)](https://github.com/weexteam/weex-devtool-iOS/issues) [![CocoaPods](https://img.shields.io/cocoapods/v/WXDevtool.svg?maxAge=2592000)]()
 
 # weex-devtool-iOS
+
 Remote debug for your native iOS app using Chrome Developer Tools
 
 
-## weex-devtool launch：
+## Launch
 
-0. install and run weex-devtool
+Firstly, install `weex-toolkit` by 
 
-		$:npm install -g weex-devtool
+```
+$ npm i weex-toolkit@latest -g
+```
 
-		$:weex-devtool  
+Then run the command:
 
-	it will launch chrome browser, showing wss ip address in chrome address bar.
-	
-	For more detailed instructions, redirect to [weex-toolkit](https://github.com/weexteam/weex-toolkit#weex-debug-command)
+```
+$ weex debug
+```
+
+You can see the QR code generate by `weex-debugger`, for test, you can use [Weex Playground App](http://weex.apache.org/tools/playground.html) to scan the QR code, you will enter the debug mode. 
+
+> Note: when you use the latest version of the Devtool SDK, make sure you are using the latest version of `weex-debugger`, you can upgrade using the command `weex update weex-debugger@latest`.
+
+
 		
-		
-## playground install WXDevtool
+## Develop
 
-1. Install dependencies.
-   
-       $:pod install
+See [Integrate Devtool to iOS](http://weex.apache.org/guide/integrate-devtool-to-ios.html-)
 
-### Usage 
-
-1. AppDelegate.m header file
-
-		#import "WXDevTool.h"
-		
-2. Initialize inspector when the APP launched
-	
-	  **Note: The inspector API must be called before weex is initialized**
-		
-	   + (void)setDebug:(BOOL)isDebug;
-			
-	  isDebug default is NO, now you open inspect model. opposite is YES, if you set isDebug to YES, then open debug model and inspect model.
-			
-		 + (void)launchDevToolDebugWithUrl:(NSString *)url;		
-	  wssip was the wss address showing in the chrome address bar.
-
-	* open debug model and inspector model
-	
-	 	  eg：- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-			{
-			  [WXDevTool setDebug:YES];
-			  [WXDevTool launchDevToolDebugWithUrl:@"ws://wssip/debugProxy/native"];
-			}
-			
-	* open inspect model, remove the @selector(setDebug:) or add [WXDevTool setDebug:NO]
-	
-	      eg：- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-			{
-			  [WXDevTool launchDevToolDebugWithUrl:@"ws://wssip/debugProxy/native"];
-			}
-
-	 
-3. Build and running APP, this time chrome will display your device with App name, select inspector to open the inspector tab.
-4. Log print support for different levels of print.
-	
-       eg: #import "WXDevTool.h"
-		   PDLogE()/PDLogW()
-	
-### WXDevtool Dependencies
-
-Your app must be linked against the following frameworks/dylibs
-
-* libicucore.dylib
-* CFNetwork.framework
-* CoreData.framework
-* Security.framework
-* Foundation.framework
 
 
 
