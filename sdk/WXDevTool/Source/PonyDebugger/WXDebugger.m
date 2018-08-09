@@ -629,11 +629,19 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
         [request setHTTPMethod:@"POST"];
         [request setHTTPBody:data];
         [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-        NSURLResponse *response = nil;
-        NSError *error = nil;
-        NSData *receivedData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
-        NSDictionary *receiveDic = (NSDictionary*) [NSKeyedUnarchiver unarchiveObjectWithData:receivedData];
-        return (JSValue*) receiveDic;
+    
+        __block NSData *receivedData = nil;
+        NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+        dispatch_semaphore_t signal = dispatch_semaphore_create(0);
+        [NSURLConnection sendAsynchronousRequest:request queue:queue completionHandler:^(NSURLResponse * _Nullable response, NSData * _Nullable data, NSError * _Nullable connectionError) {
+            receivedData = data;
+            dispatch_semaphore_signal(signal);
+        }];
+        dispatch_semaphore_wait(signal, DISPATCH_TIME_FOREVER);
+        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:receivedData
+                                                             options:NSJSONReadingAllowFragments
+                                                               error:nil];
+        return (JSValue *)dict;
     }
     else
     {
