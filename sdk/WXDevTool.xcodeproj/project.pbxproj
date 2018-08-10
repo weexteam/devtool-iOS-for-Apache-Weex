@@ -21,7 +21,6 @@
 		0A0103211D35E25300F0D592 /* WXDevTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A01029C1D35E25300F0D592 /* WXDevTool.m */; };
 		0A0298541D4B402400B4BC95 /* WXDevToolType.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A0298521D4B402400B4BC95 /* WXDevToolType.h */; };
 		0A0298551D4B402400B4BC95 /* WXDevToolType.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0298531D4B402400B4BC95 /* WXDevToolType.m */; };
-		0A1DCE3A1D4F004C005E87C7 /* TBWXDevTool.pch in Headers */ = {isa = PBXBuildFile; fileRef = 0A1DCE391D4F004C005E87C7 /* TBWXDevTool.pch */; };
 		0A37BCA21E1A521F00C5542E /* WXDebuggerUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A37BCA01E1A521F00C5542E /* WXDebuggerUtility.h */; };
 		0A37BCA31E1A521F00C5542E /* WXDebuggerUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A37BCA11E1A521F00C5542E /* WXDebuggerUtility.m */; };
 		0ABDFC6F1D3C7B6900206418 /* WXDebugDomain.h in Headers */ = {isa = PBXBuildFile; fileRef = 0ABDFC6D1D3C7B6900206418 /* WXDebugDomain.h */; };
@@ -157,7 +156,6 @@
 		0AFA10141D2CEC49006E30BB /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AFA10131D2CEC49006E30BB /* CoreData.framework */; };
 		0AFE81D61D8102B800C99208 /* WXPageDomainUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AFE81D41D8102B800C99208 /* WXPageDomainUtility.h */; };
 		0AFE81D71D8102B800C99208 /* WXPageDomainUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AFE81D51D8102B800C99208 /* WXPageDomainUtility.m */; };
-		15C5AF763645AC346A190397 /* libPods-TBWXDevTool.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C50EBFCEBD547BE8303CEC8F /* libPods-TBWXDevTool.a */; };
 		36E050F3DFBCF2724B0320CE /* libPods-WXDevTool.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 74BF27120E6548831B0E4FB7 /* libPods-WXDevTool.a */; };
 		C42545FD1F27461000B93B0D /* WXNetworkRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545BB1F27461000B93B0D /* WXNetworkRecorder.h */; };
 		C42545FE1F27461000B93B0D /* WXNetworkRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545BC1F27461000B93B0D /* WXNetworkRecorder.m */; };
@@ -168,6 +166,7 @@
 		C42546091F27461000B93B0D /* WXTracingUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545C71F27461000B93B0D /* WXTracingUtility.h */; };
 		C425460A1F27461000B93B0D /* WXTracingUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545C81F27461000B93B0D /* WXTracingUtility.m */; };
 		C49207731F28927D002EF9D7 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C49207721F28927D002EF9D7 /* ImageIO.framework */; };
+		C866F7E1211DBC67007E3B47 /* WXDevTool.pch in Headers */ = {isa = PBXBuildFile; fileRef = C866F7E0211DBC66007E3B47 /* WXDevTool.pch */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -185,11 +184,8 @@
 		0A01029C1D35E25300F0D592 /* WXDevTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXDevTool.m; sourceTree = "<group>"; };
 		0A0298521D4B402400B4BC95 /* WXDevToolType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXDevToolType.h; sourceTree = "<group>"; };
 		0A0298531D4B402400B4BC95 /* WXDevToolType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXDevToolType.m; sourceTree = "<group>"; };
-		0A1DCE391D4F004C005E87C7 /* TBWXDevTool.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBWXDevTool.pch; sourceTree = "<group>"; };
 		0A37BCA01E1A521F00C5542E /* WXDebuggerUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXDebuggerUtility.h; sourceTree = "<group>"; };
 		0A37BCA11E1A521F00C5542E /* WXDebuggerUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXDebuggerUtility.m; sourceTree = "<group>"; };
-		0ABB39F01D3F37700091332E /* TBWXDevTool_MTL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBWXDevTool_MTL.h; sourceTree = "<group>"; };
-		0ABB39F21D3F37700091332E /* TBWXDevTool_MTL.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TBWXDevTool_MTL.m; sourceTree = "<group>"; };
 		0ABDFC6D1D3C7B6900206418 /* WXDebugDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXDebugDomain.h; sourceTree = "<group>"; };
 		0ABDFC6E1D3C7B6900206418 /* WXDebugDomain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXDebugDomain.m; sourceTree = "<group>"; };
 		0ABDFC711D3C7C1F00206418 /* WXDebugDomainController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXDebugDomainController.h; sourceTree = "<group>"; };
@@ -315,8 +311,7 @@
 		0ADE98341D767BB7005781C1 /* WXWebGLTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXWebGLTypes.m; sourceTree = "<group>"; };
 		0ADE98351D767BB7005781C1 /* WXWorkerDomain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXWorkerDomain.h; sourceTree = "<group>"; };
 		0ADE98361D767BB7005781C1 /* WXWorkerDomain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXWorkerDomain.m; sourceTree = "<group>"; };
-		0AFA0ECB1D2CE79E006E30BB /* TBWXDevTool.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TBWXDevTool.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		0AFA0ECE1D2CE79E006E30BB /* TBWXDevTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBWXDevTool.h; sourceTree = "<group>"; };
+		0AFA0ECB1D2CE79E006E30BB /* WXDevTool.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = WXDevTool.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AFA0ED01D2CE79E006E30BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0AFA0FE51D2CEB39006E30BB /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		0AFA100B1D2CEC2A006E30BB /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -328,9 +323,7 @@
 		0AFE81D41D8102B800C99208 /* WXPageDomainUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXPageDomainUtility.h; sourceTree = "<group>"; };
 		0AFE81D51D8102B800C99208 /* WXPageDomainUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXPageDomainUtility.m; sourceTree = "<group>"; };
 		165DA532BBD5D3B8738062C5 /* Pods-WXDevTool.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WXDevTool.release.xcconfig"; path = "Pods/Target Support Files/Pods-WXDevTool/Pods-WXDevTool.release.xcconfig"; sourceTree = "<group>"; };
-		489AA4AF96AEBD4B7A7D8A91 /* Pods-TBWXDevTool.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBWXDevTool.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TBWXDevTool/Pods-TBWXDevTool.debug.xcconfig"; sourceTree = "<group>"; };
 		74BF27120E6548831B0E4FB7 /* libPods-WXDevTool.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WXDevTool.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		9CF2E2BFC9331B7CB90EA000 /* Pods-TBWXDevTool.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TBWXDevTool.release.xcconfig"; path = "Pods/Target Support Files/Pods-TBWXDevTool/Pods-TBWXDevTool.release.xcconfig"; sourceTree = "<group>"; };
 		A7B2575D248E618B57F22E13 /* Pods-WXDevTool.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WXDevTool.debug.xcconfig"; path = "Pods/Target Support Files/Pods-WXDevTool/Pods-WXDevTool.debug.xcconfig"; sourceTree = "<group>"; };
 		C42545BB1F27461000B93B0D /* WXNetworkRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXNetworkRecorder.h; sourceTree = "<group>"; };
 		C42545BC1F27461000B93B0D /* WXNetworkRecorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXNetworkRecorder.m; sourceTree = "<group>"; };
@@ -341,7 +334,7 @@
 		C42545C71F27461000B93B0D /* WXTracingUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXTracingUtility.h; sourceTree = "<group>"; };
 		C42545C81F27461000B93B0D /* WXTracingUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXTracingUtility.m; sourceTree = "<group>"; };
 		C49207721F28927D002EF9D7 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
-		C50EBFCEBD547BE8303CEC8F /* libPods-TBWXDevTool.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TBWXDevTool.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C866F7E0211DBC66007E3B47 /* WXDevTool.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXDevTool.pch; sourceTree = "<group>"; };
 		C8A3D04A20ECFA52004AB78A /* libWeexSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libWeexSDK.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -357,7 +350,6 @@
 				0AFA100E1D2CEC34006E30BB /* Foundation.framework in Frameworks */,
 				0AFA100C1D2CEC2A006E30BB /* CFNetwork.framework in Frameworks */,
 				0AFA0FE61D2CEB39006E30BB /* Security.framework in Frameworks */,
-				15C5AF763645AC346A190397 /* libPods-TBWXDevTool.a in Frameworks */,
 				36E050F3DFBCF2724B0320CE /* libPods-WXDevTool.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -535,26 +527,16 @@
 		0A1DCE341D4EFDD1005E87C7 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				0A1DCE391D4F004C005E87C7 /* TBWXDevTool.pch */,
+				C866F7E0211DBC66007E3B47 /* WXDevTool.pch */,
 			);
 			name = "Supporting Files";
 			path = "Source/Supporting Files";
-			sourceTree = "<group>";
-		};
-		0ABB39EF1D3F37700091332E /* TBWXDevTool_MTL */ = {
-			isa = PBXGroup;
-			children = (
-				0ABB39F01D3F37700091332E /* TBWXDevTool_MTL.h */,
-				0ABB39F21D3F37700091332E /* TBWXDevTool_MTL.m */,
-			);
-			path = TBWXDevTool_MTL;
 			sourceTree = "<group>";
 		};
 		0AFA0EC11D2CE79E006E30BB = {
 			isa = PBXGroup;
 			children = (
 				0AFA0ECD1D2CE79E006E30BB /* WXDevTool */,
-				0ABB39EF1D3F37700091332E /* TBWXDevTool_MTL */,
 				0AFA10171D2CEC61006E30BB /* Frameworks */,
 				0AFA0ECC1D2CE79E006E30BB /* Products */,
 				7AED1ACEA69643F607B0C3D3 /* Pods */,
@@ -564,7 +546,7 @@
 		0AFA0ECC1D2CE79E006E30BB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				0AFA0ECB1D2CE79E006E30BB /* TBWXDevTool.framework */,
+				0AFA0ECB1D2CE79E006E30BB /* WXDevTool.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -573,7 +555,6 @@
 			isa = PBXGroup;
 			children = (
 				0AFA0ED61D2CEA94006E30BB /* Source */,
-				0AFA0ECE1D2CE79E006E30BB /* TBWXDevTool.h */,
 				0AFA0ED01D2CE79E006E30BB /* Info.plist */,
 				0A1DCE341D4EFDD1005E87C7 /* Supporting Files */,
 			);
@@ -603,7 +584,6 @@
 				0AFA100D1D2CEC34006E30BB /* Foundation.framework */,
 				0AFA100B1D2CEC2A006E30BB /* CFNetwork.framework */,
 				0AFA0FE51D2CEB39006E30BB /* Security.framework */,
-				C50EBFCEBD547BE8303CEC8F /* libPods-TBWXDevTool.a */,
 				74BF27120E6548831B0E4FB7 /* libPods-WXDevTool.a */,
 			);
 			name = Frameworks;
@@ -613,8 +593,6 @@
 		7AED1ACEA69643F607B0C3D3 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				489AA4AF96AEBD4B7A7D8A91 /* Pods-TBWXDevTool.debug.xcconfig */,
-				9CF2E2BFC9331B7CB90EA000 /* Pods-TBWXDevTool.release.xcconfig */,
 				A7B2575D248E618B57F22E13 /* Pods-WXDevTool.debug.xcconfig */,
 				165DA532BBD5D3B8738062C5 /* Pods-WXDevTool.release.xcconfig */,
 			);
@@ -677,7 +655,6 @@
 				0ADE97891D767B62005781C1 /* WXConsoleDomainController.h in Headers */,
 				0ADE97851D767B62005781C1 /* NSOrderedSet+WXRuntimePropertyDescriptor.h in Headers */,
 				0ADE97AA1D767B6F005781C1 /* WXDynamicDebuggerDomain.h in Headers */,
-				0A1DCE3A1D4F004C005E87C7 /* TBWXDevTool.pch in Headers */,
 				0ADE97811D767B62005781C1 /* NSManagedObject+WXRuntimePropertyDescriptor.h in Headers */,
 				0A01031E1D35E25300F0D592 /* WXDeviceInfo.h in Headers */,
 				C42546011F27461000B93B0D /* WXNetworkTransaction.h in Headers */,
@@ -688,6 +665,7 @@
 				0ADE97D71D767B93005781C1 /* WXDatabaseDomain.h in Headers */,
 				0AFE81D61D8102B800C99208 /* WXPageDomainUtility.h in Headers */,
 				0ADE97D11D767B93005781C1 /* WXConsoleTypes.h in Headers */,
+				C866F7E1211DBC67007E3B47 /* WXDevTool.pch in Headers */,
 				0ADE97D91D767B93005781C1 /* WXDatabaseTypes.h in Headers */,
 				0A0298541D4B402400B4BC95 /* WXDevToolType.h in Headers */,
 				0ADE980D1D767BA5005781C1 /* WXDOMTypes.h in Headers */,
@@ -752,7 +730,7 @@
 			);
 			name = WXDevTool;
 			productName = WXDevTool;
-			productReference = 0AFA0ECB1D2CE79E006E30BB /* TBWXDevTool.framework */;
+			productReference = 0AFA0ECB1D2CE79E006E30BB /* WXDevTool.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -1048,7 +1026,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "$(SRCROOT)/WXDevTool/Source/Supporting Files/TBWXDevTool.pch";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/WXDevTool/Source/Supporting Files/WXDevTool.pch";
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = WXDevTool/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -1063,7 +1041,7 @@
 				OTHER_LIBTOOLFLAGS = "-ObjC";
 				PRIVATE_HEADERS_FOLDER_PATH = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.taobao.WXDevTool;
-				PRODUCT_NAME = TBWXDevTool;
+				PRODUCT_NAME = WXDevTool;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				PUBLIC_HEADERS_FOLDER_PATH = "";
 				SKIP_INSTALL = YES;
@@ -1087,7 +1065,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "$(SRCROOT)/WXDevTool/Source/Supporting Files/TBWXDevTool.pch";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/WXDevTool/Source/Supporting Files/WXDevTool.pch";
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = WXDevTool/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -1102,7 +1080,7 @@
 				OTHER_LIBTOOLFLAGS = "-ObjC";
 				PRIVATE_HEADERS_FOLDER_PATH = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.taobao.WXDevTool;
-				PRODUCT_NAME = TBWXDevTool;
+				PRODUCT_NAME = WXDevTool;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				PUBLIC_HEADERS_FOLDER_PATH = "";
 				SKIP_INSTALL = YES;

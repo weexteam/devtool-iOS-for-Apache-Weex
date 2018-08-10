@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "0AFA0ECA1D2CE79E006E30BB"
-               BuildableName = "TBWXDevTool.framework"
+               BuildableName = "WXDevTool.framework"
                BlueprintName = "WXDevTool"
                ReferencedContainer = "container:WXDevTool.xcodeproj">
             </BuildableReference>
@@ -48,7 +48,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0AFA0ECA1D2CE79E006E30BB"
-            BuildableName = "TBWXDevTool.framework"
+            BuildableName = "WXDevTool.framework"
             BlueprintName = "WXDevTool"
             ReferencedContainer = "container:WXDevTool.xcodeproj">
          </BuildableReference>
@@ -66,7 +66,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0AFA0ECA1D2CE79E006E30BB"
-            BuildableName = "TBWXDevTool.framework"
+            BuildableName = "WXDevTool.framework"
             BlueprintName = "WXDevTool"
             ReferencedContainer = "container:WXDevTool.xcodeproj">
          </BuildableReference>
