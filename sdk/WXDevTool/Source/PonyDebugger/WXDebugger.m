@@ -613,7 +613,7 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
     
 - (JSValue *)callJSMethod:(NSString *)method args:(NSArray *)args {
     NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
-    NSString *nonullMethod = method ? : @"";
+    NSString *nonullMethod = method? [method isEqualToString:@"callJS"] ? @"__WEEX_CALL_JAVASCRIPT__" : method : @"";
     NSArray *nonullArgs = args ? : [NSArray array];
     [params setObject:nonullMethod forKey:@"method"];
     [params setObject:nonullArgs forKey:@"args"];
@@ -630,17 +630,16 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
         [request setHTTPBody:data];
         [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     
-        __block NSData *receivedData = nil;
+        __block NSDictionary *receivedData = nil;
         NSOperationQueue *queue = [[NSOperationQueue alloc] init];
         dispatch_semaphore_t signal = dispatch_semaphore_create(0);
-        [NSURLConnection sendAsynchronousRequest:request queue:queue completionHandler:^(NSURLResponse * _Nullable response, NSData * _Nullable data, NSError * _Nullable connectionError) {
-            receivedData = data;
+        [NSURLConnection sendAsynchronousRequest:request queue:queue completionHandler:^(NSURLResponse * _Nonnull response, NSData * _Nullable data, NSError * _Nullable connectionError) {
+            NSArray *dict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+            receivedData = @{@"0": dict[0]};
             dispatch_semaphore_signal(signal);
         }];
         dispatch_semaphore_wait(signal, DISPATCH_TIME_FOREVER);
-        NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:receivedData
-                                                             options:NSJSONReadingAllowFragments
-                                                               error:nil];
+        NSDictionary *dict = receivedData;
         return (JSValue *)dict;
     }
     else
