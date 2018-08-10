@@ -634,8 +634,8 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
         NSOperationQueue *queue = [[NSOperationQueue alloc] init];
         dispatch_semaphore_t signal = dispatch_semaphore_create(0);
         [NSURLConnection sendAsynchronousRequest:request queue:queue completionHandler:^(NSURLResponse * _Nonnull response, NSData * _Nullable data, NSError * _Nullable connectionError) {
-            NSArray *dict = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
-            receivedData = @{@"0": dict[0]};
+            NSArray *array = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+            receivedData = @{@"0": array[0]};
             dispatch_semaphore_signal(signal);
         }];
         dispatch_semaphore_wait(signal, DISPATCH_TIME_FOREVER);
