@@ -156,7 +156,6 @@
 		0AFA10141D2CEC49006E30BB /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AFA10131D2CEC49006E30BB /* CoreData.framework */; };
 		0AFE81D61D8102B800C99208 /* WXPageDomainUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 0AFE81D41D8102B800C99208 /* WXPageDomainUtility.h */; };
 		0AFE81D71D8102B800C99208 /* WXPageDomainUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AFE81D51D8102B800C99208 /* WXPageDomainUtility.m */; };
-		36E050F3DFBCF2724B0320CE /* libPods-WXDevTool.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 74BF27120E6548831B0E4FB7 /* libPods-WXDevTool.a */; };
 		C42545FD1F27461000B93B0D /* WXNetworkRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545BB1F27461000B93B0D /* WXNetworkRecorder.h */; };
 		C42545FE1F27461000B93B0D /* WXNetworkRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = C42545BC1F27461000B93B0D /* WXNetworkRecorder.m */; };
 		C42546011F27461000B93B0D /* WXNetworkTransaction.h in Headers */ = {isa = PBXBuildFile; fileRef = C42545BF1F27461000B93B0D /* WXNetworkTransaction.h */; };
@@ -335,7 +334,6 @@
 		C42545C81F27461000B93B0D /* WXTracingUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXTracingUtility.m; sourceTree = "<group>"; };
 		C49207721F28927D002EF9D7 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		C866F7E0211DBC66007E3B47 /* WXDevTool.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXDevTool.pch; sourceTree = "<group>"; };
-		C8A3D04A20ECFA52004AB78A /* libWeexSDK.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libWeexSDK.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -350,7 +348,6 @@
 				0AFA100E1D2CEC34006E30BB /* Foundation.framework in Frameworks */,
 				0AFA100C1D2CEC2A006E30BB /* CFNetwork.framework in Frameworks */,
 				0AFA0FE61D2CEB39006E30BB /* Security.framework in Frameworks */,
-				36E050F3DFBCF2724B0320CE /* libPods-WXDevTool.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -575,7 +572,6 @@
 		0AFA10171D2CEC61006E30BB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				C8A3D04A20ECFA52004AB78A /* libWeexSDK.a */,
 				C49207721F28927D002EF9D7 /* ImageIO.framework */,
 				0AFA10151D2CEC58006E30BB /* libicucore.tbd */,
 				0AFA10131D2CEC49006E30BB /* CoreData.framework */,
