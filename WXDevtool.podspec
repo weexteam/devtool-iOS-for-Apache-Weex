@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
 
   s.name         = "WXDevtool"
 
-  s.version      = "0.16.3"
+  s.version      = "0.17.0"
 
   s.summary      = "WXDevtool Source."
 
@@ -30,7 +30,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = "8.0"
   
   # cocoapods
-  s.source =   { :git => "https://github.com/weexteam/weex-devtool-iOS.git", :tag => "0.16.3" }
+  s.source =   { :git => "https://github.com/weexteam/weex-devtool-iOS.git", :tag => "0.17.0" }
   s.source_files = "sdk/WXDevTool/Source/**/*.{h,m,mm,c}"
 
   s.requires_arc = true
