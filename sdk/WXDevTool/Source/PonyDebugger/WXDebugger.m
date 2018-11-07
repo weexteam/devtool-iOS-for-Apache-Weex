@@ -158,6 +158,10 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
         NSString *encodedData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         [webSocket send:encodedData];
     };
+    
+    if ([domainName isEqualToString:@"Overlay"]) {
+        domainName = @"DOM";
+    }
 
     WXDynamicDebuggerDomain *domain = [self domainForName:domainName];
 
