@@ -520,11 +520,11 @@
 				"${PODS_ROOT}/ATSDK-Weex/ATSDK.framework/Versions/A/Resources/ATSDK.bundle",
 				"${PODS_ROOT}/ATSDK-Weex/ATSDK.framework/Versions/A/Resources/en.lproj",
 				"${PODS_ROOT}/ATSDK-Weex/ATSDK.framework/Versions/A/Resources/zh-Hans.lproj",
-				"${PODS_ROOT}/../../../incubator-weex/pre-build/native-bundle-main.js",
-				"${PODS_ROOT}/../../../incubator-weex/pre-build/weex-main-jsfm.js",
-				"${PODS_ROOT}/../../../incubator-weex/pre-build/weex-polyfill.js",
-				"${PODS_ROOT}/../../../incubator-weex/pre-build/weex-rax-api.js",
-				"${PODS_ROOT}/../../../incubator-weex/ios/sdk/WeexSDK/Resources/wx_load_error@3x.png",
+				"${PODS_ROOT}/WeexSDK/pre-build/native-bundle-main.js",
+				"${PODS_ROOT}/WeexSDK/pre-build/weex-main-jsfm.js",
+				"${PODS_ROOT}/WeexSDK/pre-build/weex-polyfill.js",
+				"${PODS_ROOT}/WeexSDK/pre-build/weex-rax-api.js",
+				"${PODS_ROOT}/WeexSDK/ios/sdk/WeexSDK/Resources/wx_load_error@3x.png",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -570,11 +570,11 @@
 				"${PODS_ROOT}/ATSDK-Weex/ATSDK.framework/Versions/A/Resources/ATSDK.bundle",
 				"${PODS_ROOT}/ATSDK-Weex/ATSDK.framework/Versions/A/Resources/en.lproj",
 				"${PODS_ROOT}/ATSDK-Weex/ATSDK.framework/Versions/A/Resources/zh-Hans.lproj",
-				"${PODS_ROOT}/../../../incubator-weex/pre-build/native-bundle-main.js",
-				"${PODS_ROOT}/../../../incubator-weex/pre-build/weex-main-jsfm.js",
-				"${PODS_ROOT}/../../../incubator-weex/pre-build/weex-polyfill.js",
-				"${PODS_ROOT}/../../../incubator-weex/pre-build/weex-rax-api.js",
-				"${PODS_ROOT}/../../../incubator-weex/ios/sdk/WeexSDK/Resources/wx_load_error@3x.png",
+				"${PODS_ROOT}/WeexSDK/pre-build/native-bundle-main.js",
+				"${PODS_ROOT}/WeexSDK/pre-build/weex-main-jsfm.js",
+				"${PODS_ROOT}/WeexSDK/pre-build/weex-polyfill.js",
+				"${PODS_ROOT}/WeexSDK/pre-build/weex-rax-api.js",
+				"${PODS_ROOT}/WeexSDK/ios/sdk/WeexSDK/Resources/wx_load_error@3x.png",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
