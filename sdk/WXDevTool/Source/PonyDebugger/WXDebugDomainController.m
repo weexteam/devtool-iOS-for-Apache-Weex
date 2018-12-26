@@ -85,7 +85,7 @@
                                        appName, @"name",
                                        [WXLog logLevelString] ?: @"error",@"logLevel",
                                        [NSNumber numberWithBool:[WXDevToolType isDebug]],@"remoteDebug",
-                                       [WXDebugger isNetwork], @"network",
+                                       [NSNumber numberWithBool:[WXDebugger isNetwork]], @"network",
                                        nil];
     [self _registerDeviceWithParams:parameters];
 }
