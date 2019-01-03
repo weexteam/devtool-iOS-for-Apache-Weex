@@ -12,7 +12,6 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 #import <WeexSDK/WeexSDK.h>
-#import <WeexSDK/WXTracingManager.h>
 
 #pragma mark - Preprocessor
 
