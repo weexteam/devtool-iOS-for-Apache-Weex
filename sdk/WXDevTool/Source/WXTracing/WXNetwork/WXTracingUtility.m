@@ -370,14 +370,6 @@
     NSString *str = [outputFormatter stringFromDate:[NSDate date]];
     return str;
 }
-+ (NSArray *)formatTask:(WXTracingTask *)task
-{
-    NSMutableArray *array = [NSMutableArray new];
-    for (WXTracing *t in task.tracings) {
-        [array addObject:[t dictionary]];
-    }
-    return array;
-}
 
 // Swizzling utilities
 + (SEL)swizzledSelectorForSelector:(SEL)selector
