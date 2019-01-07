@@ -96,9 +96,9 @@
     _nativeCallBlock = callNativeBlock;
 }
 
-- (void)debugDomainRegisterCallUpdateComponentData:(WXJSCallUpdateComponentData)callUpdateComponentData;
+- (void)debugDomainRegisterCallUpdateComponentData:(WXJSCallUpdateComponentData)callUpdateComponentDataBlock;
 {
-    _callUpdateComponentDataBlock = callUpdateComponentData;
+    _callUpdateComponentDataBlock = callUpdateComponentDataBlock;
 }
 
 - (void)debugDomainRegisterCallAddElement:(WXJSCallAddElement)callAddElement {
