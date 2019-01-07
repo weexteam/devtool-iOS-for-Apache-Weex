@@ -623,6 +623,12 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
     [debugDomainCrl debugDomainRegisterCallNativeComponent:callNativeComponentBlock];
 }
 
+- (void)registerCallUpdateComponentData:(WXJSCallUpdateComponentData)callUpdateComponentDataBlock;
+{
+    WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
+    [debugDomainCrl debugDomainRegisterCallUpdateComponentData:callUpdateComponentDataBlock];
+}
+
 - (JSValue*) exception
 {
     return nil;

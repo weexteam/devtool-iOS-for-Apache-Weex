@@ -46,9 +46,13 @@
 - (void)domain:(WXDynamicDebuggerDomain *)domain callAddEvent:(NSDictionary *)jsModule callBack:(void (^)(id error))callback ;
 
 - (void)domain:(WXDynamicDebuggerDomain *)domain callRemoveEvent:(NSDictionary *)jsModule callBack:(void (^)(id error))callback ;
+
 - (void)domain:(WXDynamicDebuggerDomain *)domain syncCall:(NSDictionary *)args callBack:(void (^)(NSDictionary *data, id error))callback;
 
+- (void)domain:(WXDynamicDebuggerDomain *)domain callUpdateComponentData:(NSDictionary *)jsModule callBack:(void (^)(id error))callback ;
+
 - (void)domain:(WXDynamicDebuggerDomain *)domain enablePerformanceMonitor:(BOOL)enable monitorCallback:(void (^)(id error))callback;
+
 - (void)domain:(WXDynamicDebuggerDomain *)domain sendPerformanceData:(BOOL)enable sendCallback:(void (^)(id error))callback;
 
 @end

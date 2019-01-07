@@ -43,6 +43,8 @@
 
 - (void)debugDomainRegisterCallNativeComponent:(WXJSCallNativeComponent)callNativeComponentBlock;
 
+- (void)debugDomainRegisterCallUpdateComponentData:(WXJSCallUpdateComponentData)callUpdateComponentDataBlock;
+
 - (void)clearGarbage;
 
 @end
