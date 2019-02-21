@@ -10,6 +10,7 @@
 #import "WXDebugger.h"
 #import "WXDevToolType.h"
 #import <WeexSDK/WeexSDK.h>
+#import "WXBonjourServiceController.h"
 
 #define WXDevtool_VERSION @"0.20.1"
 
@@ -52,6 +53,41 @@
 
     [debugger enableDevToolDebug];
     [WXSDKEngine connectDevToolServer:url];
+}
+
++ (void)launchDevToolDebugFromBonjourWithCompletionHandler:(void (^)())completion {
+    [[WXBonjourServiceController sharedInstance] searchForDebuggersWithCompletion:^(NSArray<WXBonjourServiceHost *> *hosts) {
+        NSMutableDictionary<NSString *, WXBonjourServiceHost *> *hostsByDisplayName = [NSMutableDictionary dictionary];
+        for (WXBonjourServiceHost *host in hosts) {
+            hostsByDisplayName[host.displayName] = host;
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // Create an UIWindow with a transparant UIViewController to show the selection UIAlertController
+            UIWindow *containerWindow = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+            containerWindow.rootViewController = [UIViewController new];
+            containerWindow.windowLevel = UIWindowLevelAlert + 1;
+            
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Select Debugger Host" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+            for (NSString *name in hostsByDisplayName) {
+                [alert addAction:[UIAlertAction actionWithTitle:name style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                    containerWindow.hidden = YES;
+                    
+                    WXBonjourServiceHost *selectedHost = hostsByDisplayName[action.title];
+                    [self launchDevToolDebugWithUrl:selectedHost.url.absoluteString];
+                    completion();
+                }]];
+            }
+            [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+                containerWindow.hidden = YES;
+                
+                completion();
+            }]];
+            
+            [containerWindow makeKeyAndVisible];
+            [containerWindow.rootViewController presentViewController:alert animated:YES completion:nil];
+        });
+    }];
 }
 
 + (NSString*)WXDevtoolVersion

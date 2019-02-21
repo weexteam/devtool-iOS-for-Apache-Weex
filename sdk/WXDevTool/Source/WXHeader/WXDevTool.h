@@ -31,6 +31,16 @@
  **/
 + (void)launchDevToolDebugWithUrl:(NSString *)url;
 
+
+/**
+ *  connect to weex debugger from broadcasted weex debugger Bonjour service.
+ *  @discussion To provide Bonjour service, run weex debug with --bonjour option
+ *
+ *  @param completion completion handler
+ */
++ (void)launchDevToolDebugFromBonjourWithCompletionHandler:(void (^)())completion;
+
+
 /**
  * @abstract Returns the version of SDK
  *
