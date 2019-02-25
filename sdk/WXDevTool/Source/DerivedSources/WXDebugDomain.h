@@ -51,4 +51,6 @@
 - (void)domain:(WXDynamicDebuggerDomain *)domain enablePerformanceMonitor:(BOOL)enable monitorCallback:(void (^)(id error))callback;
 - (void)domain:(WXDynamicDebuggerDomain *)domain sendPerformanceData:(BOOL)enable sendCallback:(void (^)(id error))callback;
 
+- (void)domain:(WXDynamicDebuggerDomain *)domain renderPageWithURL:(NSURL *)url callBack:(void (^)(id error))callback;
+
 @end

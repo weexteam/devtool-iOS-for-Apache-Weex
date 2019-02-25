@@ -413,4 +413,10 @@
     callback(error);
 }
 
+- (void)domain:(WXDynamicDebuggerDomain *)domain renderPageWithURL:(NSURL *)url callBack:(void (^)(id error))callback {
+    NSDictionary *userInfo = @{@"url": url};
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"WXDevToolRenderPage" object:nil userInfo:userInfo];
+    callback(nil);
+}
+
 @end
