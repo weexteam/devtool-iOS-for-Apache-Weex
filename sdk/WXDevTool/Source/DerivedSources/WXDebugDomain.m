@@ -95,7 +95,11 @@
         [self.delegate domain:self sendPerformanceData:[[params objectForKey:@"value"] boolValue] sendCallback:^(id error) {
             responseCallback(nil,error);
         }];
-    } 
+    } else if ([methodName isEqualToString:@"renderPage"]) {
+        [self.delegate domain:self renderPageWithURL:[NSURL URLWithString:params[@"url"]] callBack:^(id error) {
+            responseCallback(nil, error);
+        }];
+    }
 }
 
 
