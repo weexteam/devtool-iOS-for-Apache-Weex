@@ -59,39 +59,43 @@
         [self.delegate domain:self callAddElement:params callBack:^(id error) {
             responseCallback(nil, error);
         }];
-    }else if ([methodName isEqualToString:@"callCreateBody"] && [self.delegate respondsToSelector:@selector(domain:callCreateBody:callBack:)]) {
+    } else if ([methodName isEqualToString:@"callCreateBody"] && [self.delegate respondsToSelector:@selector(domain:callCreateBody:callBack:)]) {
         [self.delegate domain:self callCreateBody:params callBack:^(id error) {
             responseCallback(nil, error);
         }];
-    }else if ([methodName isEqualToString:@"callRemoveElement"] && [self.delegate respondsToSelector:@selector(domain:callRemoveElement:callBack:)]) {
+    } else if ([methodName isEqualToString:@"callRemoveElement"] && [self.delegate respondsToSelector:@selector(domain:callRemoveElement:callBack:)]) {
         [self.delegate domain:self callRemoveElement:params callBack:^(id error) {
             responseCallback(nil, error);
         }];
-    }else if ([methodName isEqualToString:@"callMoveElement"] && [self.delegate respondsToSelector:@selector(domain:callMoveElement:callBack:)]) {
+    } else if ([methodName isEqualToString:@"callMoveElement"] && [self.delegate respondsToSelector:@selector(domain:callMoveElement:callBack:)]) {
         [self.delegate domain:self callMoveElement:params callBack:^(id error) {
             responseCallback(nil, error);
         }];
-    }else if ([methodName isEqualToString:@"callUpdateAttrs"] && [self.delegate respondsToSelector:@selector(domain:callUpdateAttrs:callBack:)]) {
+    } else if ([methodName isEqualToString:@"callUpdateAttrs"] && [self.delegate respondsToSelector:@selector(domain:callUpdateAttrs:callBack:)]) {
         [self.delegate domain:self callUpdateAttrs:params callBack:^(id error) {
             responseCallback(nil, error);
         }];
-    }else if ([methodName isEqualToString:@"callUpdateStyle"] && [self.delegate respondsToSelector:@selector(domain:callUpdateStyle:callBack:)]) {
+    } else if ([methodName isEqualToString:@"callUpdateStyle"] && [self.delegate respondsToSelector:@selector(domain:callUpdateStyle:callBack:)]) {
         [self.delegate domain:self callUpdateStyle:params callBack:^(id error) {
             responseCallback(nil, error);
         }];
-    }else if ([methodName isEqualToString:@"callAddEvent"] && [self.delegate respondsToSelector:@selector(domain:callAddEvent:callBack:)]) {
+    } else if ([methodName isEqualToString:@"callAddEvent"] && [self.delegate respondsToSelector:@selector(domain:callAddEvent:callBack:)]) {
         [self.delegate domain:self callAddEvent:params callBack:^(id error) {
             responseCallback(nil, error);
         }];
-    }else if ([methodName isEqualToString:@"callRemoveEvent"] && [self.delegate respondsToSelector:@selector(domain:callRemoveEvent:callBack:)]) {
+    } else if ([methodName isEqualToString:@"callRemoveEvent"] && [self.delegate respondsToSelector:@selector(domain:callRemoveEvent:callBack:)]) {
         [self.delegate domain:self callRemoveEvent:params callBack:^(id error) {
             responseCallback(nil, error);
         }];
-    }else if ([methodName isEqualToString:@"enablePerformanceMonitor"]) {
+    } else if ([methodName isEqualToString:@"callUpdateComponentData"] && [self.delegate respondsToSelector:@selector(domain:callUpdateComponentData:callBack:)]) {
+        [self.delegate domain:self callUpdateComponentData:params callBack:^(id error) {
+            responseCallback(nil, error);
+        }];
+    } else if ([methodName isEqualToString:@"enablePerformanceMonitor"]) {
         [self.delegate domain:self enablePerformanceMonitor:[[params objectForKey:@"value"] boolValue] monitorCallback:^(id error) {
             responseCallback(nil,error);
         }];
-    }else if ([methodName isEqualToString:@"refreshPerformanceData"]) {
+    } else if ([methodName isEqualToString:@"refreshPerformanceData"]) {
         [self.delegate domain:self sendPerformanceData:[[params objectForKey:@"value"] boolValue] sendCallback:^(id error) {
             responseCallback(nil,error);
         }];

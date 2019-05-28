@@ -164,7 +164,7 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
     }
 
     WXDynamicDebuggerDomain *domain = [self domainForName:domainName];
-
+    
     if (domain) {
         [domain handleMethodWithName:methodName parameters:[obj objectForKey:@"params"] responseCallback:[responseCallback copy]];
     } else {
@@ -267,7 +267,7 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
 - (void)netServiceDidResolveAddress:(NSNetService *)service;
 {
     NSAssert([service isEqual:_currentService], @"Resolved incorrect service!");
-
+    
     [self connectToURL:[NSURL URLWithString:[NSString stringWithFormat:@"ws://%@:%ld/device", [service hostName], (long)[service port]]]];
 }
 
@@ -281,7 +281,7 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
 - (void)sendEventWithName:(NSString *)methodName parameters:(id)params;
 {
     NSDictionary *obj = [[NSDictionary alloc] initWithObjectsAndKeys:methodName, @"method", [params WX_JSONObject], @"params",nil];
-
+    
     NSData *data = [NSJSONSerialization dataWithJSONObject:obj options:0 error:nil];
     NSString *encodedData = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     
@@ -604,7 +604,7 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
     WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
     [debugDomainCrl debugDomainRegisterCallRemoveEvent:callRemoveEvent];
 }
-    
+
 - (void)registerCallCreateFinish:(WXJSCallCreateFinish)callCreateFinish
 {
     WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
@@ -616,11 +616,17 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
     WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
     [debugDomainCrl debugDomainRegisterCallNativeModule:callNativeModuleBlock];
 }
-    
+
 - (void)registerCallNativeComponent:(WXJSCallNativeComponent)callNativeComponentBlock
 {
     WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
     [debugDomainCrl debugDomainRegisterCallNativeComponent:callNativeComponentBlock];
+}
+
+- (void)registerCallUpdateComponentData:(WXJSCallUpdateComponentData)callUpdateComponentDataBlock;
+{
+    WXDebugDomainController *debugDomainCrl = [WXDebugDomainController defaultInstance];
+    [debugDomainCrl debugDomainRegisterCallUpdateComponentData:callUpdateComponentDataBlock];
 }
 
 - (JSValue*) exception
@@ -632,7 +638,7 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
 {
     [self _initEnvironment];
 }
-    
+
 - (JSValue *)callJSMethod:(NSString *)method args:(NSArray *)args {
     NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
     NSString *nonullMethod = method? [method isEqualToString:@"callJS"] ? @"__WEEX_CALL_JAVASCRIPT__" : method : @"";
@@ -651,7 +657,7 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
         [request setHTTPMethod:@"POST"];
         [request setHTTPBody:data];
         [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    
+        
         __block NSArray *receivedData = nil;
         NSOperationQueue *queue = [[NSOperationQueue alloc] init];
         dispatch_semaphore_t signal = dispatch_semaphore_create(0);
@@ -774,40 +780,40 @@ void _WXLogObjectsImpl(NSString *severity, NSArray *arguments)
 }
 
 /*
-#pragma mark - server
-- (void)serverStartWithHost:(NSString *)host port:(NSUInteger)port {
-    if (!_server) {
-        _server = [PSWebSocketServer serverWithHost:host port:port];
-        _server.delegate = self;
-        [_server start];
-    }
-}
-
-#pragma mark - PSWebSocketServerDelegate
-
-- (void)serverDidStart:(PSWebSocketServer *)server {
-    NSLog(@"Server did start…");
-}
-- (void)serverDidStop:(PSWebSocketServer *)server {
-    NSLog(@"Server did stop…");
-}
-- (BOOL)server:(PSWebSocketServer *)server acceptWebSocketWithRequest:(NSURLRequest *)request {
-    NSLog(@"Server should accept request: %@", request);
-    return YES;
-}
-- (void)server:(PSWebSocketServer *)server webSocket:(PSWebSocket *)webSocket didReceiveMessage:(id)message {
-    NSLog(@"Server websocket did receive message: %@", message);
-}
-- (void)server:(PSWebSocketServer *)server webSocketDidOpen:(PSWebSocket *)webSocket {
-    NSLog(@"Server websocket did open");
-}
-- (void)server:(PSWebSocketServer *)server webSocket:(PSWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
-    NSLog(@"Server websocket did close with code: %@, reason: %@, wasClean: %@", @(code), reason, @(wasClean));
-}
-- (void)server:(PSWebSocketServer *)server webSocket:(PSWebSocket *)webSocket didFailWithError:(NSError *)error {
-    NSLog(@"Server websocket did fail with error: %@", error);
-}
-*/
+ #pragma mark - server
+ - (void)serverStartWithHost:(NSString *)host port:(NSUInteger)port {
+ if (!_server) {
+ _server = [PSWebSocketServer serverWithHost:host port:port];
+ _server.delegate = self;
+ [_server start];
+ }
+ }
+ 
+ #pragma mark - PSWebSocketServerDelegate
+ 
+ - (void)serverDidStart:(PSWebSocketServer *)server {
+ NSLog(@"Server did start…");
+ }
+ - (void)serverDidStop:(PSWebSocketServer *)server {
+ NSLog(@"Server did stop…");
+ }
+ - (BOOL)server:(PSWebSocketServer *)server acceptWebSocketWithRequest:(NSURLRequest *)request {
+ NSLog(@"Server should accept request: %@", request);
+ return YES;
+ }
+ - (void)server:(PSWebSocketServer *)server webSocket:(PSWebSocket *)webSocket didReceiveMessage:(id)message {
+ NSLog(@"Server websocket did receive message: %@", message);
+ }
+ - (void)server:(PSWebSocketServer *)server webSocketDidOpen:(PSWebSocket *)webSocket {
+ NSLog(@"Server websocket did open");
+ }
+ - (void)server:(PSWebSocketServer *)server webSocket:(PSWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
+ NSLog(@"Server websocket did close with code: %@, reason: %@, wasClean: %@", @(code), reason, @(wasClean));
+ }
+ - (void)server:(PSWebSocketServer *)server webSocket:(PSWebSocket *)webSocket didFailWithError:(NSError *)error {
+ NSLog(@"Server websocket did fail with error: %@", error);
+ }
+ */
 
 #pragma mark - local enable
 + (void)setEnabled:(BOOL)enabled
